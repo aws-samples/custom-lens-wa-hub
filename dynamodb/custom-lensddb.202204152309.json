@@ -1,0 +1,958 @@
+{
+   "schemaVersion":"2021-11-01",
+   "name":"DynamoDB Best Practice Lens",
+   "description":"Best practices for optimization your DynamoDB",
+   "pillars":[
+        {
+         "id":"DDBOPS",
+         "name":"Operational Excellence",
+         "questions":[
+            {
+               "id":"ddbops1",
+               "title":"How do you backup DynamoDB tables?",
+               "description":"With proper backup process, you will be able to prevent unexpected data lost.",
+               "choices":[
+                  {
+                     "id":"ddbops1_1",
+                     "title":"Use On-Demand Backup for DynamoDB tables",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"A detail description or definition of this best practice, and give a clear scope of this best practice in pillar, also the impact of the risk.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/BackupRestore.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Enable On-Demand Backup",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/BackupRestore.html"
+                     }
+                  },
+                  {
+                     "id":"ddbops1_2",
+                     "title":"Enable DynamoDB PITR",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Point-in-time recovery (PITR) provides continuous backups of your DynamoDB table data. When enabled, DynamoDB maintains incremental backups of your table for the last 35 days until you explicitly turn it off."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Enable Dynamodb PITR"
+                     }
+                  },
+                  {
+                     "id":"ddbops1_3",
+                     "title":"Use AWS Backup for DynamoDB tables",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"AWS Backup is a fully-managed service that makes it easy to centralize and automate data protection across AWS services, in the cloud, and on premises.",
+                        "url":"https://docs.aws.amazon.com/aws-backup/latest/devguide/about-backup-plans.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Use AWS Backup"
+                     }
+                  },
+                  {
+                     "id":"ddbops1_4",
+                     "title":"Export DynamoDB to other storage media",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Using DynamoDB table export, you can export data from an Amazon DynamoDB table from any time within your point-in-time recovery window to an Amazon S3 bucket.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DataExport.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Export Dynamodb To S3"
+                     }
+                  },
+                  {
+                     "id":"ddbops1_5",
+                     "title":"None of above",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"-"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Setup backup process"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbops1_1 && ddbops1_2 && ddbops1_3 && ddbops1_4",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"(!ddbops1_1) || ddbops1_5",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"ddbops2",
+               "title":"How do you monitor DynamoDB tables?",
+               "description":"Monitor process helps to indenfy the functionality status in different dimentions.",
+               "choices":[
+                  {
+                     "id":"ddbops2_1",
+                     "title":"Setup metrics or KPI target for table monitoring",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Recommended monitoring process should identify clear metrics as key index, which can help to identify system performance degradation or funcationality failure."
+                     },
+                     "improvementPlan":{
+                        "displayText":"some text"
+                     }
+                  },
+                  {
+                     "id":"ddbops2_2",
+                     "title":"Setup a notification based on metrics threshold",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"The monitoring metrics should be quantified, a specific number as threshold which learned from experiences could be set as a trigger for remediation process or incidence response."
+                     },
+                     "improvementPlan":{
+                        "displayText":"some text"
+                     }
+                  },
+                  {
+                     "id":"ddbops2_3",
+                     "title":"Have monitor stretagy in different layer for diagnositc",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"For operation monitoring toward DynamoDB can be triggered from different layer. Amazon CloudWatch can provide resource level monitoring. With application layer performance monitoring can help to identify different patterns from higher angle."
+                     },
+                     "improvementPlan":{
+                        "displayText":"some text"
+                     }
+                  },
+                  {
+                     "id":"ddbops2_4",
+                     "title":"Leverage CloudWatch metrics for DynamoDB to improve operation process",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Amazon CloudWatch provided \"out of box\" metrics and math metrics for user to evolving the interaction with DynamoDB table.",
+                        "url":"https://aws.amazon.com/cn/blogs/database/monitoring-amazon-dynamodb-for-operational-awareness/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"some text"
+                     }
+                  },
+                  {
+                     "id":"ddbops2_5",
+                     "title":"None of above",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"-"
+                     },
+                     "improvementPlan":{
+                        "displayText":"some text"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbops2_1 && ddbops2_2 && ddbops2_3 && ddbops2_4",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"(!ddbops2_1) || ddbops2_5",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"ddbops3",
+               "title":"How do you response to DynamoDB table configuration change requests?",
+               "description":"With expected or unexpected traffic peak, the requests toward DynamoDB tables will need to be well handled with different configurations, to keep the service functionality. An incident response process will need to be well defined, like a standard procedure for reviewing, playbook or escalation path.",
+               "helpfulResource":{
+                  "displayText":"some text"
+               },
+               "choices":[
+                  {
+                     "id":"ddbops3_1",
+                     "title":"Have a process or playbook to adjust table configurations",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"-"
+                     },
+                     "improvementPlan":{
+                        "displayText":"some text"
+                     }
+                  },
+                  {
+                     "id":"ddbops3_2",
+                     "title":"Not yet have pre-defined process, but capable to adjust manually",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"-"
+                     },
+                     "improvementPlan":{
+                        "displayText":"some text"
+                     }
+                  },
+                  {
+                     "id":"ddbops3_5",
+                     "title":"None of above",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"-"
+                     },
+                     "improvementPlan":{
+                        "displayText":"some text"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbops3_1 && ddbops3_2",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"(!ddbops3_2) || ddbops3_5",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "id":"DDBPERF",
+         "name":"PerformanceEfficiency",
+         "questions":[
+            {
+               "id":"ddbperf1",
+               "title":"Do you have banchmark process?",
+               "description":"Use your application to benchmark on DynamoDB table according to your use case and access pattern, which make sure the DynamoDB can fulfill your senerio",
+               "choices":[
+                  {
+                     "id":"ddbperf1_1",
+                     "title":"Collect user behavior",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Realize user behavior and API count information, which help you to reproduce the user traffic in real world"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Collect API count and related information with API recorder to captures the traffic between API clients and API providers."
+                     }
+                  },
+                  {
+                     "id":"ddbperf1_2",
+                     "title":"Mock user behavior with your application",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Mock user behavior with your application and simulater with tool or code"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Using API Simulator Tools to mock the traffic from API client to API provider."
+                     }
+                  },
+                  {
+                     "id":"ddbperf1_3",
+                     "title":"Test with distributed load test solutions",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Ensure Optimal Application Performance with Distributed Load Testing solutions",
+                        "url":"https://aws.amazon.com/blogs/architecture/ensure-optimal-application-performance-with-distributed-load-testing-on-aws/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Implement Distributed Load Testing on AWS",
+                        "url":"https://aws.amazon.com/solutions/implementations/distributed-load-testing-on-aws/"
+                     }
+                  },
+                  {
+                     "id":"ddbperf1_4",
+                     "title":"Analysis your load test result",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Realize your Distrubuted Load Test result and find where is bottleneck is important."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Analysis your load test result and check the bottleneck come from DynamoDB or not"
+                     }
+                  },
+                  {
+                     "id":"ddbperf1_5",
+                     "title":"Have your consider network effect in your latency",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"DynamoDB latency only consider latency in table, but you still need to calculate the latency between client and DynamoDB"
+                     },
+                     "improvementPlan":{
+                        "displayText":"You can calculate the DynamoDB request latency in your client side, and compare to DynamoDB SuccessfulRequestLatency.",
+                        "url":"https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-high-latency/?nc1=h_ls"
+                     }
+                  },
+                  {
+                     "id":"ddbperf1_6",
+                     "title":"None of above",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"-"
+                     },
+                     "improvementPlan":{
+                        "displayText":"-"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbperf1_1 && ddbperf1_2 && ddbperf1_3 && ddbperf1_4 && ddbperf1_5",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"(!ddbperf1_1) || (!ddbperf1_2) || (!ddbperf1_4) || (!ddbperf1_5) || ddbperf1_6",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"ddbperf2",
+               "title":"Do you aware the throttle limitation of DynamoDB tables?",
+               "description":"During the peak request, we might encounter the throttled problem.",
+               "choices":[
+                  {
+                     "id":"ddbperf2_1",
+                     "title":"read/write capacity estimate according to your use case",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"DynamoDB uses read/write capacity in table, information to reserve sufficient system resources to meet your throughput requirements.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html#HowItWorks.requests"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Managing Settings on DynamoDB Provisioned Capacity Tables. For different capcity mode read/write capcity have different effect and shared limitation you need to focus.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ProvisionedThroughput.html"
+                     }
+                  },
+                  {
+                     "id":"ddbperf2_2",
+                     "title":"Determine the on-demand or provisioned Capcity Mode",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"DynamoDB have two read/write capacity mode which controls how you are charged for read and write throughput and how you manage capacity.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Determine the on-demand or provisioned Capcity Mode. And pay attension to the known behaivor and limitaiton accroding to your capacity mode."
+                     }
+                  },
+                  {
+                     "id":"ddbperf2_3",
+                     "title":"Switch capacity modes in order to optimize cost and performance",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"After determine apply provisioned capacity mode, you might still encounter serveral peak. Which too fast to auto scaling the read/write capcity.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/switching.capacitymode.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Switch capacity modes in order to optimize cost and performance",
+                        "url":"https://aws.amazon.com/blogs/database/running-spiky-workloads-and-optimizing-costs-by-more-than-90-using-amazon-dynamodb-on-demand-capacity-mode/"
+                     }
+                  },
+                  {
+                     "id":"ddbperf2_4",
+                     "title":"Managing throughput capacity automatically with DynamoDB auto scaling",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"When you apply Provisioned Mode in your DynamoDB table. You can manage throughput capacity automatically with DynamoDB auto scaling.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html#HowItWorks.ProvisionedThroughput.Manual"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Managing throughput capacity automatically with DynamoDB auto scaling, which you define a range (upper and lower limits) for read and write capacity units.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/AutoScaling.html"
+                     }
+                  },
+                  {
+                     "id":"ddbperf2_5",
+                     "title":"Awareness of where is the throttle come from",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"You need to awareness of where is throttled come from which can help you take action according to different situation."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Some of the common throttling issues that you might face are the following.",
+                        "url":"https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-table-throttled/"
+                     }
+                  },
+                  {
+                     "id":"ddbperf2_6",
+                     "title":"Your application have mechanism to handle throttle problem",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"DynamoDB reports minute-level metrics to Amazon CloudWatch. The metrics are calculated as the sum for a minute, and then are averaged. However, the DynamoDB rate limits are applied per second.",
+                        "url":"https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-table-throttled/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"If your request exceed read/write capacity, then the requests might be throttled. To resolve this issue, add jitter and exponential backoff to your API calls.",
+                        "url":"https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/"
+                     }
+                  },
+                  {
+                     "id":"ddbperf2_7",
+                     "title":"None of above",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"-"
+                     },
+                     "improvementPlan":{
+                        "displayText":"-"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbperf2_1 && ddbperf2_2 && ddbperf2_3 && ddbperf2_4 && ddbperf2_5 && ddbperf2_6",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"(!ddbperf2_1) || (!ddbperf2_2) || (!ddbperf2_6) || ddbperf2_7",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"ddbperf3",
+               "title":"How do you identify hot partition access in DynamoDB table?",
+               "description":"DynamoDB use partition key determined which partition to store the data, when user keep access the data locate in same partition which called hot partition.",
+               "choices":[
+                  {
+                     "id":"ddbperf3_1",
+                     "title":"Your Application have chose a partition key which can evenly distribute your data and loading.",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"In DynamoDB, a partition key that doesn't have a high cardinality can result in many requests targeting only a few partitions and resulting in a hot partition.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-partition-key-design.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Designing Partition Keys to Distribute Your Workload Evenly",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-partition-key-uniform-load.html"
+                     }
+                  },
+                  {
+                     "id":"ddbperf3_2",
+                     "title":"Have you consider single partition limitation (3000 RCU, 1000 WCU) in your use case.",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"A hot partition can cause throttling if the partition limits of 3000 RCU or 1000 WCU (or a combination of both) per second are exceeded.",
+                        "url":"https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-table-throttled/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"To avoid Read or write operations on my Amazon DynamoDB table are being throttled. You need to consider hot partiton and how to mitigate it in your use case."
+                     }
+                  },
+                  {
+                     "id":"ddbperf3_3",
+                     "title":"Find the most accessed and throttled items in your table.",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Analyzing Data Access Using CloudWatch Contributor Insights for DynamoDB",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/contributorinsights.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Enable Amazon CloudWatch Contributor Insights",
+                        "url":"https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContributorInsights.html"
+                     }
+                  },
+                  {
+                     "id":"ddbperf3_4",
+                     "title":"Pre-warm your DynamoDB table",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"If you use DynamoDB for a service that receives requests with several peak times you need to pre-warm your DynamoDB table.",
+                        "url":"https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-table-throttled/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"we would pre-warm a provisioned table with enough WCU and RCU to meet our requirements, and then switch the table to on-demand mode.",
+                        "url":"https://aws.amazon.com/blogs/database/running-spiky-workloads-and-optimizing-costs-by-more-than-90-using-amazon-dynamodb-on-demand-capacity-mode/"
+                     }
+                  },
+                  {
+                     "id":"ddbperf3_5",
+                     "title":"None of above",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"-"
+                     },
+                     "improvementPlan":{
+                        "displayText":"-"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbperf3_1 && ddbperf3_2 && ddbperf3_3 && ddbperf3_4",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"(!ddbperf3_1) || (!ddbperf3_2) || (!ddbperf3_3) || ddbperf3_5",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"ddbperf4",
+               "title":"Do you have any cache stretagy for DynamoDB table?",
+               "description":"Though DynamoDB offers consistent single-digit-millisecond latency, cache solution will take performance to the next level with response times in microseconds for millions of requests per second for read-heavy workloads.",
+               "choices":[
+                  {
+                     "id":"ddbperf4_1",
+                     "title":"Determined your cache strategy",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"You need to determined which cache strategy is adapt includes: Side-cache, Read-through cache, Write-through cache, Write-back (or write-behind) cache",
+                        "url":"https://aws.amazon.com/blogs/database/amazon-dynamodb-accelerator-dax-a-read-throughwrite-through-cache-for-dynamodb/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"As a read-through/write-through cache, DAX greatly simplifies the process of adding in-memory acceleration for read-heavy workloads to existing or new DynamoDB applications."
+                     }
+                  },
+                  {
+                     "id":"ddbperf4_2",
+                     "title":"Enable DAX with cache strategy supported",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Amazon DynamoDB Accelerator (DAX) is a write-through caching service that is designed to simplify the process of adding a cache to DynamoDB tables.",
+                        "url":"https://aws.amazon.com/blogs/database/amazon-dynamodb-accelerator-dax-a-read-throughwrite-through-cache-for-dynamodb/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Enable DAX with cache strategy supported like Read-Through/Write-Through Cache for DynamoDB"
+                     }
+                  },
+                  {
+                     "id":"ddbperf4_3",
+                     "title":"Understand DAX and DynamoDB Consistency Models",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Because DAX operates separately from DynamoDB, it is important that you understand the consistency models",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.consistency.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Understand consistency model of both DAX and DynamoDB to ensure that your applications behave as you expect."
+                     }
+                  },
+                  {
+                     "id":"ddbperf4_4",
+                     "title":"Sizing your DAX cluster",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"It's important to scale your DAX cluster appropriately for your workload, whether you're creating a new cluster or maintaining an existing cluster.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.sizing-guide.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"As time goes on and your application's workload changes, you should periodically revisit your scaling decisions to make sure that they are still appropriate."
+                     }
+                  },
+                  {
+                     "id":"ddbperf4_5",
+                     "title":"None of above",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"-"
+                     },
+                     "improvementPlan":{
+                        "displayText":"-"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbperf4_1 && ddbperf4_2 && ddbperf4_3 && ddbperf4_4",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"(!ddbperf4_1) || (!ddbperf4_3) || (!ddbperf4_4) || ddbperf4_5",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"ddbperf5",
+               "title":"Do you have optimize the response latency for DynamoDB table?",
+               "description":"DynamoDB provides fast access to items in a table by specifying primary key values. To further optimize performace of data access we have best practice to follow.",
+               "choices":[
+                  {
+                     "id":"ddbperf5_1",
+                     "title":"Improving Data Access with Secondary Indexes",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"A secondary index is a data structure that contains a subset of attributes from a table, along with an alternate key to support Query operations."
+                     },
+                     "improvementPlan":{
+                        "displayText":"To allow efficient access to data with attributes other than the primary key, we usually improve data access with secondary index.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SecondaryIndexes.html"
+                     }
+                  },
+                  {
+                     "id":"ddbperf5_2",
+                     "title":"Optimize Amazon DynamoDB scan latency through schema design",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Most DynamoDB schemas and access patterns are oriented and optimized around the GetItem and Query operations. However, some use cases and access patterns require scanning the table or indices."
+                     },
+                     "improvementPlan":{
+                        "displayText":"have only as many attributes as you actually need for operations at the database level. To reduce the amount of attribute-name metadata, combine the rest of your data into a single attribute (perhaps as a JSON blob).",
+                        "url":"https://aws.amazon.com/blogs/database/optimizing-amazon-dynamodb-scan-latency-through-schema-design/"
+                     }
+                  },
+                  {
+                     "id":"ddbperf5_3",
+                     "title":"Check if you need to store large item",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"DynamoDB currently limits 400KB size for each item. If your item size is big think carefully whether you actually need to store it together on the same item or you can split it in multiple items."
+                     },
+                     "improvementPlan":{
+                        "displayText":"If you still need to store large item, check whether you can compress those item or if your item size is larger than 400KB, store them as an object in Amazon S3 and then store the object identifier in your DynamoDB item.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-use-s3-too.html"
+                     }
+                  },
+                  {
+                     "id":"ddbperf5_4",
+                     "title":"None of above",
+                     "description":"Helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"-"
+                     },
+                     "improvementPlan":{
+                        "displayText":"-"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbperf5_1 && ddbperf5_2 && ddbperf5_3",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"(!ddbperf5_1) || (!ddbperf5_3) || ddbperf5_4",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "id":"DDBSEC",
+         "name":"Security",
+         "questions":[
+            {
+               "id":"ddbsec1",
+               "title":"How do you protect data-on-rest with DynamoDB?",
+               "description":"Data should be encrypted at all time to secure the data. Did customer notice DynamoDB has data encryption feature by default.",
+               "choices":[
+                  {
+                     "id":"ddbsec1_1",
+                     "title":"Enable DynamoDB encryption feature",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Enable data encryption in overall workload together with DynamoDB encryption feature",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Enable data encryption",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/encryption.tutorial.html"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbsec1_1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"HIGH_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"ddbsec2",
+               "title":"How do you protect data-in-transit with DynamoDB?",
+               "description":"DynamoDB could use client-side encryption",
+               "choices":[
+                  {
+                     "id":"ddbsec2_1",
+                     "title":"Enable DynamoDB Encryption Client",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Use DynamoDB Encryption Client client-side encryption if needed",
+                        "url":"https://docs.aws.amazon.com/dynamodb-encryption-client/latest/devguide/client-server-side.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Use DynamoDB Encryption Client client-side encryption if needed",
+                        "url":"https://docs.aws.amazon.com/dynamodb-encryption-client/latest/devguide/what-is-ddb-encrypt.html"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbsec2_1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"ddbsec3",
+               "title":"How do you track and audit the access for DynamoDB table?",
+               "description":"Database access should be tracked and audit",
+               "choices":[
+                  {
+                     "id":"ddbsec3_1",
+                     "title":"Requests to access DynamoDB tables has been captured",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Use CloudTrail audit log to track and monitor DynamoDB access by user",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/logging-using-cloudtrail.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Use CloudTrail audit log to track and monitor DynamoDB access by user",
+                        "url":"https://aws.amazon.com/tw/blogs/database/amazon-dynamodb-now-supports-audit-logging-and-monitoring-using-aws-cloudtrail/"
+                     }
+                  },
+                  {
+                     "id":"ddbsec3_2",
+                     "title":"Requests to access data in DynamoDB table has been tracked",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Use CloudWatch Contributor Insights",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Contributor_Insights_IAM.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"AWSServiceRoleForDynamoDBCloudWatchContributorInsights, allows DynamoDB to manage CloudWatch Contributor Insights rules on your behalf."
+                     }
+                  },
+                  {
+                     "id":"ddbsec3_3",
+                     "title":"Unautherized access attempt will be tracked",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Use CloudWatch alarm"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Use CloudWatch alarm to notified administrator when unautherized access happened",
+                        "url":"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbsec3_1 && ddbsec3_2 && ddbsec3_3",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"(!ddbsec3_1)",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"ddbsec4",
+               "title":"How do you manage the (internal/operational) access toward DynamoDB tables?",
+               "description":"Use role in same account / assume role cross acount to access DynamoDB, and strict access policy. ",
+               "choices":[
+                  {
+                     "id":"ddbsec4_1",
+                     "title":"Fine-grained access control",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Use IAM and DynamoDB access policy to control column level or item level access",
+                        "url":"https://aws.amazon.com/tw/blogs/aws/fine-grained-access-control-for-amazon-dynamodb/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Create fine-grained access control to individual items and attributes in Amazon DynamoDB resources to secure data access",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/specifying-conditions.html"
+                     }
+                  },
+                  {
+                     "id":"ddbsec4_2",
+                     "title":"Use role in same account / assume role cross acount to access DynamoDB",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Use role in same account / assume role cross acount to access DynamoDB",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/authentication-and-access-control.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Use role in same account / assume role cross acount to access DynamoDB",
+                        "url":"https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/configure-cross-account-access-to-amazon-dynamodb.html"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbsec4_1 && ddbsec4_2",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"ddbsec5",
+               "title":"How do you secure the request access toward DynamoDB tables?",
+               "description":"DyanmoDB is standing outside from VPC, without proper network access control which will lead to severe potential risk.",
+               "choices":[
+                  {
+                     "id":"ddbsec5_1",
+                     "title":"Use VPC endpoint",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Use VPC endpoint to connect service in a single VPC",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/vpc-endpoints-dynamodb.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Use VPC endpoint to connect service in a single VPC. Customized access for each VPC endpoint with unique IAM role and permission",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/vpc-endpoints-dynamodb.html"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbsec5_1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"ddbsec6",
+               "title":"How do we track any configuration change happened on DynamoDB table?",
+               "description":"All the resource configuration modification should be captured to ensure the functionalty correctness, also for governance purpose.",
+               "choices":[
+                  {
+                     "id":"ddbsec6_1",
+                     "title":"Use AWS config",
+                     "description":"Some helpful choice description",
+                     "helpfulResource":{
+                        "displayText":"Use AWS Config to track configuration change",
+                        "url":"https://aws.amazon.com/tw/about-aws/whats-new/2017/09/aws-config-adds-support-for-amazon-dynamodb-tables/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Use AWS Config to track configuration changes to your DynamoDB tables, such as capacity requirements for read and write activity, global secondary indexes",
+                        "url":"https://docs.aws.amazon.com/config/latest/developerguide/dynamodb-table-encryption-enabled.html"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbsec6_1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "id":"DDBCOST",
+         "name":"CostOptimization",
+         "questions":[
+            {
+               "id":"ddbcost1",
+               "title":"How do we choose correct pricing model for DynamoDB tables?",
+               "description":"DynamoDB has different pricing model offerring, with correct setting matching with access type can best utilize the resource and fitting with the pricing model.",
+               "choices":[
+                  {
+                     "id":"ddbcost1_1",
+                     "title":"Provisioned pricing mode for stabled workload",
+                     "helpfulResource":{
+                        "displayText":"With provisioned capacity mode, you specify the number of data reads and writes per second that you require for your application.",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ServiceQuotas.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Judge by usage on DynamoDB and provisioned suitable provision volume for your workload"
+                     }
+                  },
+                  {
+                     "id":"ddbcost1_2",
+                     "title":"On demand pricing mode when unable to predict",
+                     "helpfulResource":{
+                        "displayText":"DynamoDB on-demand offers simple pay-per-request pricing for read and write requests so that you only pay for what you use, making it easy to balance costs and performance.",
+                        "url":"https://aws.amazon.com/tw/blogs/database/safely-reduce-the-cost-of-your-unused-amazon-dynamodb-tables-using-on-demand-mode/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Reduce the cost of your unused Amazon DynamoDB tables using on-demand mode",
+                        "url":"https://aws.amazon.com/blogs/aws/amazon-dynamodb-on-demand-no-capacity-planning-and-pay-per-request-pricing/"
+                     }
+                  },
+                  {
+                     "id":"ddbcost1_3",
+                     "title":"Use IA table type for unfrequent access",
+                     "helpfulResource":{
+                        "displayText":"The DynamoDB Standard-IA table class is ideal for use cases that require long-term storage of data that is infrequently accessed, such as application logs, old social media posts, e-commerce order history, and past gaming achievements.",
+                        "url":"https://aws.amazon.com/tw/dynamodb/standard-ia/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Use DynamoDB Standard-IA",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.TableClasses.html"
+                     }
+                  },
+                  {
+                     "id":"ddbcost1_4",
+                     "title":"Use eventually consistensy for specific workload to reduce WCU/RCU cost",
+                     "helpfulResource":{
+                        "displayText":"Utilized eventually consistensy for specific workload",
+                        "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Monitor DynamoDB usage pattern and identified eventually consistency suitable workload to reduce cost"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"ddbcost1_1 && ddbcost1_2 && ddbcost1_3 && ddbcost1_4",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            }
+         ]
+      }
+   ]
+}
