@@ -1,7 +1,27 @@
 {
    "schemaVersion":"2021-11-01",
-   "name":"DynamoDB Best Practice Lens",
-   "description":"Best practices for optimization your DynamoDB",
+   "_version":"0.5",
+   "_release_date":"2022-07-07",
+   "_readme":"A public review version, now we have 4 pillars with 14 best practices.",
+   "_teams":{
+      "_authors":[
+         {
+            "name":"Ray Wang, Analytics SME, GCR, AWS",
+            "email":"hsiawang@amazon.com"
+         },
+         {
+            "name":"Cathy Lai, GTM Database Speacialist, GCR, AWS",
+            "email":"laicathy@amazon.com"
+         }
+      ],
+      "_tech_reviewers":[
+         {
+            "name":"Lee Hannigan"
+         }
+      ]
+   },
+   "name":"DynamoDB Best Practice - WA Custom Lens",
+   "description":"Best practices for configuring DynamoDB",
    "pillars":[
         {
          "id":"DDBOPS",
@@ -14,14 +34,14 @@
                "choices":[
                   {
                      "id":"ddbops1_1",
-                     "title":"Use On-Demand Backup for DynamoDB tables",
-                     "description":"Some helpful choice description",
+                     "title":"Manually trigger Amazon DynamoDB Backup process",
+                     "description":"Either use AWS Console or CLI to trigger a table backup.",
                      "helpfulResource":{
-                        "displayText":"A detail description or definition of this best practice, and give a clear scope of this best practice in pillar, also the impact of the risk.",
+                        "displayText":"Amazon DynamoDB supports stand-alone on-demand backup and restores features. Those features are available to you independent of whether you use AWS Backup.",
                         "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/BackupRestore.html"
                      },
                      "improvementPlan":{
-                        "displayText":"Enable On-Demand Backup",
+                        "displayText":"Have a regular process to trigger backup process on Amazon DynamoDB",
                         "url":"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/BackupRestore.html"
                      }
                   },
@@ -30,10 +50,13 @@
                      "title":"Enable DynamoDB PITR",
                      "description":"Some helpful choice description",
                      "helpfulResource":{
-                        "displayText":"Point-in-time recovery (PITR) provides continuous backups of your DynamoDB table data. When enabled, DynamoDB maintains incremental backups of your table for the last 35 days until you explicitly turn it off."
+                        "displayText":"Point-in-time recovery (PITR) provides continuous backups of your DynamoDB table data. When enabled, DynamoDB maintains incremental backups of your table for the last 35 days until you explicitly turn it off.",
+                        "url":"https://aws.amazon.com/dynamodb/pitr/"
+
                      },
                      "improvementPlan":{
-                        "displayText":"Enable Dynamodb PITR"
+                        "displayText":"Enable Dynamodb PITR",
+                        "url":"https://aws.amazon.com/dynamodb/pitr/"
                      }
                   },
                   {
@@ -167,31 +190,31 @@
             {
                "id":"ddbops3",
                "title":"How do you response to DynamoDB table configuration change requests?",
-               "description":"With expected or unexpected traffic peak, the requests toward DynamoDB tables will need to be well handled with different configurations, to keep the service functionality. An incident response process will need to be well defined, like a standard procedure for reviewing, playbook or escalation path.",
+               "description":"With expected or unexpected traffic peak, the requests toward DynamoDB tables will need to be well handled with different configurations, to keep the service functionality.",
                "helpfulResource":{
-                  "displayText":"some text"
+                  "displayText":"Make sure you do have a pre-defined process for configuration change will help to mitigate potential risk. For example, you might want to switch between provisioned and on-demand."
                },
                "choices":[
                   {
                      "id":"ddbops3_1",
                      "title":"Have a process or playbook to adjust table configurations",
-                     "description":"Some helpful choice description",
+                     "description":"To have a pre-defined process can help to mitigate the risk of manual mistake, also the playbook.",
                      "helpfulResource":{
-                        "displayText":"-"
+                        "displayText":"To have a pre-defined process can help to mitigate the risk of manual mistake, also the playbook."
                      },
                      "improvementPlan":{
-                        "displayText":"some text"
+                        "displayText":"To setup a pre-defined process which response to trigger the configuration change. "
                      }
                   },
                   {
                      "id":"ddbops3_2",
                      "title":"Not yet have pre-defined process, but capable to adjust manually",
-                     "description":"Some helpful choice description",
+                     "description":"Understand the risk and impact when manual adjusting happened.",
                      "helpfulResource":{
-                        "displayText":"-"
+                        "displayText":"Understand the risk and impact when manual adjusting happened."
                      },
                      "improvementPlan":{
-                        "displayText":"some text"
+                        "displayText":"Understand the risk and impact when manual adjusting happened."
                      }
                   },
                   {
