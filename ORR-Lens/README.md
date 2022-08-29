@@ -25,18 +25,21 @@ Upload the your custom lens WA template json template, and submit it.
 ## Publish your custom lens and attached with version tag
 
 And then you will find your custom lens WA in draft version.
+![orr-publish-custom-lens](https://user-images.githubusercontent.com/3434790/187256107-3f3db861-bd6c-4ce1-b3ae-a924cd3607bd.jpg)
 
-Publish your draft version attached with version tag.
+Publish your draft version attached with version tag. After which the status will change from DRAFT to PUBLISHED
 
 
 ## Review workloads using custom lenses
 
-After your custom lens WA is publish, you can define a workload in your WA console.
+After your custom lens WA is published, you can define a workload in your WA console to use the custom lens.
 ![image 7](https://user-images.githubusercontent.com/17841922/175505004-1f9026f7-c3f8-415d-92a1-747ab68f6610.png)
 
 Input your workload information, and select the newly published 'AWS Operational Readiness Review Whtiepaper Sample' custom lens. 
-
+![orr-define-workload](https://user-images.githubusercontent.com/3434790/187257574-a0cb454a-5108-42cb-b590-9e0f6a1e71ee.jpg)
 
 You can continue reviewing and answer the questions for custom lens.
+![orr-review-workload-using-custom-lens](https://user-images.githubusercontent.com/3434790/187259743-689d717e-cc64-4f57-899d-2ba05b556100.jpg)
 
 Now you can review your 'Operational Readiness Review' (ORR) with customized questionnaire and practice.
+![orr-workload-review-custom-lens](https://user-images.githubusercontent.com/3434790/187260519-53a034c2-7663-448b-9011-09c7d53cf0d4.jpg)
