@@ -17,7 +17,7 @@ Feel free to download the [ORR sample custom lens](ORR-Lens/ORR-Whitepaper-Sampl
 ## Navigate to the AWS WA Tool on the AWS console and create custom lens
 
 After you prepare your custom lens WA template json file, you can navigate to the AWS WA Tool on the AWS console and create custom lens.
-![image 1](https://user-images.githubusercontent.com/17841922/175503831-cf89ff5e-8c6e-42c7-b796-3ff91e9d8470.png)
+![orr-create-custom-lens](https://user-images.githubusercontent.com/3434790/187253712-ca472b7b-30bb-41f9-8cbd-db622ecea5c9.jpg)
 
 Upload the your custom lens WA template json template, and submit it.
 ![image 2](https://user-images.githubusercontent.com/17841922/175503996-9b734d2c-8220-4efb-b5d2-f4ad77ad0ff4.png)
