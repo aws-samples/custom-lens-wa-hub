@@ -20,7 +20,7 @@ After you prepare your custom lens WA template json file, you can navigate to th
 ![orr-create-custom-lens](https://user-images.githubusercontent.com/3434790/187253712-ca472b7b-30bb-41f9-8cbd-db622ecea5c9.jpg)
 
 Upload the your custom lens WA template json template, and submit it.
-![image 2](https://user-images.githubusercontent.com/17841922/175503996-9b734d2c-8220-4efb-b5d2-f4ad77ad0ff4.png)
+![orr-upload-json-file](https://user-images.githubusercontent.com/3434790/187254567-fa9e9fd6-4625-4dd9-98d4-89e477172b2b.jpg)
 
 ## Publish your custom lens and attached with version tag
 
