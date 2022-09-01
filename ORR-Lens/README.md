@@ -12,7 +12,7 @@ The AWS Well-Architected Tool makes it easy to create custom lenses by providing
 4. [Review workloads using custom lenses](#review-workloads-using-custom-lenses)
 
 ## Prepare your custom lens WA template json file
-Feel free to download the [ORR sample custom lens](ORR-Lens/ORR-Whitepaper-Sample-PUBLISHED.json) and edit is as needed.
+Feel free to download the [ORR sample custom lens](ORR-Whitepaper-Sample-PUBLISHED.json) and edit is as needed.
 
 ## Navigate to the AWS WA Tool on the AWS console and create custom lens
 
