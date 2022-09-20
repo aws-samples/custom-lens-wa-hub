@@ -1,0 +1,1973 @@
+{
+    "schemaVersion": "2021-11-01",
+    "_version":"0.1",
+    "_release_date":"2022-09-01",
+    "_release_note":"for public preview",
+    "_teams":{
+        "_authors":[
+            {
+                "name":"Karthik Vijayraghavan, Sr.Manager NoSQL DB Specialist SA, GCR, AWS",
+                "email":"kvijayra@amazon.com"
+            },
+            {
+                "name":"Jack Hsu, Partner Solutions Architect, GCR, AWS",
+                "email":"jackhsu@amazon.com"
+            }            
+        ],
+        "_tech_reviewers":[             
+            {
+                "name":"Bob Yeh, Well-Architected Geo SA, APAC",
+                "note":"Issue found - 'dollar-sign' required to describe the variable in the question. "
+            }
+      ]
+    },
+    "name": "DocumentDB Best Practices",
+    "description": "DocumentDB Best Practices",
+    "pillars": [
+        {
+            "id": "docdb_ops",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "docdb_ops1",
+                    "title": "How do you deploy Amazon DocumentDB clusters across regions / environments?",
+                    "description": "Critical workloads with a global footprint have strict availability requirements and may need to tolerate a region-wide outage",
+                    "choices": [
+                        {
+                            "id": "docdb_ops1_1",
+                            "title": "Use Cloud Formation template for consistent environment configuration across regions / accounts.",
+                            "helpfulResource": {
+                                "displayText": "AWS CloudFormation is a service that helps you model and set up your AWS resources so that you can spend less time managing those resources and more time focusing on your applications that run in AWS.",
+                                "url": "https://docs.aws.amazon.com/en_us/AWSCloudFormation/latest/UserGuide/Welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Cloud Formation template for consistent environment configuration across regions / accounts.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/quick_start_cfn.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops1_2",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops1_3",
+                            "title": "Configure subnet groups with 3 AZs with minimum 2 instances.",
+                            "helpfulResource": {
+                                "displayText": "Each DB subnet group should have subnets in at least two Availability Zones in a given Region. When creating a DB cluster in a VPC, you must select a DB subnet group. Amazon DocumentDB uses that DB subnet group and your preferred Availability Zone to select a subnet and an IP address within that subnet to associate with your cluster",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/document-db-subnet-groups.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon DocumentDB instances can be provisioned in up to three AZs.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/document-db-subnet-group-create.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops1_4",
+                            "title": "Use Cluster endpoint",
+                            "helpfulResource": {
+                                "displayText": "A cluster endpoint is an endpoint for an Amazon DocumentDB cluster that connects to the current primary instance for the cluster.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/endpoints.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can find a cluster's cluster endpoint and reader endpoint using the Amazon DocumentDB console or AWS CLI.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/db-cluster-endpoints-find.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops1_5",
+                            "title": "Script global cluster failover and externalize endpoint lookup for applications",
+                            "helpfulResource": {
+                                "displayText": "Failover is automatically handled by Amazon DocumentDB so that your applications can resume database operations as quickly as possible without administrative intervention.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/failover.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon DocumentDB provides multiple connection options to serve a wide range of use cases.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/how-it-works.html#how-it-works.endpoints"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops1_6",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_ops1_1 && docdb_ops1_2 && docdb_ops1_3 && docdb_ops1_4 && docdb_ops1_5 && docdb_ops1_6",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_ops1_1) || (!docdb_ops1_2) || (!docdb_ops1_3) || (!docdb_ops1_4) || (!docdb_ops1_6)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_ops2",
+                    "title": "How do you track and test changes to cluster configuration?",
+                    "description": "Controlled changes are necessary to deploy new functionality, If these changes are uncontrolled, then it makes it difficult to predict the effect of these changes, or to address issues that arise because of them.",
+                    "choices": [
+                        {
+                            "id": "docdb_ops2_1",
+                            "title": "Define AWS config rules to validate Amazon DocumentDB best practices",
+                            "helpfulResource": {
+                                "displayText": "AWS Configallows you to create rules and configure resources so they comply with the standards enforced by your organization.",
+                                "url": "https://aws.amazon.com/blogs/database/evaluate-amazon-documentdb-with-mongodb-compatibility-configurations-using-aws-config/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Config managed rules for evaluating and validating Amazon DocumentDB for best practices",
+                                "url": "https://aws.amazon.com/blogs/database/evaluate-amazon-documentdb-with-mongodb-compatibility-configurations-using-aws-config/"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops2_2",
+                            "title": "Trigger AWS CloudWatch events rules for AWS config events",
+                            "helpfulResource": {
+                                "displayText": "When the trigger for a rule occurs, AWS Config invokes the rule's AWS Lambda function by publishing an event",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_example-events.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Trigger AWS CloudWatch events rules for AWS config events",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_example-events.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops2_3",
+                            "title": "Benchmark Amazon DocumentDB cluster for performance",
+                            "helpfulResource": {
+                                "displayText": "Monitor performance metrics on a regular basis to see the average, maximum, and minimum values for a variety of time ranges.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-performance"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Benchmark Amazon DocumentDB cluster for performance",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-performance"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops2_4",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_ops2_1 && docdb_ops2_2 && docdb_ops2_3 && docdb_ops2_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_ops2_3) || (!docdb_ops2_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_ops3",
+                    "title": "How do you evaluate operational readiness of your workload?",
+                    "description": "\nEvaluate the operational readiness of your workload, processes and procedures, and personnel to understand the operational risks related to your workload.",
+                    "choices": [
+                        {
+                            "id": "docdb_ops3_1",
+                            "title": "Use AWS IAM to control access to Amazon DocumentDB resources",
+                            "helpfulResource": {
+                                "displayText": "Every AWS resource is owned by an AWS account, and permissions to create or access the resources are governed by permissions policies. An account administrator can attach permissions policies to IAM identities ",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/UsingWithRDS.IAM.AccessControl.Overview.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS IAM to control access to Amazon DocumentDB resources",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/UsingWithRDS.IAM.AccessControl.Overview.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops3_2",
+                            "title": "Use playbooks to define operational readiness",
+                            "helpfulResource": {
+                                "displayText": "Runbooks are documented procedures to achieve specific outcomes. Enable consistent and prompt responses to well-understood events by documenting procedures in runbooks.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/a-prepare.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use playbooks to define operational readiness ",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/a-prepare.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops3_3",
+                            "title": "Periodically running readiness tests according to existing playbooks",
+                            "helpfulResource": {
+                                "displayText": " Implement runbooks as code and trigger the execution of runbooks in response to events where appropriate, to ensure consistency, speed responses, and reduce errors caused by manual processes.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/a-prepare.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Periodically running readiness tests according to existing playbooks",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/a-prepare.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops3_4",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_ops3_1 && docdb_ops3_2 && docdb_ops3_3 && docdb_ops3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_ops3_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_ops4",
+                    "title": "How do you monitor Amazon DocumentDB cluster(s)?",
+                    "description": "Define, capture, and analyze workload metrics to gain visibility to workload events so that you can take appropriate action.",
+                    "choices": [
+                        {
+                            "id": "docdb_ops4_1",
+                            "title": "Configure application to log database connectivity response times & errors",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops4_2",
+                            "title": "Create AWS CloudWatch dashboard and alarms for key metrics and application logs",
+                            "helpfulResource": {
+                                "displayText": "Amazon CloudWatch dashboards are customizable home pages in the CloudWatch console that you can use to monitor your resources in a single view, even those resources that are spread across different Regions.",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Dashboards.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create AWS CloudWatch dashboard and alarms for key metrics and application logs",
+                                "url": "https://catalog.us-east-1.prod.workshops.aws/workshops/464d6c17-9faa-4fef-ac9f-dd49610174d3/monitoring"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops4_3",
+                            "title": "Define log insight queries for profiler and audit logs",
+                            "helpfulResource": {
+                                "displayText": "Amazon DocumentDB has a profilerthat logs any database operations that take longer than some period of time (e.g. 100 ms). You can use the profiler logs to identify queries that are taking a long time to run.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/profiling.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define log insight queries for profiler and audit logs",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/profiling.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops4_4",
+                            "title": "Tag instances for organization, identification and cost accounting",
+                            "helpfulResource": {
+                                "displayText": "You can use Amazon DocumentDB (with MongoDB compatibility) tags to add metadata to your Amazon DocumentDB resources. These tags can be used with AWS Identity and Access Management (IAM) policies to manage access to Amazon DocumentDB resources and to control what actions can be applied to the resources.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/tagging.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Tag instances for organization, identification and cost accounting",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/tagging.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops4_5",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_ops4_1 && docdb_ops4_2 && docdb_ops4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_ops4_2) || (!docdb_ops4_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_ops6",
+                    "title": "How do you manage lifecycle of manual snapshots?",
+                    "description": "A manual snapshot is a full backup that is deleted only when you manually delete it using the AWS Management Console or AWS CLI. You cannot manually delete an automatic snapshot because automatic snapshots are deleted only when the snapshot's retention period expires or you delete the snapshot's cluster.",
+                    "choices": [
+                        {
+                            "id": "docdb_ops6_2",
+                            "title": "Create jobs to periodically remove manual snapshots",
+                            "helpfulResource": {
+                                "displayText": "A manual snapshot is a full backup that is deleted only when you manually delete it using the AWS Management Console or AWS CLI.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/backup_restore-compare_automatic_manual_snapshots.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create jobs to periodically remove manual snapshots",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-cost_optimization"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops6_3",
+                            "title": "Use AWS Backup to centrally manage Amazon DocumentDB backup",
+                            "helpfulResource": {
+                                "displayText": "AWS Backup announced support for Amazon DocumentDB (with MongoDB compatibility) clusters, you can centrally manage and govern the data protection of Amazon DocumentDB snapshots alongside other supported AWS services.",
+                                "url": "https://aws.amazon.com/blogs/storage/manage-backup-and-restore-of-amazon-documentdb-with-aws-backup/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Backup to centrally manage Amazon DocumentDB backup",
+                                "url": "https://aws.amazon.com/blogs/storage/manage-backup-and-restore-of-amazon-documentdb-with-aws-backup/"
+                            }
+                        },
+                        {
+                            "id": "docdb_ops6_4",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_ops6_2 && docdb_ops6_3 && docdb_ops6_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_ops6_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "docdb_perf",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "docdb_perf1",
+                    "title": "What are your query access patterns?",
+                    "description": "Access patterns for the application dictate the schema structure of documents stored in the database. Schema flexibility offered by JSON allows you to make changes quickly, making document databases an ideal choice for agile development.",
+                    "choices": [
+                        {
+                            "id": "docdb_perf1_1",
+                            "title": "Optimize access patterns for compute , NOT storage",
+                            "helpfulResource": {
+                                "displayText": "Storing infrequently accessed fields in a separate document helps reduce I/O utilization and improve performance.",
+                                "url": "https://aws.amazon.com/blogs/database/document-modeling-with-amazon-documentdb-and-hackolade/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "When mutable and immutable parts of the documents are separated, performance and I/O optimization is optimized because updates modify smaller mutable documents."
+                            }
+                        },
+                        {
+                            "id": "docdb_perf1_2",
+                            "title": "Document size smaller than 8KB",
+                            "helpfulResource": {
+                                "displayText": "I/Os are input/output operations performed by Amazon DocumentDB against a solid state drive (SSD)-based virtualized storage layer. Every database page read operation counts as one I/O.",
+                                "url": "https://aws.amazon.com/documentdb/faqs/?nc1=h_ls"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf1_3",
+                            "title": "Separate mutable & immutable parts of document",
+                            "helpfulResource": {
+                                "displayText": "Amazon DocumentDB issues reads against the storage layer in order to fetch pages not present in the buffer cache. Each page is 8 KB in Amazon DocumentDB. When mutable and immutable parts of the documents are separated, performance and I/O optimization is optimized because updates modify smaller mutable documents.",
+                                "url": "https://aws.amazon.com/blogs/database/document-modeling-with-amazon-documentdb-and-hackolade/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Separate mutable & immutable parts of document",
+                                "url": "https://aws.amazon.com/blogs/database/document-modeling-with-amazon-documentdb-and-hackolade/"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf1_4",
+                            "title": "Use logical modeling and selective denormalization",
+                            "helpfulResource": {
+                                "displayText": "Use selective denormalization to logically model your entity. In document databases, its a common practice to duplicate data. But ensure that you dont increase the document size significantly by excessive denormalization",
+                                "url": "https://aws.amazon.com/blogs/database/document-modeling-with-amazon-documentdb-and-hackolade/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use logical modeling and selective denormalization",
+                                "url": "https://aws.amazon.com/blogs/database/document-modeling-with-amazon-documentdb-and-hackolade/"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf1_5",
+                            "title": "Use index in fields with high cardinality",
+                            "helpfulResource": {
+                                "displayText": "By choosing fields that have high cardinality, such as an identity field, you increase the index selectivity. Conversely, choosing a low cardinality field, such as Boolean where there are only two unique values, can retrieve more information than is needed, which increases memory usage and the risk of going into the distributed storage volume. The goal with index selectivity is to allow the query to filter as much data as possible up front, thereby letting the query processor do less work.",
+                                "url": "https://aws.amazon.com/blogs/database/how-to-index-on-amazon-documentdb-with-mongodb-compatibility/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use index in fields with high cardinality",
+                                "url": "https://aws.amazon.com/blogs/database/how-to-index-on-amazon-documentdb-with-mongodb-compatibility/"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf1_6",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_perf1_1 && docdb_perf1_2 && docdb_perf1_3 && docdb_perf1_4 && docdb_perf1_5 && docdb_perf1_6",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_perf1_1) || (!docdb_perf1_3) || (!docdb_perf1_5) || (!docdb_perf1_6)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_perf2",
+                    "title": "How does your application access data?",
+                    "description": "How you access data will affect how the performance performs.Access patterns or query patterns define how the users and the system access the data to satisfy business needs.",
+                    "choices": [
+                        {
+                            "id": "docdb_perf2_1",
+                            "title": "Use bulk operations over individual",
+                            "helpfulResource": {
+                                "displayText": "You can run bulk update and insert operations for multiple records using a multi-statement."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use bulk operations over individual"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf2_2",
+                            "title": "Use operators with optimizations like (0024)hint, (0024)project",
+                            "helpfulResource": {
+                                "displayText": "Customers who want control over their query plan can use the (0024)hint operator to enforce selection of a preferred index. Use (0024)project to return only those fields you need so as to avoid processing more data than is necessary."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use operators with optimizations like (0024)hint, (0024)project"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf2_3",
+                            "title": "Avoid sub optimal operators like (0024)distinct (for multi key), (0024)ne,(0024)nin",
+                            "helpfulResource": {
+                                "displayText": "Avoidsub-optimaloperators like aggregation operator (0024)distinct,Comparison Operators (0024)ne, (0024)nin"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Avoid sub optimal operators like (0024)distinct (for multi key), (0024)ne,(0024)nin"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf2_4",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_perf2_1 && docdb_perf2_2 && docdb_perf2_3 && docdb_perf2_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_perf2_2) || (!docdb_perf2_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_perf3",
+                    "title": "How do your customers across the globe access data?",
+                    "description": "If you have offices around the world, you can use a global cluster to keep your main sources of information updated in the primary region.",
+                    "choices": [
+                        {
+                            "id": "docdb_perf3_1",
+                            "title": "Leverage global clusters for local reads per region",
+                            "helpfulResource": {
+                                "displayText": "A global cluster consists of one primary region and up to five read-only secondary regions.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/global-clusters.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Issue write operations directly to the primary cluster in the primary region and Amazon DocumentDB automatically replicates the data to the secondary regions using dedicated infrastructure"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf3_2",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_perf3_1 && docdb_perf3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_perf3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_perf4",
+                    "title": "How does your application connect to your cluster?",
+                    "description": "Offices in your other regions can access the information in their own region, with local latency.",
+                    "choices": [
+                        {
+                            "id": "docdb_perf4_1",
+                            "title": "Connect as replica set and use replica reads for scalability",
+                            "helpfulResource": {
+                                "displayText": "Amazon DocumentDB has three endpoints that you can use to connect to your cluster:\nCluster endpoint\nReader endpoint\nInstance endpoints",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/connect-to-replica-set.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "we recommend that you connect to your cluster as a replica set and distribute reads to replica instances using the built-in read preference capabilities of your driver."
+                            }
+                        },
+                        {
+                            "id": "docdb_perf4_2",
+                            "title": "Deploy application in same AZs as DB instance",
+                            "helpfulResource": {
+                                "displayText": "Amazon DocumentDB provides you the ability to place resources, such as instances, and data in multiple locations.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/regions-and-azs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy application in same AZs as DB instance"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf4_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_perf4_1 && docdb_perf4_2 && docdb_perf4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_perf4_1) || (!docdb_perf4_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_perf5",
+                    "title": "How many concurrent requests does the application support?",
+                    "description": "Consider constraining database connections if you see high numbers of user connections together with decreases in instance performance and response time. The best number of user connections for your instance varies based on your instance class and the complexity of the operations being performed.",
+                    "choices": [
+                        {
+                            "id": "docdb_perf5_1",
+                            "title": "Configure workload specific connection parameters",
+                            "helpfulResource": {
+                                "displayText": "Configure workload specific connection parameters",
+                                "url": "https://aws.amazon.com/blogs/database/building-resilient-applications-with-amazon-documentdb-with-mongodb-compatibility-part-1-client-configuration/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure workload specific connection parameters",
+                                "url": "https://aws.amazon.com/blogs/database/building-resilient-applications-with-amazon-documentdb-with-mongodb-compatibility-part-1-client-configuration/"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf5_2",
+                            "title": "Validate instance size against connection limits",
+                            "helpfulResource": {
+                                "displayText": "For certain management features, Amazon DocumentDB uses operational technology that is shared with Amazon Relational Database Service (Amazon RDS) and Amazon Neptune. The following table contains regional limits that are shared among Amazon DocumentDB, Amazon RDS, and Neptune.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/limits.html#limits.instance"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Validate instance size against connection limits\n\nLimit Connections : CoudWatch metrics DatabaseConnectionsMax\nThe maximum number of open database connections on an instance in a one-minute period.\n",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/limits.html#limits.instance"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf5_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_perf5_1 && docdb_perf5_2 && docdb_perf5_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_perf5_1) || (!docdb_perf5_2) || (!docdb_perf5_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_perf6",
+                    "title": "How did you size your cluster?",
+                    "description": "Rightsizing is an ongoing process and its the most effective way to control cloud costs. It involves continually analyzing instance performance and usage needs and patternsand then turning off idle instances and rightsizing instances that are either overprovisioned or poorly matched to the workload.",
+                    "choices": [
+                        {
+                            "id": "docdb_perf6_1",
+                            "title": "Use data characteristics to size workload",
+                            "helpfulResource": {
+                                "displayText": "Use this simple form to provide aggregated input for your workload to determine cluster sizing.\n\nThis form provides sizing recommendation for a single collection in the cluster.",
+                                "url": "https://sizing.cloudnativedb.com/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use data characteristics to size workload",
+                                "url": "https://sizing.cloudnativedb.com/"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf6_2",
+                            "title": "Ensure Indices and working set fit in cache",
+                            "helpfulResource": {
+                                "displayText": "Amazon DocumentDB best practice to choose an instance type with enough RAM to fit your working set (i.e., data and indexes) in memory.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Having properly sized instances will help optimize for overall performance and potentially minimize I/O cost."
+                            }
+                        },
+                        {
+                            "id": "docdb_perf6_3",
+                            "title": "Validate sizing by performing load test and scale as needed",
+                            "helpfulResource": {
+                                "displayText": "Visualize the load to determine when and where the load is on the database",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/performance-insights.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Performance Insights adds to the existing Amazon DocumentDB monitoring features to illustrate your cluster performance and help you analyze any issues that affect it. With the Performance Insights dashboard, you can visualize the database load and filter the load by waits, query statements, hosts, or application."
+                            }
+                        },
+                        {
+                            "id": "docdb_perf6_4",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_perf6_1 && docdb_perf6_2 && docdb_perf6_3 && docdb_perf6_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_perf6_2) || (!docdb_perf6_3) || (!docdb_perf6_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_perf7",
+                    "title": "How do you monitor performance of your cluster?",
+                    "description": "Monitor performance metrics on a regular basis to see the average, maximum, and minimum values for a variety of time ranges. This helps you identify when performance is degraded.",
+                    "choices": [
+                        {
+                            "id": "docdb_perf7_1",
+                            "title": "Monitor performance to determine scaling needs:",
+                            "helpfulResource": {
+                                "displayText": "Amazon DocumentDB best practice to choose an instance type with enough RAM to fit your working set (i.e., data and indexes) in memory. Having properly sized instances will help optimize for overall performance and potentially minimize I/O cost.",
+                                "url": "https://aws.amazon.com/blogs/database/monitoring-metrics-and-setting-up-alarms-on-your-amazon-documentdb-with-mongodb-compatibility-clusters/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can monitorAmazon DocumentDB Metricsat the cluster, instance, or role level (for more information about roles, see Managing Amazon DocumentDB Users). In addition, other services can use the metrics, such as Amazon Simple Notification Service (Amazon SNS) to set notification alarms when a metric breaches a predefined threshold.",
+                                "url": "https://aws.amazon.com/blogs/database/monitoring-metrics-and-setting-up-alarms-on-your-amazon-documentdb-with-mongodb-compatibility-clusters/"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf7_2",
+                            "title": "Implement autoscaling",
+                            "helpfulResource": {
+                                "displayText": "automatically add or remove read replicas based on cluster load",
+                                "url": "https://aws.amazon.com/blogs/database/amazon-documentdb-with-mongodb-compatibility-read-autoscaling/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement autoscaling",
+                                "url": "https://aws.amazon.com/blogs/database/amazon-documentdb-with-mongodb-compatibility-read-autoscaling/"
+                            }
+                        },
+                        {
+                            "id": "docdb_perf7_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_perf7_1 && docdb_perf7_2 && docdb_perf7_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_perf7_1) || (!docdb_perf7_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "docdb_rel",
+            "name": "Reliability",
+            "questions": [
+                {
+                    "id": "docdb_rel1",
+                    "title": "How are you meeting your RPO and RTO with Amazon DocumentDB?",
+                    "description": "Recovery from disaster is typically measured using values for RTO and RPO.\nRecovery time objective (RTO)  The time it takes a system to return to a working state after a disaster. In other words, RTO measures downtime. For a global cluster, RTO can be in the order of minutes.\nRecovery point objective (RPO)  The amount of data that can be lost (measured in time). For a global cluster, RPO is typically measured in seconds.",
+                    "choices": [
+                        {
+                            "id": "docdb_rel1_1",
+                            "title": "Select backup retention period based on RPO",
+                            "helpfulResource": {
+                                "displayText": "Amazon DocumentDB (with MongoDB compatibility) continuously backs up your data to Amazon Simple Storage Service (Amazon S3) for 135 days so that you can quickly restore to any point within the backup retention period.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/backup_restore.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Select backup retention period based on RPO",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/backup_restore.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel1_2",
+                            "title": "Use global clusters for low RTO requirements",
+                            "helpfulResource": {
+                                "displayText": "When you choose Group related resources on the Clusters page in the console, you see the primary cluster and secondary clusters grouped under the associated global cluster.\nThe Configuration tab for a global cluster shows the AWS Regions where the clusters are running, the version, and the global cluster identifier.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/global-clusters.manage.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon DocumentDB global cluster spans at least two AWS Regions. The primary region supports a cluster that has one primary (writer) instance and up to fifteen replica instances, while a secondary region runs a read-only cluster made up entirely of up to sixteen replica instances. A global cluster can have up to five secondary regions. The table lists the maximum clusters, instances, and replicas allowed in a global cluster.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/global-clusters.get-started.html#global-clusters.config"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel1_3",
+                            "title": "Retain manual snapshots beyond retention period based on purge requirements",
+                            "helpfulResource": {
+                                "displayText": "You can create a manual snapshot using either the AWS Management Console or AWS CLI. The amount of time it takes to create a snapshot varies with the size of your databases. When you create a snapshot, you must do the following:",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/backup_restore-create_manual_cluster_snapshot.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Retain manual snapshots beyond retention period based on purge requirements",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/backup_restore-create_manual_cluster_snapshot.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel1_4",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_rel1_1 && docdb_rel1_2 && docdb_rel1_3 && docdb_rel1_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_rel1_1) || (!docdb_rel1_2) || (!docdb_rel1_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_rel2",
+                    "title": "How do you support Disaster Recovery (DR) requirements?",
+                    "description": "Disaster recovery strategies available to you within AWS can be broadly categorized into four approaches, ranging from the low cost and low complexity of making backups to more complex strategies using multiple active Regions.",
+                    "choices": [
+                        {
+                            "id": "docdb_rel2_1",
+                            "title": "Use global clusters for DR requirements",
+                            "helpfulResource": {
+                                "displayText": "A global cluster consists of one primary region and up to five read-only secondary regions. You issue write operations directly to the primary cluster in the primary region and Amazon DocumentDB automatically replicates the data to the secondary regions using dedicated infrastructure. Latency is typically under a second.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/global-clusters.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use global clusters for DR requirements",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/global-clusters.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel2_2",
+                            "title": "Use cluster snapshot copy for flexible RTO requirements",
+                            "helpfulResource": {
+                                "displayText": "In Amazon DocumentDB, you can copy manual and automatic snapshots within the same AWS Region or to a different AWS Region within the same account. You can also share snapshots owned by other AWS accounts in the same AWS Region.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/backup_restore-copy_cluster_snapshot.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use cluster snapshot copy for flexible RTO requirements",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/backup_restore-copy_cluster_snapshot.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel2_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_rel2_1 && docdb_rel2_2 && docdb_rel2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_rel2_1) || (!docdb_rel2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_rel3",
+                    "title": "How does your application handle exceptions from Amazon DocumentDB?",
+                    "description": "In certain cases, such as certain types of planned maintenance, or in the unlikely event of a primary node or Availability Zone failure, Amazon DocumentDB (with MongoDB compatibility) detects the failure and replaces the primary node. So that your applications can resume database operations as quickly as possible without administrative intervention.",
+                    "choices": [
+                        {
+                            "id": "docdb_rel3_1",
+                            "title": "Implement exception handling with retry techniques",
+                            "helpfulResource": {
+                                "displayText": "its important to understand the exceptions that an application should tolerate and how to handle them efficiently",
+                                "url": "https://aws.amazon.com/blogs/database/building-resilient-applications-with-amazon-documentdb-with-mongodb-compatibility-part-2-exception-handling/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement exception handling with retry techniques",
+                                "url": "https://aws.amazon.com/blogs/database/building-resilient-applications-with-amazon-documentdb-with-mongodb-compatibility-part-2-exception-handling/"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel3_2",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_rel3_1 && docdb_rel3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_rel3_1) || (!docdb_rel3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_rel4",
+                    "title": "How do you manage client connections to clusters?",
+                    "description": "Consider constraining database connections if you see high numbers of user connections in conjunction with decreases in instance performance and response time. The best number of user connections for your instance will vary based on your instance class and the complexity of the operations being performed.",
+                    "choices": [
+                        {
+                            "id": "docdb_rel4_1",
+                            "title": "Configure clients for connection and cursor management:",
+                            "helpfulResource": {
+                                "displayText": " Amazon DocumentDB handles write concerns, configurations for journaling, and best practices for working with connection and cursor limits.",
+                                "url": "https://aws.amazon.com/blogs/database/building-resilient-applications-with-amazon-documentdb-with-mongodb-compatibility-part-1-client-configuration/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure clients for connection and cursor management:",
+                                "url": "https://aws.amazon.com/blogs/database/building-resilient-applications-with-amazon-documentdb-with-mongodb-compatibility-part-1-client-configuration/"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel4_2",
+                            "title": "Use (allowDiskUse: true) for aggregate queries",
+                            "helpfulResource": {
+                                "displayText": "By default, Amazon DocumentDB will utilize the hash algorithm when allowDiskUse:false is used and sort merge when allowDiskUse:true is used. For some use cases, it may be desirable to force the query optimizer to use a different algorithm.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/functional-differences.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use (allowDiskUse: true) for aggregate queries",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/functional-differences.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel4_3",
+                            "title": "Terminate abandoned queries",
+                            "helpfulResource": {
+                                "displayText": "<Working-in-Progress>"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel4_4",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_rel4_1 && docdb_rel4_2 && docdb_rel4_3 && docdb_rel4_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_rel4_1) || (!docdb_rel4_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_rel5",
+                    "title": "How do you support High Availability(HA) architecture deployments?",
+                    "description": "You can achieve high availability and read scaling in Amazon DocumentDB (with MongoDB compatibility) by using replica instances. A single Amazon DocumentDB cluster supports a single primary instance and up to 15 replica instances. These instances can be distributed across Availability Zones within the cluster's Region. The primary instance accepts read and write traffic, and replica instances accept only read requests.",
+                    "choices": [
+                        {
+                            "id": "docdb_rel5_1",
+                            "title": "Use minimum of 2 instances for Auto failover",
+                            "helpfulResource": {
+                                "displayText": "Failover is automatically handled by Amazon DocumentDB so that your applications can resume database operations as quickly as possible without administrative intervention.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/failover.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use minimum of 2 instances for Auto failover",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/failover.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel5_2",
+                            "title": "Select number of instances based on availability target",
+                            "helpfulResource": {
+                                "displayText": "Provide the processing power for the database, writing data to, and reading data from, the cluster storage volume. An Amazon DocumentDB cluster can have 016 instances.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/how-it-works.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Select number of instances based on availability target",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/how-it-works.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel5_3",
+                            "title": "Use global clusters for HA deployments across regions",
+                            "helpfulResource": {
+                                "displayText": "A global cluster consists of one primary region and up to five read-only secondary regions. You issue write operations directly to the primary cluster in the primary region and Amazon DocumentDB automatically replicates the data to the secondary regions using dedicated infrastructure. Latency is typically under a second.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/global-clusters.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use global clusters for HA deployments across regions",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/global-clusters.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel5_4",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_rel5_1 && docdb_rel5_2 && docdb_rel5_3 && docdb_rel5_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_rel5_1) || (!docdb_rel5_2) || (!docdb_rel5_3) || (!docdb_rel5_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_rel6",
+                    "title": "How do you automate database deployments?",
+                    "description": "Infrastructure as code (IaC) helps organizations achieve their DevOps goals of automation and self-service by maintaining declaration files in version control that define your application environments.lets you model, provision, and manage AWS and third-party resources by treating infrastructure as code.",
+                    "choices": [
+                        {
+                            "id": "docdb_rel6_1",
+                            "title": "Automate deployments using AWS CloudFormation",
+                            "helpfulResource": {
+                                "displayText": "Use an AWS CloudFormation template to create a cluster and instances in your default Amazon VPC.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/quick_start_cfn.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Automate deployments using AWS CloudFormation:",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/quick_start_cfn.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel6_2",
+                            "title": "Use AWS SDK for automating deployments",
+                            "helpfulResource": {
+                                "displayText": "Instance, and resource management operations for Amazon DocumentDB (with MongoDB compatibility) that are accessible via HTTP, the AWS Command Line Interface (AWS CLI), or the AWS SDK. You can use these APIs to create, delete, and modify clusters and instances.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/api-reference.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS SDK for automating deployments",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/api-reference.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel6_3",
+                            "title": "Use AWS CLI for automating deployments",
+                            "helpfulResource": {
+                                "displayText": "Instance, and resource management operations for Amazon DocumentDB (with MongoDB compatibility) that are accessible via HTTP, the AWS Command Line Interface (AWS CLI), or the AWS SDK. You can use these APIs to create, delete, and modify clusters and instances.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/api-reference.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS CLI for automating deployments",
+                                "url": "https://docs.aws.amazon.com/cli/latest/reference/docdb/"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel6_4",
+                            "title": "Other (terraform or similar )",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel6_5",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_rel6_1 && docdb_rel6_2 && docdb_rel6_3 && docdb_rel6_4 && docdb_rel6_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_rel6_5)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_rel7",
+                    "title": "How do you monitor the reliability of your workload?",
+                    "description": "Monitoring your Amazon DocumentDB is an important part of keeping your systems healthy and functioning optimallyto determine the health and performance of your clusters and instances.",
+                    "choices": [
+                        {
+                            "id": "docdb_rel7_1",
+                            "title": "Monitor metrics and configure alarms and notifications",
+                            "helpfulResource": {
+                                "displayText": "Amazon DocumentDB best practice to choose an instance type with enough RAM to fit your working set (i.e., data and indexes) in memory. Having properly sized instances will help optimize for overall performance and potentially minimize I/O cost."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon DocumentDB Metrics. You can monitor these metrics at the cluster, instance, or role level (for more information about roles, see Managing Amazon DocumentDB Users). In addition, other services can use the metrics, such as Amazon Simple Notification Service (Amazon SNS) to set notification alarms when a metric breaches a predefined threshold.",
+                                "url": "https://aws.amazon.com/blogs/database/monitoring-metrics-and-setting-up-alarms-on-your-amazon-documentdb-with-mongodb-compatibility-clusters/"
+                            }
+                        },
+                        {
+                            "id": "docdb_rel7_2",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_rel7_1 && docdb_rel7_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_rel7_1) || (!docdb_rel7_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "docdb_sec",
+            "name": "Security",
+            "questions": [
+                {
+                    "id": "docdb_sec1",
+                    "title": "How do you securely operate your Amazon DocumentDB cluster?",
+                    "description": "Cloud security at AWS is the highest priority. As an AWS customer, you benefit from a data center and network architecture that are built to meet the requirements of the most security-sensitive organizations.",
+                    "choices": [
+                        {
+                            "id": "docdb_sec1_1",
+                            "title": "Use default security settings for At-Rest and over the wire encryption",
+                            "helpfulResource": {
+                                "displayText": "You encrypt data at rest in your Amazon DocumentDB cluster by specifying the storage encryption option when you create your cluster. Storage encryption is enabled cluster-wide and is applied to all instances, including the primary instance and any replicas. It is also applied to your clusters storage volume, data, indexes, logs, automated backups, and snapshots.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/encryption-at-rest.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can enable encryption at rest on an Amazon DocumentDB cluster when the cluster is provisioned using either the AWS Management Console or the AWS Command Line Interface (AWS CLI). Clusters that you create using the console have encryption at rest enabled by default. Clusters that you create using the AWS CLI have encryption at rest disabled by default. Therefore, you must explicitly enable encryption at rest using the --storage-encrypted parameter. In either case, after the cluster is created, you can't change the encryption at rest option.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/encryption-at-rest.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec1_2",
+                            "title": "Use TLS 1.2 and above",
+                            "helpfulResource": {
+                                "displayText": "You use AWS published API calls to access Amazon DocumentDB through the network. Clients must support TLS (Transport Layer Security) 1.0. We recommend TLS 1.2 or later. Clients must also support cipher suites with perfect forward secrecy (PFS) such as Ephemeral Diffie-Hellman (DHE) or Elliptic Curve Ephemeral Diffie-Hellman (ECDHE)",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/security.infrastructure.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Encryption in transit for an Amazon DocumentDB cluster is managed via the TLS parameter in a cluster parameter group. You can manage your Amazon DocumentDB cluster TLS settings using the AWS Management Console or the AWS Command Line Interface (AWS CLI).",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/security.encryption.ssl.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec1_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_sec1_1 && docdb_sec1_2 && docdb_sec1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_sec1_1) || (!docdb_sec1_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_sec2",
+                    "title": "How do you limit Amazon DocumentDB access to other services and applications?",
+                    "description": "For security best practices, you must use AWS Identity and Access Management (IAM) accounts to control access to Amazon DocumentDB API operations, especially operations that create, modify, or delete Amazon DocumentDB resources. Such resources include clusters, security groups, and parameter groups.",
+                    "choices": [
+                        {
+                            "id": "docdb_sec2_1",
+                            "title": "Configure security group to limit surface area of attack",
+                            "helpfulResource": {
+                                "displayText": "For security best practices, asecurity group controls the traffic that is allowed to reach and leave the resources that it is associated with",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Leverage security groups as the primary mechanism for controlling network access to VPCs.",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#VPCSecurityGroups"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec2_2",
+                            "title": "Create users with least access privilege. Avoid use of master credentials",
+                            "helpfulResource": {
+                                "displayText": "Access to manage Amazon DocumentDB (with MongoDB compatibility) resources such as clusters, instances, and cluster parameter groups requires credentials that AWS can use to authenticate your requests. Those credentials must have permissions to access AWS resources, such as an Amazon DocumentDB instance.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/security.IAM.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You must also use IAM to control actions that perform common administrative actions such as backing up restoring clusters. When creating IAM roles, employ the principle of least privilege.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-security"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec2_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_sec2_1 && docdb_sec2_2 && docdb_sec2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_sec2_1) || (!docdb_sec2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_sec3",
+                    "title": "How do you ensure secure application connections to Amazon DocumentDBAmazon DocumentDB?",
+                    "description": "AWS Secrets Manager helps you protect secrets needed to access your applications, services, and IT resources. The service enables you to easily rotate, manage, and retrieve database credentials, API keys, and other secrets throughout their lifecycle. Users and applications retrieve secrets with a call to AWS Secrets Manager API, eliminating the need to hardcode sensitive information in plain text.",
+                    "choices": [
+                        {
+                            "id": "docdb_sec3_1",
+                            "title": "Isolate credentials from application.",
+                            "helpfulResource": {
+                                "displayText": "An application often uses a single Amazon DocumentDB cluster as its datastore but has multiple users that require authorization to perform specific operations. Some users may need to read and write data, whereas other users may only require read access.",
+                                "url": "https://catalog.us-east-1.prod.workshops.aws/workshops/464d6c17-9faa-4fef-ac9f-dd49610174d3/en-US/security/rbac/leastprivilege"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The principle of least privilege is a foundational security practice. You can use RBAC to apply this principle by limiting user access to only what is required to perform their functions.",
+                                "url": "https://catalog.us-east-1.prod.workshops.aws/workshops/464d6c17-9faa-4fef-ac9f-dd49610174d3/en-US/security/rbac/leastprivilege"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec3_2",
+                            "title": "Use Secrets Manager to retrieve Amazon DocumentDB credentials.",
+                            "helpfulResource": {
+                                "displayText": "AWS Secrets Manager helps you protect secrets needed to access your applications, services, and IT resources. The service enables you to easily rotate, manage, and retrieve database credentials, API keys, and other secrets throughout their lifecycle.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/security_best_practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create a secret in AWS Secrets Manager that contains your Amazon DocumentDB cluster name, userid, and password.",
+                                "url": "https://catalog.us-east-1.prod.workshops.aws/workshops/464d6c17-9faa-4fef-ac9f-dd49610174d3/en-US/security/secretsmanager"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec3_3",
+                            "title": "Use external secrets store (Vault or similar)",
+                            "helpfulResource": {
+                                "displayText": "Many customers choose to centralize the management of secrets outside by using external secret stores such asVault or similarto improve the security, management, and auditability of their secret usage."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure AWS Secrets Manager to automatically rotate the secrets for Amazon DocumentDB. For more information, see Rotating Your AWS Secrets Manager Secrets and Rotating Secrets for Amazon DocumentDB in the AWS Secrets Manager User Guide.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-security"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec3_4",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_sec3_1 && docdb_sec3_2 && docdb_sec3_3 && docdb_sec3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_sec3_1) || (!docdb_sec3_2) || (!docdb_sec3_3) || (!docdb_sec3_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_sec4",
+                    "title": "How do you control access to Amazon DocumentDB resources?",
+                    "description": "Every AWS resource is owned by an AWS account, and permissions to create or access the resources are governed by permissions policies. An account administrator can attach permissions policies to IAM identities (that is, users, groups, and roles), and some services (such as AWS Lambda) also support attaching permissions policies to resources.",
+                    "choices": [
+                        {
+                            "id": "docdb_sec4_1",
+                            "title": "Use AWS IAM to control access to Amazon DocumentDB resources",
+                            "helpfulResource": {
+                                "displayText": "Access to manage Amazon DocumentDB (with MongoDB compatibility) resources such as clusters, instances, and cluster parameter groups requires credentials that AWS can use to authenticate your requests. Those credentials must have permissions to access AWS resources, such as an Amazon DocumentDB instance. ",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/security.IAM.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Every AWS resource is owned by an AWS account, and permissions to create or access the resources are governed by permissions policies. An account administrator can attach permissions policies to IAM identities (that is, users, groups, and roles), and some services (such as AWS Lambda) also support attaching permissions policies to resources.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/UsingWithRDS.IAM.AccessControl.Overview.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec4_2",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_sec4_1 && docdb_sec4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_sec4_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_sec5",
+                    "title": "What are your database auditing requirements?",
+                    "description": "You can audit events that were performed in your cluster. Examples of logged events include successful and failed authentication attempts, dropping a collection in a database, or creating an index. By default, auditing is disabled on Amazon DocumentDB and requires that you opt in to use this feature.",
+                    "choices": [
+                        {
+                            "id": "docdb_sec5_1",
+                            "title": "Enable audit logging",
+                            "helpfulResource": {
+                                "displayText": "With Amazon DocumentDB (with MongoDB compatibility), you can audit events that were performed in your cluster. Examples of logged events include successful and failed authentication attempts, dropping a collection in a database, or creating an index.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/event-auditing.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "By default, auditing is disabled on Amazon DocumentDB and requires that you opt in to use this feature.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/event-auditing.html#event-auditing-enabling-auditing"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec5_2",
+                            "title": "Set alarms for anti-patterns",
+                            "helpfulResource": {
+                                "displayText": "Amazon DocumentDB will optionally record audit events  for certain operations. In the last section you enabled audit logs along with the profiler. In this section you will explore the audit event data.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/event-auditing.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For production use cases you want alarms triggered automatically if your metrics cross certain thresholds. That way you can alert your operations team, open tickets in your operations systems, or even start an automated response in certain scenarios.",
+                                "url": "https://catalog.us-east-1.prod.workshops.aws/workshops/464d6c17-9faa-4fef-ac9f-dd49610174d3/en-US/monitoring/alarms"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec5_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_sec5_1 && docdb_sec5_2 && docdb_sec5_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_sec5_1) || (!docdb_sec5_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_sec6",
+                    "title": "How do you automate security best practices?",
+                    "description": "To improve the ability to continuously monitor and notify when configurations in Amazon DocumentDB deviate from best practices, you can create AWS Config rules and trigger notifications immediately when the cluster modification violates compliance and standards predefined by your organization.",
+                    "choices": [
+                        {
+                            "id": "docdb_sec6_1",
+                            "title": "Use default values for security best practices",
+                            "helpfulResource": {
+                                "displayText": "Cloud security at AWS is the highest priority. As an AWS customer, you benefit from a data center and network architecture that are built to meet the requirements of the most security-sensitive organizations."
+                            },
+                            "improvementPlan": {
+                                "displayText": "For security best practices, you must use AWS Identity and Access Management (IAM) accounts to control access to Amazon DocumentDB API operations, especially operations that create, modify, or delete Amazon DocumentDB resources. Such resources include clusters, security groups, and parameter groups. You must also use IAM to control actions that perform common administrative actions such as backing up restoring clusters. When creating IAM roles, employ the principle of least privilege.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-security"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec6_2",
+                            "title": "Use AWS config to enforce compliance",
+                            "helpfulResource": {
+                                "displayText": "AWS Config allows you to create rules and configure resources so they comply with the standards enforced by your organization. These rules are configured to be evaluated either periodically or every time a configuration change occurs to validate if the change has violated the rule.",
+                                "url": "https://aws.amazon.com/blogs/database/evaluate-amazon-documentdb-with-mongodb-compatibility-configurations-using-aws-config/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "set up AWS Config to evaluate Amazon DocumentDB configurations. AWS Config checks for compliance rules such as backup retention policy changes and triggers a notification by sending an event to Amazon EventBridge, a serverless event bus. This event is created when a noncompliant configuration change is detected, such as a new cluster created with a backup retention period that doesnt match an organizations Recovery Point Objective (RPO) requirements. Because we have a handle on the event, we can proactively remediate the noncompliant action using an AWS Lambda function and trigger a notification informing the stakeholders about the change. In the backup retention policy example, our Lambda function modifies the cluster and updates its backup retention policy to be compliant again.",
+                                "url": "https://aws.amazon.com/blogs/database/evaluate-amazon-documentdb-with-mongodb-compatibility-configurations-using-aws-config/"
+                            }
+                        },
+                        {
+                            "id": "docdb_sec6_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_sec6_1 && docdb_sec6_2 && docdb_sec6_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_sec6_1) || (!docdb_sec6_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "docdb_cost",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "docdb_cost1",
+                    "title": "How does your workload characteristics vary for sustained and peak traffic?",
+                    "description": "Cluster instances need to be appropriately sized to keep all working set memory. This avoids the need to continuously read index pages from the storage volume, which negatively impacts performance and generates higher I/O costs.",
+                    "choices": [
+                        {
+                            "id": "docdb_cost1_1",
+                            "title": "Size instances for sustained load and scale on demand instances for peak load",
+                            "helpfulResource": {
+                                "displayText": "Use this simple form to provide aggregated input for your workload to determine cluster sizing.\n\nThis form provides sizing recommendation for a single collection in the cluster.",
+                                "url": "https://sizing.cloudnativedb.com/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use data characteristics to size workload",
+                                "url": "https://sizing.cloudnativedb.com/"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost1_2",
+                            "title": "Use smaller instances in lower environments. Start and stop instances as needed",
+                            "helpfulResource": {
+                                "displayText": "One of the most critical aspects of choosing an instance size in Amazon DocumentDB is the amount of RAM for your cache. Amazon DocumentDB reserves one-third of the RAM for its own services, meaning that only two-thirds of the instance RAM is available for the cache.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-instance_sizing"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use data characteristics to size workload",
+                                "url": "https://sizing.cloudnativedb.com/"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost1_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_cost1_1 && docdb_cost1_2 && docdb_cost1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_cost1_1) || (!docdb_cost1_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_cost2",
+                    "title": "Do you utilize complex analytical queries for adhoc reporting?",
+                    "description": "One of the best ways to improve cluster performance is to tune your most commonly used and most resource-intensive queries to make them less expensive to run.",
+                    "choices": [
+                        {
+                            "id": "docdb_cost2_1",
+                            "title": "Start instances with higher compute for adhoc reporting and stop when done",
+                            "helpfulResource": {
+                                "displayText": "One of the most critical aspects of choosing an instance size in Amazon DocumentDB is the amount of RAM for your cache. Amazon DocumentDB reserves one-third of the RAM for its own services, meaning that only two-thirds of the instance RAM is available for the cache.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-instance_sizing"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use data characteristics to size workload",
+                                "url": "https://sizing.cloudnativedb.com/"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost2_2",
+                            "title": "Optimize inefficient queries",
+                            "helpfulResource": {
+                                "displayText": "One of the best ways to improve cluster performance is to tune your most commonly used and most resource-intensive queries to make them less expensive to run.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use the profiler (see Profiling Amazon DocumentDB Operations) to log the execution time and details of operations that were performed on your cluster. Profiler is useful for monitoring the slowest operations on your cluster to help you improve individual query performance and overall cluster performance.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/profiling.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost2_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_cost2_1 && docdb_cost2_2 && docdb_cost2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_cost2_1) || (!docdb_cost2_2) || (!docdb_cost2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_cost3",
+                    "title": "How often does your application perform update operations?",
+                    "description": "While indexes can improve query performance by avoiding the need to scan every document in a collection, this improvement comes with a tradeoff. For each index on a collection, every time a document is inserted, updated, or deleted, the database must update the collection and write the fields to each of the indexes for the collection. ",
+                    "choices": [
+                        {
+                            "id": "docdb_cost3_1",
+                            "title": "Separate mutable and immutable portions of document",
+                            "helpfulResource": {
+                                "displayText": "Access patterns for the application dictate the schema structure of documents stored in the database. Schema flexibility offered by JSON allows you to make changes quickly, making document databases an ideal choice for agile development.",
+                                "url": "https://aws.amazon.com/blogs/database/document-modeling-with-amazon-documentdb-and-hackolade/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Access patterns  Storing infrequently accessed fields in a separate document helps reduce I/O utilization and improve performance. When mutable and immutable parts of the documents are separated, performance and I/O optimization is optimized because updates modify smaller mutable documents.",
+                                "url": "https://aws.amazon.com/blogs/database/document-modeling-with-amazon-documentdb-and-hackolade/"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost3_2",
+                            "title": "Use Amazon S3 to store images and store link and metadata in Amazon DocumentDB",
+                            "helpfulResource": {
+                                "displayText": "Amazon Simple Storage Service (Amazon S3) is an object storage service offering industry-leading scalability, data availability, security, and performance. Customers of all sizes and industries can store and protect any amount of data for virtually any use case, such as data lakes, cloud-native applications, and mobile apps.",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost3_3",
+                            "title": "Remove unused indexes",
+                            "helpfulResource": {
+                                "displayText": "When importing data into Amazon DocumentDB, you should create your indexes before importing large datasets.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-indexes"
+                            },
+                            "improvementPlan": {
+                                "displayText": "it is recommended to only create indexes on fields that are commonly utilized as a filter and regularly look for unused indexes. For more information, see How Do I Identify Unused Indexes?.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/user_diagnostics.html#user_diagnostics-identify_unused_indexes"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost3_4",
+                            "title": "Optimize working set by moving least accessed documents to different collection",
+                            "helpfulResource": {
+                                "displayText": " it is an Amazon DocumentDB best practice to choose an instance type with enough RAM to fit your working set (i.e., data and indexes) in memory",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To determine whether your application's working set fits in memory, monitor the BufferCacheHitRatio using Amazon CloudWatch for each instance in a cluster that is under load.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-security"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost3_5",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_cost3_1 && docdb_cost3_2 && docdb_cost3_3 && docdb_cost3_4 && docdb_cost3_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_cost3_1) || (!docdb_cost3_2) || (!docdb_cost3_3) || (!docdb_cost3_5)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_cost4",
+                    "title": "How do you purge older data from your collections?",
+                    "description": "Identifying and removing or expiry unused document, indexes and snapshot is a best practice that we recommend performing on a regular basis.",
+                    "choices": [
+                        {
+                            "id": "docdb_cost4_1",
+                            "title": "Use rolling collections over TTL",
+                            "helpfulResource": {
+                                "displayText": "Document deletion resulting from TTL index expiry is a best effort process. Documents are not guaranteed to be deleted within any specific period. Factors like instance size, instance resource utilization, document size, overall throughput, the number of indexes, and whether indexes and the working set fit in memory can all affect the timing of when expired documents are deleted by the TTL process.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For time-series workloads, you can consider creating rolling collections instead of a TTL index as rolling collections can be a more performant way to delete data and less I/O intensive.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost4_2",
+                            "title": "Delete unused manual snapshots",
+                            "helpfulResource": {
+                                "displayText": "You can create a manual snapshot using either the AWS Management Console or AWS CLI. The amount of time it takes to create a snapshot varies with the size of your databases. When you create a snapshot, you must do the following:",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/backup_restore-create_manual_cluster_snapshot.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To delete a unsed manual cluster snapshot using the AWS Management Console",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/backup_restore-delete_cluster_snapshot.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost4_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_cost4_1 && docdb_cost4_2 && docdb_cost4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_cost4_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_cost5",
+                    "title": "Do you cleanse data after migrating to Amazon DocumentDB?",
+                    "description": "Cluster instances need to be appropriately sized to keep all working set memory. This avoids the need to continuously read index pages from the storage volume, which negatively impacts performance and generates higher I/O costs",
+                    "choices": [
+                        {
+                            "id": "docdb_cost5_1",
+                            "title": "Perform data cleansing before migrating data to Amazon DocumentDB",
+                            "helpfulResource": {
+                                "displayText": "Cluster instances need to be appropriately sized to keep all working set memory. This avoids the need to continuously read index pages from the storage volume, which negatively impacts performance and generates higher I/O costs.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-cost_optimization"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For best performance, minimize the number of indexes in your collections, adding only those indexes necessary to improve performance for common queries. While workloads vary, a good guideline is to keep the number of indexes per collection to five or fewer.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-cost_optimization"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost5_2",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_cost5_1 && docdb_cost5_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_cost5_1) || (!docdb_cost5_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_cost6",
+                    "title": "How do you monitor usage and cost for Amazon DocumentDB?",
+                    "description": " You must regularly report on cost and usage optimization within your organization. You can implement dedicated sessions to cost optimization, or include cost optimization in your regular operational reporting cycles for your workloads.",
+                    "choices": [
+                        {
+                            "id": "docdb_cost6_1",
+                            "title": "Monitor metrics and set billing alarms",
+                            "helpfulResource": {
+                                "displayText": "Monitor performance metrics on a regular basis to see the average, maximum, and minimum values for a variety of time ranges.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-performance"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create billing alerts at thresholds of 50 percent and 75 percent of your expected bill for the month. For more information about creating billing alerts, see Creating a Billing Alarm.",
+                                "url": "https://docs.aws.amazon.com//AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html#creating_billing_alarm_with_wizard"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost6_2",
+                            "title": "Use cost allocation tags to track expense at a granular level",
+                            "helpfulResource": {
+                                "displayText": "In AWS, a tag is a label that you assign to an AWS resource, such as an Amazon DocumentDB cluster or instance. Tags enable you to categorize your AWS resources in different ways (for example, by purpose, owner, or environment), and you can use tags for cost allocation, access control, and automation.",
+                                "url": "https://aws.amazon.com/blogs/database/using-cost-allocation-tags-with-amazon-documentdb-with-mongodb-compatibility/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use cost allocation tags to track expense at a granular level",
+                                "url": "https://aws.amazon.com/blogs/database/using-cost-allocation-tags-with-amazon-documentdb-with-mongodb-compatibility/"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost6_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_cost6_1 && docdb_cost6_2 && docdb_cost6_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_cost6_1) || (!docdb_cost6_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "docdb_cost7",
+                    "title": "How do you meet cost targets when you select resource type, size and number?",
+                    "description": "Rightsizing is an ongoing process and its the most effective way to control cloud costs. It involves continually analyzing instance performance and usage needs and patternsand then turning off idle instances and rightsizing instances that are either overprovisioned or poorly matched to the workload.",
+                    "choices": [
+                        {
+                            "id": "docdb_cost7_1",
+                            "title": "Choose appropriate instance size and number of instances",
+                            "helpfulResource": {
+                                "displayText": "Use this simple form to provide aggregated input for your workload to determine cluster sizing.\n\nThis form provides sizing recommendation for a single collection in the cluster.",
+                                "url": "https://sizing.cloudnativedb.com/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use data characteristics to size workload",
+                                "url": "https://sizing.cloudnativedb.com/"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost7_2",
+                            "title": "Select most cost effective instance type, size and number",
+                            "helpfulResource": {
+                                "displayText": "One of the most critical aspects of choosing an instance size in Amazon DocumentDB is the amount of RAM for your cache. Amazon DocumentDB reserves one-third of the RAM for its own services, meaning that only two-thirds of the instance RAM is available for the cache.",
+                                "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/best_practices.html#best_practices-instance_sizing"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use the third party Amazon DocumentDB sizing calculator to estimate the instance size for a particular workload.",
+                                "url": "https://sizing.cloudnativedb.com/"
+                            }
+                        },
+                        {
+                            "id": "docdb_cost7_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "docdb_cost7_1 && docdb_cost7_2 && docdb_cost7_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_cost7_1) || (!docdb_cost7_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
