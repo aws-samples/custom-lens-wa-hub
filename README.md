@@ -19,6 +19,8 @@ This sample used DynamoDB as an example to show how to create Custom Lens in WA 
 3. [Publish your custom lens and attached with version tag](/DynamoDB/README.md#publish-your-custom-lens-and-attached-with-version-tag)
 4. [Review workloads using custom lenses](/DynamoDB/README.md#review-workloads-using-custom-lenses)
 
+You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.com/well-architectedtool/100_labs/100_custom_lenses_on_watool/) which provide step by step guideline.
+
 ## :notebook: Examples
 * [DynamoDB](/DynamoDB)
 * [DocumentDB](/DocumentDB)
