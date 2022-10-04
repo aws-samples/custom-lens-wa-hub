@@ -1,4 +1,4 @@
-![AWS Well-Archietcted](https://user-images.githubusercontent.com/17841922/192413820-2cb08389-5a74-4027-be34-d8ab0ec62872.png)
+![AWS Well-Archietcted](https://user-images.githubusercontent.com/17841922/193863243-97f13367-07c1-43c9-b713-c3fa70986d69.png)
 # AWS Well-Architected Custom Lens Examples
 Example JSON file template that demonstrate how to create customize Well-Architected reviews using Custom lenses.
 
