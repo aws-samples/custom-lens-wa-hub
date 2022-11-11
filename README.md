@@ -22,8 +22,12 @@ This sample used DynamoDB as an example to show how to create Custom Lens in WA 
 You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.com/well-architectedtool/100_labs/100_custom_lenses_on_watool/) which provide step by step guideline.
 
 ## :notebook: Examples
+### Custom Lens for AWS Key Services
 * [DynamoDB](/DynamoDB)
 * [DocumentDB](/DocumentDB)
+* [Glue](/Glue)
+
+### Custom Lens for Operation
 * [Operational Readiness Review](/ORR-Lens/)
 
 ## :balance_scale: License
