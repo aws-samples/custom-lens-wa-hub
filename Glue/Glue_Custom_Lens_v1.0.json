@@ -2,9 +2,9 @@
     "schemaVersion": "2021-11-01",
     "name": "Glue Best Practice Lens",
     "description": "Best practices for configuring Glue",
-    "_version":"0.8",
-    "_release_date":"2022-11-10",
-    "_release_note":"A public review version, now we have 4 pillars.",
+    "_version":"1.0",
+    "_release_date":"2022-11-22",
+    "_release_note":"",
     "_teams":{
        "_authors":[
           {
@@ -15,6 +15,9 @@
        "_tech_reviewers":[
           {
              "name":"Hsu, Chia-Wei, Glue SME"
+          },
+          {
+            "name":"Bob Yeh, Geo Solutions Architect, Well-Architected APAC, AWS"
           }
        ]
     },
@@ -66,7 +69,7 @@
                         },
                         {
                             "id": "OPS1_4",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
@@ -141,7 +144,7 @@
                         },
                         {
                             "id": "OPS2_5",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
@@ -228,7 +231,7 @@
                         },
                         {
                             "id": "OPS3_6",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
@@ -315,7 +318,7 @@
                         },
                         {
                             "id": "OPS4_6",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
@@ -366,7 +369,7 @@
                         },
                         {
                             "id": "OPS5_3",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
@@ -471,7 +474,7 @@
                         },
                         {
                             "id": "SEC1_7",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
@@ -534,7 +537,7 @@
                         },
                         {
                             "id": "SEC2_4",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
@@ -591,7 +594,7 @@
                         },
                         {
                             "id": "PERF1_3",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
@@ -666,7 +669,7 @@
                         },
                         {
                             "id": "PERF2_5",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
@@ -717,7 +720,7 @@
                         },
                         {
                             "id": "PERF3_3",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
@@ -756,7 +759,7 @@
                         },
                         {
                             "id": "PERF4_2",
-                            "title": "Identify too big DAG in spark history and log",
+                            "title": "Identify 'too big' DAG in spark history and log",
                             "helpfulResource": {
                                 "displayText": "Spark uses lazy evaluation and creates a DAG (directed acyclic graph) of the operations needed to compute a peice of data. Even if the data is persisted or cached, Spark will keep this DAG in memory on the driver so that if an executor fails it can re-create this data later.",
                                 "url": "https://holdenk.github.io/spark-flowchart/details/toobigdag/"
@@ -780,7 +783,7 @@
                         },
                         {
                             "id": "PERF4_4",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
@@ -849,7 +852,7 @@
                         },
                         {
                             "id": "COST1_4",
-                            "title": "None of above (add this if required)",
+                            "title": "None of above",
                             "helpfulResource": {
                                 "displayText": "-"
                             },
