@@ -7,7 +7,7 @@ The AWS Well-Archtected Tool makes it easy to create custom lenses by providing 
 4. [Review workloads using custom lenses](#review-workloads-using-custom-lenses)
 
 ## Prepare your custom lens WA template json file
-Prepare your custom lens WA template json file by yourself or just download the [dynamodb custom lens](custom-lensddb.v0.7.json).
+Prepare your custom lens WA template json file by yourself or just download the [dynamodb custom lens](custom-lensddb-v1.0.json).
 
 ```json
 {
