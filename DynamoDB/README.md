@@ -1,9 +1,9 @@
 # Customize Well-Architected Reviews for DynamoDB
 
 The AWS Well-Archtected Tool makes it easy to create custom lenses by providing a json template that you can use. The template outlines how the lens content must be defined, and it controls how the lens is presented within the AWS Well-Architected Tool. This repo contains the recommended DynamoDB custom lens json file which can be used to create a DynamoDB Custom Lens in Well-Architected console from json template with the following steps:
-1. [Prepare your custom lens Well-Architected template json file](#prepare-your-custom-lens-WA-template-json-file)
-2. [Navigate to the AWS Well-Architected Tool on the AWS console and create custom lens](#navigate-to-the-aws-wa-tool-on-the-aws-console-and-create-custom-lens)
-3. [Publish your custom lens and attach a version tag](#publish-your-custom-lens-and-attached-with-version-tag)
+1. [Prepare your custom lens Well-Architected template json file](#prepare-your-custom-lens-well-architected-template-json-file)
+2. [Navigate to the AWS Well-Architected Tool on the AWS console and create custom lens](#navigate-to-the-aws-well-architected-tool-on-the-aws-console-and-create-custom-lens)
+3. [Publish your custom lens and attach a version tag](#publish-your-custom-lens-and-attach-a-version-tag)
 4. [Review workloads using custom lenses](#review-workloads-using-custom-lenses)
 
 ## Prepare your custom lens Well-Architected template json file
