@@ -1,7 +1,7 @@
 ![AWS Well-Archietcted](https://user-images.githubusercontent.com/17841922/193863243-97f13367-07c1-43c9-b713-c3fa70986d69.png)
 # AWS Well-Architected Custom Lens Hub
 Provide JSON file template that demonstrate how to create customize Well-Architected reviews using Custom lenses.
-> Note: This repository is maintained by multiple open-source contributors and domain service experts not owned by AWS Well-Architectured team
+> Note: This repository is maintained by multiple open-source contributors and domain service experts, which is not owned by AWS Well-Architectured team
 
 ## :books: Background
 [AWS Well-Architected](https://aws.amazon.com/architecture/well-architected/) helps cloud architects build secure, high-performing, resilient, and efficient infrastructure for a variety of applications and workloads.
