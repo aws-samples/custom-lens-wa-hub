@@ -23,6 +23,228 @@
     },
     "pillars": [
         {
+            "id": "PERF",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "PERF1",
+                    "title": "How do you select file formats and compression to store your data?",
+                    "description": "How do you select file formats and compression to store your data?",
+                    "choices": [
+                        {
+                            "id": "PERF1_1",
+                            "title": "Feature support across data formats in AWS Glue",
+                            "helpfulResource": {
+                                "displayText": "Each data format may support different AWS Glue features. The document offer information about feature support and configuration parameters for data formats supported by AWS Glue.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-format.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Certain AWS Glue connection types support multiple format types, requiring you to specify information about your data format with a format_options object",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-format.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_2",
+                            "title": "Parameters used to interact with data formats in AWS Glue",
+                            "helpfulResource": {
+                                "displayText": "AWS Glue Jobs can be configured with the arguments listed in this document.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-glue-arguments.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS Glue recognizes several argument names that you can use to set up the script environment for your jobs and job runs",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-glue-arguments.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF1_1 && PERF1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF1_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF2",
+                    "title": "How do you determine compute unit for your Glue Job?",
+                    "description": "How do you determine compute unit for your Glue Job?",
+                    "choices": [
+                        {
+                            "id": "PERF2_1",
+                            "title": "Benchmarking using Glue TPC-DS Connector or custom dataset",
+                            "helpfulResource": {
+                                "displayText": "Generate the TPC-DS compliant datasets from AWS Glue or generate your custom dataset to conduct benchmark and evaluation performance of different DPU.",
+                                "url": "https://aws.amazon.com/marketplace/pp/prodview-xtty6azr4xgey"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The TPC-DS Glue connector enables Glue ETL Jobs to generate TPC-DS compliant datasets with your preferred scale. The generated datasets can be used for any benchmarking purpose in AWS Glue jobs, Amazon Athena, Amazon EMR, Amazon Redshift Spectrum, etc.",
+                                "url": "https://aws.amazon.com/marketplace/pp/prodview-xtty6azr4xgey"
+                            }
+                        },
+                        {
+                            "id": "PERF2_2",
+                            "title": "Debugging demanding stages and straggler tasks",
+                            "helpfulResource": {
+                                "displayText": "A straggler task takes much longer than the rest of the tasks in a stage of an AWS Glue job. As a result, the stage takes longer to complete, which also delays the total execution time of the job.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-profile-debug-straggler.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use AWS Glue job profiling to identify demanding stages and straggler tasks in your extract, transform, and load (ETL) jobs.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-profile-debug-straggler.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_3",
+                            "title": "Visualize the profiled metrics on the AWS Glue console",
+                            "helpfulResource": {
+                                "displayText": "This is a common workflow pattern, and requires monitoring for individual job progress, data processing backlog, data reprocessing, and job bookmarks.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-multiple.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can profile multiple AWS Glue jobs together and monitor the flow of data between them.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-multiple.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_4",
+                            "title": "Calculating and Monitoring for DPU capacity planning",
+                            "helpfulResource": {
+                                "displayText": "Applicable to AWS Glue versions 0.9 and 1.0. Later versions of AWS Glue contain cost-saving features that introduce additional considerations when capacity planning.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-capacity.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use job metrics in AWS Glue to estimate the number of data processing units (DPUs) that can be used to scale out an AWS Glue job.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-capacity.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF2_1 && PERF2_2 && PERF2_3 && PERF2_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF2_2) || (!PERF2_3) || (!PERF2_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF3",
+                    "title": "How do you organize or partition your data in your data lake for Glue Jobs friendly?",
+                    "description": "How do you organize or partition your data in your data lake for Glue Jobs friendly?",
+                    "choices": [
+                        {
+                            "id": "PERF3_1",
+                            "title": "Structure your data to build high performant of Glue Job",
+                            "helpfulResource": {
+                                "displayText": "You can identify your ETL job query pattern and structure your data so that you can get better performance and reduce cost through target the partitioned data.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can apply the same practices to Amazon EMR data processing applications such as Spark, Presto, and Hive when your data is stored in Amazon S3.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            }
+                        },
+                        {
+                            "id": "PERF3_2",
+                            "title": "Awareness of performance degration in Glue partition",
+                            "helpfulResource": {
+                                "displayText": "Over time, hundreds of thousands of partitions get added to a table. The GetPartitions API is used to fetch the partitions in the table. The API returns partitions which match the expression provided in the request.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/partition-indexes.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "When you create a partition index, you specify a list of partition keys that already exist on a given table. Partition index is sub list of partition keys defined in the table. A partition index can be created on any permutation of partition keys defined on the table.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/partition-indexes.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF3_1 && PERF3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF3_1) || (!PERF3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF4",
+                    "title": "How do you identified and improve your slow running job?",
+                    "description": "How do you identified and improve your slow running job?",
+                    "choices": [
+                        {
+                            "id": "PERF4_1",
+                            "title": "Identify your slow stage in spark history",
+                            "helpfulResource": {
+                                "displayText": "You can compare the slow and the fast runs. For this you can even use your local pyspark and calculate a ratio between slow and fast run for each stage metrics.",
+                                "url": "https://holdenk.github.io/spark-flowchart/details/slow-stage/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Once you identify the slow stage, check the fields \"Input\", \"Output\", \"Shuffle Read\", \"Shuffle Write\" of the slow stage and use below grid to identify the stage type and the corresponding ETL action.",
+                                "url": "https://holdenk.github.io/spark-flowchart/details/slow-stage/"
+                            }
+                        },
+                        {
+                            "id": "PERF4_2",
+                            "title": "Identify too big DAG in spark history and log",
+                            "helpfulResource": {
+                                "displayText": "Spark uses lazy evaluation and creates a DAG (directed acyclic graph) of the operations needed to compute a peice of data. Even if the data is persisted or cached, Spark will keep this DAG in memory on the driver so that if an executor fails it can re-create this data later.",
+                                "url": "https://holdenk.github.io/spark-flowchart/details/toobigdag/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "This is more likely to cause problems with iterative algorithms that create RDDs or DataFrames on each iteration based on the previous iteration, like ALS. Some signs of a DAG getting too big are:Iterative algorithm becoming slower on each iterationDriver OOMExecutor out-of-disk-error",
+                                "url": "https://holdenk.github.io/spark-flowchart/details/toobigdag/"
+                            }
+                        },
+                        {
+                            "id": "PERF4_3",
+                            "title": "Identify your job is waiting for cluster resources",
+                            "helpfulResource": {
+                                "displayText": "Sometimes the cluster manager may choke or otherwise not be able to allocate resources and we don't have a good way of detecting this situation making it difficult for the user to debug and tell apart from Spark not scaling up correctly.",
+                                "url": "https://holdenk.github.io/spark-flowchart/details/slow-job-slow-cluster/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "As of Spark3.4, an executor will note when and for how long it waits for cluster resources. Check the JVM metrics for this information.",
+                                "url": "https://holdenk.github.io/spark-flowchart/details/slow-job-slow-cluster/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF4_1 && PERF4_2 && PERF4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF4_1) || (!PERF4_2) || (!PERF4_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "id": "OPS",
             "name": "Operational Excellence",
             "questions": [
@@ -66,22 +288,16 @@
                                 "displayText": "CloudTrail captures all API calls for AWS Glue as events. The calls captured include calls from the AWS Glue console and code calls to the AWS Glue API operations.",
                                 "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-cloudtrail.html"
                             }
-                        },
-                        {
-                            "id": "OPS1_4",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "OPS1_1 && OPS1_2 && OPS1_3 && OPS1_4",
+                            "condition": "OPS1_1 && OPS1_2 && OPS1_3",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS1_2)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -141,22 +357,16 @@
                                 "displayText": "You can collect metrics about AWS Glue jobs and visualize them on the AWS Glue and Amazon CloudWatch consoles to identify and fix issues.",
                                 "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-profile-glue-job-cloudwatch-metrics.html"
                             }
-                        },
-                        {
-                            "id": "OPS2_5",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "OPS2_1 && OPS2_2 && OPS2_3 && OPS2_4 && OPS2_5",
+                            "condition": "OPS2_1 && OPS2_2 && OPS2_3 && OPS2_4",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS2_2) || (!OPS2_3) || (!OPS2_4)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -228,22 +438,16 @@
                                 "displayText": "You can contact AWS Support to request a quota increase for the service quotas listed in the AWS General Reference.",
                                 "url": "https://docs.aws.amazon.com/glue/latest/dg/troubleshooting-service-limits.html"
                             }
-                        },
-                        {
-                            "id": "OPS3_6",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "OPS3_1 && OPS3_2 && OPS3_3 && OPS3_4 && OPS3_5 && OPS3_6",
+                            "condition": "OPS3_1 && OPS3_2 && OPS3_3 && OPS3_4 && OPS3_5",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS3_1) || (!OPS3_2) || (!OPS3_4) || (!OPS3_5)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -315,22 +519,16 @@
                                 "displayText": "Data engineers need a way to enable non-data engineers; AWS Glue custom blueprints, which offer a framework for you to build and share reusable AWS Glue workflows.",
                                 "url": "https://aws.amazon.com/blogs/big-data/simplify-data-integration-pipeline-development-using-aws-glue-custom-blueprints/"
                             }
-                        },
-                        {
-                            "id": "OPS4_6",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "OPS4_1 && OPS4_2 && OPS4_3 && OPS4_4 && OPS4_5 && OPS4_6",
+                            "condition": "OPS4_1 && OPS4_2 && OPS4_3 && OPS4_4 && OPS4_5",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS4_1)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -366,22 +564,16 @@
                                 "displayText": "You can create a method to unit test Python-based ETL Glue Jobs, using the PyTest Framework in AWS CodePipeline.",
                                 "url": "https://aws.amazon.com/blogs/devops/how-to-unit-test-and-deploy-aws-glue-jobs-using-aws-codepipeline/"
                             }
-                        },
-                        {
-                            "id": "OPS5_3",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "OPS5_1 && OPS5_2 && OPS5_3",
+                            "condition": "OPS5_1 && OPS5_2",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS5_2)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -471,22 +663,16 @@
                                 "displayText": "You can add, delete, or rotate the SSH key of a development endpoint. You can also create notebooks that use the development endpoint.",
                                 "url": "https://docs.aws.amazon.com/glue/latest/dg/dev-endpoints.html"
                             }
-                        },
-                        {
-                            "id": "SEC1_7",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "SEC1_1 && SEC1_2 && SEC1_3 && SEC1_4 && SEC1_5 && SEC1_6 && SEC1_7",
+                            "condition": "SEC1_1 && SEC1_2 && SEC1_3 && SEC1_4 && SEC1_5 && SEC1_6",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC1_1) || (!SEC1_2) || (!SEC1_4) || (!SEC1_5) || (!SEC1_6)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -534,268 +720,16 @@
                                 "displayText": "You can grant access to your data to external AWS accounts by using AWS Glue methods or by using AWS Lake Formation cross-account grants.",
                                 "url": "https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html"
                             }
-                        },
-                        {
-                            "id": "SEC2_4",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "SEC2_1 && SEC2_2 && SEC2_3 && SEC2_4",
+                            "condition": "SEC2_1 && SEC2_2 && SEC2_3",
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "default",
-                            "risk": "MEDIUM_RISK"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "PERF",
-            "name": "Performance Efficiency",
-            "questions": [
-                {
-                    "id": "PERF1",
-                    "title": "How do you select file formats and compression to store your data?",
-                    "description": "How do you select file formats and compression to store your data?",
-                    "choices": [
-                        {
-                            "id": "PERF1_1",
-                            "title": "Feature support across data formats in AWS Glue",
-                            "helpfulResource": {
-                                "displayText": "Each data format may support different AWS Glue features. The document offer information about feature support and configuration parameters for data formats supported by AWS Glue.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-format.html"
-                            },
-                            "improvementPlan": {
-                                "displayText": "Certain AWS Glue connection types support multiple format types, requiring you to specify information about your data format with a format_options object",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-format.html"
-                            }
-                        },
-                        {
-                            "id": "PERF1_2",
-                            "title": "Parameters used to interact with data formats in AWS Glue",
-                            "helpfulResource": {
-                                "displayText": "AWS Glue Jobs can be configured with the arguments listed in this document.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-glue-arguments.html"
-                            },
-                            "improvementPlan": {
-                                "displayText": "AWS Glue recognizes several argument names that you can use to set up the script environment for your jobs and job runs",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-glue-arguments.html"
-                            }
-                        },
-                        {
-                            "id": "PERF1_3",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
-                        }
-                    ],
-                    "riskRules": [
-                        {
-                            "condition": "PERF1_1 && PERF1_2 && PERF1_3",
-                            "risk": "NO_RISK"
-                        },
-                        {
-                            "condition": "default",
-                            "risk": "MEDIUM_RISK"
-                        }
-                    ]
-                },
-                {
-                    "id": "PERF2",
-                    "title": "How do you determine compute unit for your Glue Job?",
-                    "description": "How do you determine compute unit for your Glue Job?",
-                    "choices": [
-                        {
-                            "id": "PERF2_1",
-                            "title": "Benchmarking using Glue TPC-DS Connector or custom dataset",
-                            "helpfulResource": {
-                                "displayText": "Generate the TPC-DS compliant datasets from AWS Glue or generate your custom dataset to conduct benchmark and evaluation performance of different DPU.",
-                                "url": "https://aws.amazon.com/marketplace/pp/prodview-xtty6azr4xgey"
-                            },
-                            "improvementPlan": {
-                                "displayText": "The TPC-DS Glue connector enables Glue ETL Jobs to generate TPC-DS compliant datasets with your preferred scale. The generated datasets can be used for any benchmarking purpose in AWS Glue jobs, Amazon Athena, Amazon EMR, Amazon Redshift Spectrum, etc.",
-                                "url": "https://aws.amazon.com/marketplace/pp/prodview-xtty6azr4xgey"
-                            }
-                        },
-                        {
-                            "id": "PERF2_2",
-                            "title": "Debugging demanding stages and straggler tasks",
-                            "helpfulResource": {
-                                "displayText": "A straggler task takes much longer than the rest of the tasks in a stage of an AWS Glue job. As a result, the stage takes longer to complete, which also delays the total execution time of the job.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-profile-debug-straggler.html"
-                            },
-                            "improvementPlan": {
-                                "displayText": "You can use AWS Glue job profiling to identify demanding stages and straggler tasks in your extract, transform, and load (ETL) jobs.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-profile-debug-straggler.html"
-                            }
-                        },
-                        {
-                            "id": "PERF2_3",
-                            "title": "Visualize the profiled metrics on the AWS Glue console",
-                            "helpfulResource": {
-                                "displayText": "This is a common workflow pattern, and requires monitoring for individual job progress, data processing backlog, data reprocessing, and job bookmarks.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-multiple.html"
-                            },
-                            "improvementPlan": {
-                                "displayText": "You can profile multiple AWS Glue jobs together and monitor the flow of data between them.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-multiple.html"
-                            }
-                        },
-                        {
-                            "id": "PERF2_4",
-                            "title": "Calculating and Monitoring for DPU capacity planning",
-                            "helpfulResource": {
-                                "displayText": "Applicable to AWS Glue versions 0.9 and 1.0. Later versions of AWS Glue contain cost-saving features that introduce additional considerations when capacity planning.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-capacity.html"
-                            },
-                            "improvementPlan": {
-                                "displayText": "You can use job metrics in AWS Glue to estimate the number of data processing units (DPUs) that can be used to scale out an AWS Glue job.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-capacity.html"
-                            }
-                        },
-                        {
-                            "id": "PERF2_5",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
-                        }
-                    ],
-                    "riskRules": [
-                        {
-                            "condition": "PERF2_1 && PERF2_2 && PERF2_3 && PERF2_4 && PERF2_5",
-                            "risk": "NO_RISK"
-                        },
-                        {
-                            "condition": "default",
-                            "risk": "MEDIUM_RISK"
-                        }
-                    ]
-                },
-                {
-                    "id": "PERF3",
-                    "title": "How do you organize or partition your data in your data lake for Glue Jobs friendly?",
-                    "description": "How do you organize or partition your data in your data lake for Glue Jobs friendly?",
-                    "choices": [
-                        {
-                            "id": "PERF3_1",
-                            "title": "Structure your data to build high performant of Glue Job",
-                            "helpfulResource": {
-                                "displayText": "You can identify your ETL job query pattern and structure your data so that you can get better performance and reduce cost through target the partitioned data.",
-                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
-                            },
-                            "improvementPlan": {
-                                "displayText": "You can apply the same practices to Amazon EMR data processing applications such as Spark, Presto, and Hive when your data is stored in Amazon S3.",
-                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
-                            }
-                        },
-                        {
-                            "id": "PERF3_2",
-                            "title": "Awareness of performance degration in Glue partition",
-                            "helpfulResource": {
-                                "displayText": "Over time, hundreds of thousands of partitions get added to a table. The GetPartitions API is used to fetch the partitions in the table. The API returns partitions which match the expression provided in the request.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/partition-indexes.html"
-                            },
-                            "improvementPlan": {
-                                "displayText": "When you create a partition index, you specify a list of partition keys that already exist on a given table. Partition index is sub list of partition keys defined in the table. A partition index can be created on any permutation of partition keys defined on the table.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/partition-indexes.html"
-                            }
-                        },
-                        {
-                            "id": "PERF3_3",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
-                        }
-                    ],
-                    "riskRules": [
-                        {
-                            "condition": "PERF3_1 && PERF3_2 && PERF3_3",
-                            "risk": "NO_RISK"
-                        },
-                        {
-                            "condition": "default",
-                            "risk": "MEDIUM_RISK"
-                        }
-                    ]
-                },
-                {
-                    "id": "PERF4",
-                    "title": "How do you identified and improve your slow running job?",
-                    "description": "How do you identified and improve your slow running job?",
-                    "choices": [
-                        {
-                            "id": "PERF4_1",
-                            "title": "Identify your slow stage in spark history",
-                            "helpfulResource": {
-                                "displayText": "You can compare the slow and the fast runs. For this you can even use your local pyspark and calculate a ratio between slow and fast run for each stage metrics.",
-                                "url": "https://holdenk.github.io/spark-flowchart/details/slow-stage/"
-                            },
-                            "improvementPlan": {
-                                "displayText": "Once you identify the slow stage, check the fields \"Input\", \"Output\", \"Shuffle Read\", \"Shuffle Write\" of the slow stage and use below grid to identify the stage type and the corresponding ETL action.",
-                                "url": "https://holdenk.github.io/spark-flowchart/details/slow-stage/"
-                            }
-                        },
-                        {
-                            "id": "PERF4_2",
-                            "title": "Identify 'too big' DAG in spark history and log",
-                            "helpfulResource": {
-                                "displayText": "Spark uses lazy evaluation and creates a DAG (directed acyclic graph) of the operations needed to compute a peice of data. Even if the data is persisted or cached, Spark will keep this DAG in memory on the driver so that if an executor fails it can re-create this data later.",
-                                "url": "https://holdenk.github.io/spark-flowchart/details/toobigdag/"
-                            },
-                            "improvementPlan": {
-                                "displayText": "This is more likely to cause problems with iterative algorithms that create RDDs or DataFrames on each iteration based on the previous iteration, like ALS. Some signs of a DAG getting too big are:Iterative algorithm becoming slower on each iterationDriver OOMExecutor out-of-disk-error",
-                                "url": "https://holdenk.github.io/spark-flowchart/details/toobigdag/"
-                            }
-                        },
-                        {
-                            "id": "PERF4_3",
-                            "title": "Identify your job is waiting for cluster resources",
-                            "helpfulResource": {
-                                "displayText": "Sometimes the cluster manager may choke or otherwise not be able to allocate resources and we don't have a good way of detecting this situation making it difficult for the user to debug and tell apart from Spark not scaling up correctly.",
-                                "url": "https://holdenk.github.io/spark-flowchart/details/slow-job-slow-cluster/"
-                            },
-                            "improvementPlan": {
-                                "displayText": "As of Spark3.4, an executor will note when and for how long it waits for cluster resources. Check the JVM metrics for this information.",
-                                "url": "https://holdenk.github.io/spark-flowchart/details/slow-job-slow-cluster/"
-                            }
-                        },
-                        {
-                            "id": "PERF4_4",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
-                        }
-                    ],
-                    "riskRules": [
-                        {
-                            "condition": "PERF4_1 && PERF4_2 && PERF4_3 && PERF4_4",
-                            "risk": "NO_RISK"
+                            "condition": "(!SEC2_1) || (!SEC2_2)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -849,22 +783,16 @@
                                 "displayText": "You can use job metrics in AWS Glue to estimate the number of data processing units (DPUs) that can be used to scale out an AWS Glue job.",
                                 "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-capacity.html"
                             }
-                        },
-                        {
-                            "id": "COST1_4",
-                            "title": "None of above",
-                            "helpfulResource": {
-                                "displayText": "-"
-                            },
-                            "improvementPlan": {
-                                "displayText": "-"
-                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "COST1_1 && COST1_2 && COST1_3 && COST1_4",
+                            "condition": "COST1_1 && COST1_2 && COST1_3",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST1_2) || (!COST1_3)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
