@@ -138,7 +138,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "(!DDBPERF1_1) || (!DDBPERF1_2) || (!DDBPERF1_3) || (!DDBPERF1_4) || (!DDBPERF1_5) || (!DDBPERF1_6)",
+                            "condition": "(!DDBPERF1_1) || (!DDBPERF1_2) || (!DDBPERF1_4) || (!DDBPERF1_5) || (!DDBPERF1_6)",
                             "risk": "HIGH_RISK"
                         },
                         {
