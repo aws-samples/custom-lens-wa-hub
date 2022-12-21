@@ -8,8 +8,8 @@ CTO, Technical Leader or technical owner for an AWS DocumentDB workload
 
 ## Contributing
 
-- [Karthik Vijayraghavan](kvijayra@amazon.com), Sr.Manager NoSQL DB Specialist SA, WWSO Database, AWS
+- [Karthik Vijayraghavan](mailto:kvijayra@amazon.com), Sr.Manager NoSQL DB Specialist SA, WWSO Database, AWS
 
 ## Co-contributing
-- [Jack Hsu](jackhsu@amazon.com), Partner Solutions Architect, AWS
+- [Jack Hsu](mailto:jackhsu@amazon.com), Partner Solutions Architect, AWS
 
