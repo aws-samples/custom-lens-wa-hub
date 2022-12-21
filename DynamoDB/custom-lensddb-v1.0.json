@@ -47,7 +47,7 @@
           }
        ]
     },
-    "name": "DynamoDB Best Practice - For WA Custom Lens",
+    "name": "Dynamodb Best Practice - For WA Custom Lens",
     "description": "Best practices for configuring Dynamodb",
     "pillars": [
         {
@@ -63,7 +63,7 @@
                             "id": "DDBPERF1_1",
                             "title": "Optimize access patterns for compute , NOT storage.",
                             "helpfulResource": {
-                                "displayText": "Read as few items as possible when retrieving data in DynamoDB. ",
+                                "displayText": "Read as few items as possible when retrieving data in DynamoDB.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SQLtoNoSQL.ReadData.html"
                             },
                             "improvementPlan": {
@@ -123,7 +123,7 @@
                             "id": "DDBPERF1_6",
                             "title": "Use high cardinality partition keys for table and GSIs to distribute data and access evenly across keys",
                             "helpfulResource": {
-                                "displayText": "The partition key value is hashed to determine the physical location of the item in the key space. ",
+                                "displayText": "The partition key value is hashed to determine the physical location of the item in the key space.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-partition-key-design.html"
                             },
                             "improvementPlan": {
@@ -136,6 +136,10 @@
                         {
                             "condition": "DDBPERF1_1 && DDBPERF1_2 && DDBPERF1_3 && DDBPERF1_4 && DDBPERF1_5 && DDBPERF1_6",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBPERF1_1) || (!DDBPERF1_2) || (!DDBPERF1_3) || (!DDBPERF1_4) || (!DDBPERF1_5) || (!DDBPERF1_6)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -191,6 +195,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBPERF10_1) || (!DDBPERF10_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -229,7 +237,7 @@
                             "id": "DDBPERF11_3",
                             "title": "Choose a maintenance window as per off-peak hours",
                             "helpfulResource": {
-                                "displayText": "Every cluster has a weekly maintenance window during which any system changes are applied. ",
+                                "displayText": "Every cluster has a weekly maintenance window during which any system changes are applied.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.concepts.cluster.html"
                             },
                             "improvementPlan": {
@@ -242,6 +250,10 @@
                         {
                             "condition": "DDBPERF11_1 && DDBPERF11_2 && DDBPERF11_3",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBPERF11_1) || (!DDBPERF11_2)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -282,7 +294,7 @@
                             "id": "DDBPERF2_3",
                             "title": "Use on-demand capacity mode for new/spiky/unpredictable traffic",
                             "helpfulResource": {
-                                "displayText": "DynamoDB tables using on-demand capacity mode automatically adapt to your application s traffic volume. ",
+                                "displayText": "DynamoDB tables using on-demand capacity mode automatically adapt to your application s traffic volume.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html#HowItWorks.InitialThroughput"
                             },
                             "improvementPlan": {
@@ -295,6 +307,10 @@
                         {
                             "condition": "DDBPERF2_1 && DDBPERF2_2 && DDBPERF2_3",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBPERF2_1) || (!DDBPERF2_2) || (!DDBPERF2_3)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -315,7 +331,7 @@
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Programming.Errors.html#Programming.Errors.BatchOperations"
                             },
                             "improvementPlan": {
-                                "displayText": " The application needs to handle less serialization and deserialization of the traffic, cpu goes down and each app server can handle higher throughput and so less number of application servers can do the same amount of work. ",
+                                "displayText": "The application needs to handle less serialization and deserialization of the traffic, cpu goes down and each app server can handle higher throughput and so less number of application servers can do the same amount of work.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Programming.Errors.html#Programming.Errors.BatchOperations"
                             }
                         },
@@ -352,7 +368,7 @@
                             "id": "DDBPERF4_1",
                             "title": "Use SuccessfulRequestLatency metric for server-side latency",
                             "helpfulResource": {
-                                "displayText": "When analyzing the Amazon CloudWatch metric SuccessfulRequestLatency, it's a best practice to check the average latency. ",
+                                "displayText": "When analyzing the Amazon CloudWatch metric SuccessfulRequestLatency, it's a best practice to check the average latency.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/metrics-dimensions.html#SuccessfulRequestLatency"
                             },
                             "improvementPlan": {
@@ -380,7 +396,7 @@
                                 "url": "https://aws.amazon.com/xray/"
                             },
                             "improvementPlan": {
-                                "displayText": "Features such as latency metric logging for the AWS SDK or the X-Ray service can help you identify the source of the increased latency. ",
+                                "displayText": "Features such as latency metric logging for the AWS SDK or the X-Ray service can help you identify the source of the increased latency.",
                                 "url": "https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-high-latency/"
                             }
                         },
@@ -392,7 +408,7 @@
                                 "url": "https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-high-latency/"
                             },
                             "improvementPlan": {
-                                "displayText": "To get the latency value for all DynamoDB calls, turn on latency metric logging for the AWS SDK. ",
+                                "displayText": "To get the latency value for all DynamoDB calls, turn on latency metric logging for the AWS SDK.",
                                 "url": "https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-high-latency/"
                             }
                         }
@@ -417,7 +433,7 @@
                             "id": "DDBPERF5_1",
                             "title": "Tune SDK settings and client-side timeouts based on load testing",
                             "helpfulResource": {
-                                "displayText": "Tune the client SDK parameters so that the latent requests timeout and fail much faster (for example, after 50 milliseconds). ",
+                                "displayText": "Tune the client SDK parameters so that the latent requests timeout and fail much faster (for example, after 50 milliseconds).",
                                 "url": "https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-high-latency/"
                             },
                             "improvementPlan": {
@@ -429,7 +445,7 @@
                             "id": "DDBPERF5_2",
                             "title": "Re-use connections, use connection pooling",
                             "helpfulResource": {
-                                "displayText": "When your tables are idle, consider having the client send dummy traffic to the DynamoDB tables. Also consider reusing client connections or use connection pooling. ",
+                                "displayText": "When your tables are idle, consider having the client send dummy traffic to the DynamoDB tables. Also consider reusing client connections or use connection pooling.",
                                 "url": "https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-high-latency/"
                             },
                             "improvementPlan": {
@@ -445,7 +461,7 @@
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GlobalTables.html"
                             },
                             "improvementPlan": {
-                                "displayText": " This can significantly reduce latency for your users. Also, consider using the DynamoDB gateway endpoint to avoid traffic across the internet.",
+                                "displayText": "This can significantly reduce latency for your users. Also, consider using the DynamoDB gateway endpoint to avoid traffic across the internet.",
                                 "url": "https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-ddb.html"
                             }
                         },
@@ -480,6 +496,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBPERF5_2) || (!DDBPERF5_3) || (!DDBPERF5_5)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -498,7 +518,7 @@
                                 "url": "https://aws.amazon.com/blogs/database/monitoring-amazon-dynamodb-for-operational-awareness/"
                             },
                             "improvementPlan": {
-                                "displayText": "You can create a CloudWatch alarm that sends an Amazon SNS message when the alarm changes state. ",
+                                "displayText": "You can create a CloudWatch alarm that sends an Amazon SNS message when the alarm changes state.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/creating-alarms.html"
                             }
                         },
@@ -542,7 +562,7 @@
                             "id": "DDBPERF6_5",
                             "title": "Use CloudWatch Contributor Insights for hot key detection",
                             "helpfulResource": {
-                                "displayText": "CloudWatch Contributor Insights (CCI) logs frequently accessed keys, and throttled keys for both partition and partition+sort key.  ",
+                                "displayText": "CloudWatch Contributor Insights (CCI) logs frequently accessed keys, and throttled keys for both partition and partition+sort key.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/contributorinsights_HowItWorks.html"
                             },
                             "improvementPlan": {
@@ -555,6 +575,10 @@
                         {
                             "condition": "DDBPERF6_1 && DDBPERF6_2 && DDBPERF6_3 && DDBPERF6_4 && DDBPERF6_5",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBPERF6_1) || (!DDBPERF6_3) || (!DDBPERF6_4)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -622,6 +646,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBPERF7_1) || (!DDBPERF7_3) || (!DDBPERF7_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -649,6 +677,10 @@
                         {
                             "condition": "DDBPERF8_1",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBPERF8_1)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -704,6 +736,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBPERF9_1) || (!DDBPERF9_2) || (!DDBPERF9_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -752,7 +788,7 @@
                                 "url": "https://wa.aws.amazon.com/serv.question.OPS_2.en.html"
                             },
                             "improvementPlan": {
-                                "displayText": "Use infrastructure as code and version control to enable tracking of changes and releases. Isolate development and production stages in separate environments. ",
+                                "displayText": "Use infrastructure as code and version control to enable tracking of changes and releases. Isolate development and production stages in separate environments.",
                                 "url": "https://wa.aws.amazon.com/serv.question.OPS_2.en.html"
                             }
                         }
@@ -761,6 +797,10 @@
                         {
                             "condition": "DDBOPS1_1 && DDBOPS1_2 && DDBOPS1_3",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBOPS1_1) || (!DDBOPS1_2) || (!DDBOPS1_3)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -814,6 +854,10 @@
                         {
                             "condition": "DDBOPS2_1 && DDBOPS2_2 && DDBOPS2_3",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBOPS2_3)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -904,7 +948,7 @@
                             "id": "DDBOPS4_4",
                             "title": "Enable CloudWatch Contributor Insights (CCI) for Amazon DynamoDB (at least during troubleshooting)",
                             "helpfulResource": {
-                                "displayText": "CloudWatch Contributor Insights (CCI) logs frequently accessed keys, and throttled keys for both partition and partition+sort key.  ",
+                                "displayText": "CloudWatch Contributor Insights (CCI) logs frequently accessed keys, and throttled keys for both partition and partition+sort key.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/contributorinsights_HowItWorks.html"
                             },
                             "improvementPlan": {
@@ -917,6 +961,10 @@
                         {
                             "condition": "DDBOPS4_1 && DDBOPS4_2 && DDBOPS4_3 && DDBOPS4_4",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBOPS4_3)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -978,6 +1026,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBSEC1_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -992,7 +1044,7 @@
                             "id": "DDBSEC2_1",
                             "title": "Using IAM roles for users and other AWS services to access DynamoDB Tables",
                             "helpfulResource": {
-                                "displayText": "When you grant permissions in DynamoDB, you can specify conditions that determine how a permissions policy takes effect. ",
+                                "displayText": "When you grant permissions in DynamoDB, you can specify conditions that determine how a permissions policy takes effect.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/best-practices-security-preventative.html"
                             },
                             "improvementPlan": {
@@ -1019,6 +1071,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBSEC2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -1033,7 +1089,7 @@
                             "id": "DDBSEC3_1",
                             "title": "Proper access requirements are defined. Grant minimum access required by identities (least privilege access)",
                             "helpfulResource": {
-                                "displayText": "When you set permissions with IAM policies, grant only the permissions required to perform a task. ",
+                                "displayText": "When you set permissions with IAM policies, grant only the permissions required to perform a task.",
                                 "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege"
                             },
                             "improvementPlan": {
@@ -1049,7 +1105,7 @@
                                 "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#remove-credentials"
                             },
                             "improvementPlan": {
-                                "displayText": "IAM provides last accessed information to help you identify the users, roles, permissions, policies, and credentials that you no longer need so that you can remove them. ",
+                                "displayText": "IAM provides last accessed information to help you identify the users, roles, permissions, policies, and credentials that you no longer need so that you can remove them.",
                                 "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#remove-credentials"
                             }
                         },
@@ -1061,7 +1117,7 @@
                                 "url": "https://aws.amazon.com/blogs/security/easier-way-to-control-access-to-aws-regions-using-iam-policies/"
                             },
                             "improvementPlan": {
-                                "displayText": "You can now use the aws:RequestedRegion global condition key in your IAM policies to specify the region to which the IAM principal (user or role) can invoke an API call. ",
+                                "displayText": "You can now use the aws:RequestedRegion global condition key in your IAM policies to specify the region to which the IAM principal (user or role) can invoke an API call.",
                                 "url": "https://aws.amazon.com/blogs/security/easier-way-to-control-access-to-aws-regions-using-iam-policies/"
                             }
                         },
@@ -1081,7 +1137,7 @@
                             "id": "DDBSEC3_5",
                             "title": "Cross Account resources are shared securely: provide cross account access to only resources that require this type of access",
                             "helpfulResource": {
-                                "displayText": "If resources in a different AWS account try to access DynamoDB, they require setting up cross-account access and a trust relationship. ",
+                                "displayText": "If resources in a different AWS account try to access DynamoDB, they require setting up cross-account access and a trust relationship.",
                                 "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/configure-cross-account-access-to-amazon-dynamodb.html"
                             },
                             "improvementPlan": {
@@ -1106,6 +1162,10 @@
                         {
                             "condition": "DDBSEC3_1 && DDBSEC3_2 && DDBSEC3_3 && DDBSEC3_4 && DDBSEC3_5 && DDBSEC3_6",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBSEC3_1)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -1158,11 +1218,11 @@
                             "id": "DDBSEC4_4",
                             "title": "Configure CloudTrail with CloudWatch Logs to monitor logs and be notified when specific activity occurs",
                             "helpfulResource": {
-                                "displayText": "For robust monitoring and alerting, you can also integrate CloudTrail events with Amazon CloudWatch Logs. ",
+                                "displayText": "For robust monitoring and alerting, you can also integrate CloudTrail events with Amazon CloudWatch Logs.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/logging-using-cloudtrail.html"
                             },
                             "improvementPlan": {
-                                "displayText": "To enhance your analysis of DynamoDB service activity and identify changes in activities for an AWS account, you can query AWS CloudTrail logs using Amazon Athena. ",
+                                "displayText": "To enhance your analysis of DynamoDB service activity and identify changes in activities for an AWS account, you can query AWS CloudTrail logs using Amazon Athena.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/logging-using-cloudtrail.html"
                             }
                         },
@@ -1174,7 +1234,7 @@
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/logging-using-cloudtrail.html"
                             },
                             "improvementPlan": {
-                                "displayText": "By specifying AWS::DynamoDB::Stream as a resource type, you can log only calls to the DynamoDB Streams APIs, enabling you to identify security issues while controlling costs. ",
+                                "displayText": "By specifying AWS::DynamoDB::Stream as a resource type, you can log only calls to the DynamoDB Streams APIs, enabling you to identify security issues while controlling costs.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/logging-using-cloudtrail.html"
                             }
                         }
@@ -1199,7 +1259,7 @@
                             "id": "DDBSEC5_1",
                             "title": "Use a VPC endpoint to limit access from only the required VPC",
                             "helpfulResource": {
-                                "displayText": "For security reasons, many AWS customers run their applications within an Amazon Virtual Private Cloud environment (Amazon VPC). ",
+                                "displayText": "For security reasons, many AWS customers run their applications within an Amazon Virtual Private Cloud environment (Amazon VPC).",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/vpc-endpoints-dynamodb.html"
                             },
                             "improvementPlan": {
@@ -1215,7 +1275,7 @@
                                 "url": "https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-access.html"
                             },
                             "improvementPlan": {
-                                "displayText": "You can edit the endpoint policy for a gateway endpoint, which controls access to DynamoDB from the VPC through the endpoint. The default policy allows full access. ",
+                                "displayText": "You can edit the endpoint policy for a gateway endpoint, which controls access to DynamoDB from the VPC through the endpoint. The default policy allows full access.",
                                 "url": "https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-access.html"
                             }
                         },
@@ -1260,6 +1320,10 @@
                         {
                             "condition": "DDBSEC5_1 && DDBSEC5_2 && DDBSEC5_3 && DDBSEC5_4 && DDBSEC5_5",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBSEC5_3) || (!DDBSEC5_4) || (!DDBSEC5_5)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -1316,7 +1380,7 @@
                                 "url": "https://wa.aws.amazon.com/wat.question.SEC_7.en.html"
                             },
                             "improvementPlan": {
-                                "displayText": "Use Macie to detect sensitive data in Amazon DynamoDB tables by exporting the data to Amazon S3 so that Macie can scan the data. ",
+                                "displayText": "Use Macie to detect sensitive data in Amazon DynamoDB tables by exporting the data to Amazon S3 so that Macie can scan the data.",
                                 "url": "https://aws.amazon.com/blogs/security/detecting-sensitive-data-in-dynamodb-with-macie/"
                             }
                         },
@@ -1337,6 +1401,10 @@
                         {
                             "condition": "DDBSEC6_1 && DDBSEC6_2 && DDBSEC6_3 && DDBSEC6_4 && DDBSEC6_5",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBSEC6_1) || (!DDBSEC6_2) || (!DDBSEC6_3)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -1365,7 +1433,7 @@
                             "id": "DDBSEC7_2",
                             "title": "Using encryption at rest for DAX",
                             "helpfulResource": {
-                                "displayText": "DAX encryption at rest provides an additional layer of data protection by helping secure your data from unauthorized access to the underlying storage. ",
+                                "displayText": "DAX encryption at rest provides an additional layer of data protection by helping secure your data from unauthorized access to the underlying storage.",
                                 "url": "https://docs.amazonaws.cn/en_us/amazondynamodb/latest/developerguide/DAXEncryptionAtRest.html"
                             },
                             "improvementPlan": {
@@ -1528,6 +1596,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBREL1_1) || (!DDBREL1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -1593,6 +1665,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBREL2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -1646,6 +1722,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBREL3_1) || (!DDBREL3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -1673,6 +1753,10 @@
                         {
                             "condition": "DDBREL4_1",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBREL4_1)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -1714,6 +1798,10 @@
                         {
                             "condition": "DDBREL5_1 && DDBREL5_2",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBREL5_1) || (!DDBREL5_2)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -1769,6 +1857,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBREL6_1) || (!DDBREL6_2) || (!DDBREL6_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -1799,7 +1891,7 @@
                                 "url": "https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-table-throttled/"
                             },
                             "improvementPlan": {
-                                "displayText": "Application Auto Scaling automatically scales the provisioned capacity only when the consumed capacity is higher than target utilization for two consistent minutes. ",
+                                "displayText": "Application Auto Scaling automatically scales the provisioned capacity only when the consumed capacity is higher than target utilization for two consistent minutes.",
                                 "url": "https://aws.amazon.com/premiumsupport/knowledge-center/dynamodb-table-throttled/"
                             }
                         },
@@ -1807,7 +1899,7 @@
                             "id": "DDBREL7_3",
                             "title": "Ensure default limits/quotas are increased to handle large spikes of demand",
                             "helpfulResource": {
-                                "displayText": "Be aware of unchangeable service quotas and physical resources, and architect to prevent these from impacting reliability. ",
+                                "displayText": "Be aware of unchangeable service quotas and physical resources, and architect to prevent these from impacting reliability.",
                                 "url": "https://wa.aws.amazon.com/wat.question.REL_1.en.html"
                             },
                             "improvementPlan": {
@@ -1820,6 +1912,10 @@
                         {
                             "condition": "DDBREL7_1 && DDBREL7_2 && DDBREL7_3",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBREL7_1) || (!DDBREL7_2) || (!DDBREL7_3)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -1842,7 +1938,7 @@
                             "id": "DDBCOST1_1",
                             "title": "Use Provisioned capacity mode with autoscaling for gradually changing/predictable traffic",
                             "helpfulResource": {
-                                "displayText": "With provisioned capacity mode, you specify the number of data reads and writes per second that you require for your application. ",
+                                "displayText": "With provisioned capacity mode, you specify the number of data reads and writes per second that you require for your application.",
                                 "url": "https://aws.amazon.com/dynamodb/pricing/provisioned/"
                             },
                             "improvementPlan": {
@@ -1867,6 +1963,10 @@
                         {
                             "condition": "DDBCOST1_1 && DDBCOST1_2",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBCOST1_1) || (!DDBCOST1_2)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -1898,6 +1998,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBCOST2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -1923,6 +2027,10 @@
                         {
                             "condition": "DDBCOST3_1",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBCOST3_1)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -1954,6 +2062,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBCOST4_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -1968,7 +2080,7 @@
                             "id": "DDBCOST5_1",
                             "title": "Implement Cost Allocation Tags on your DynamoDB resources for use with Cost Explorer",
                             "helpfulResource": {
-                                "displayText": "A tag is a label that you or AWS assigns to an AWS resource. Each tag consists of a key and a value. For each resource, each tag key must be unique, and each tag key can have only one value. ",
+                                "displayText": "A tag is a label that you or AWS assigns to an AWS resource. Each tag consists of a key and a value. For each resource, each tag key must be unique, and each tag key can have only one value.",
                                 "url": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html"
                             },
                             "improvementPlan": {
@@ -1981,6 +2093,10 @@
                         {
                             "condition": "DDBCOST5_1",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBCOST5_1)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -2022,6 +2138,10 @@
                         {
                             "condition": "DDBCOST6_1 && DDBCOST6_2",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBCOST6_1) || (!DDBCOST6_2)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -2094,6 +2214,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBCOST8_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -2108,7 +2232,7 @@
                             "id": "DDBCOST9_1",
                             "title": "We reserve DynamoDB capacity where appropriate",
                             "helpfulResource": {
-                                "displayText": "DynamoDB reserved capacity can help you save on your provisioned capacity costs by making an upfront commitment on your base level of provisioned capacity. ",
+                                "displayText": "DynamoDB reserved capacity can help you save on your provisioned capacity costs by making an upfront commitment on your base level of provisioned capacity.",
                                 "url": "https://aws.amazon.com/dynamodb/pricing/provisioned/"
                             },
                             "improvementPlan": {
@@ -2121,6 +2245,10 @@
                         {
                             "condition": "DDBCOST9_1",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!DDBCOST9_1)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -2158,6 +2286,10 @@
                             "risk": "NO_RISK"
                         },
                         {
+                            "condition": "(!DDBSUST1_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
                             "condition": "default",
                             "risk": "MEDIUM_RISK"
                         }
@@ -2172,7 +2304,7 @@
                             "id": "DDBSUST2_1",
                             "title": "Yes we prioritize using Serverless services",
                             "helpfulResource": {
-                                "displayText": "Unlike on-premise or instance-based database services, DynamoDB allows for extreme flexibility in scalability and cost. ",
+                                "displayText": "Unlike on-premise or instance-based database services, DynamoDB allows for extreme flexibility in scalability and cost.",
                                 "url": "https://docs.aws.amazon.com/wellarchitected/latest/sustainability-pillar/design-principles-for-sustainability-in-the-cloud.html"
                             },
                             "improvementPlan": {
@@ -2201,7 +2333,7 @@
                             "id": "DDBSUST3_1",
                             "title": "Yes we use streams and we utilise Lambda Event Filtering",
                             "helpfulResource": {
-                                "displayText": "DynamoDB is integrated with Lambda so that you can create triggers pieces of code that automatically respond to events in DynamoDB Streams. ",
+                                "displayText": "DynamoDB is integrated with Lambda so that you can create triggers pieces of code that automatically respond to events in DynamoDB Streams.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.Lambda.html"
                             },
                             "improvementPlan": {
@@ -2300,7 +2432,7 @@
                             "id": "DDBSUST6_2",
                             "title": "Metrics are viewed in the AWS web console",
                             "helpfulResource": {
-                                "displayText": "When you interact with DynamoDB, it sends the following metrics and dimensions to CloudWatch. Metrics are grouped first by the service namespace, and then by the various dimension combinations within each namespace. ",
+                                "displayText": "When you interact with DynamoDB, it sends the following metrics and dimensions to CloudWatch. Metrics are grouped first by the service namespace, and then by the various dimension combinations within each namespace.",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/metrics-dimensions.html"
                             },
                             "improvementPlan": {
