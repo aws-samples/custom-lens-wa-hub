@@ -31,6 +31,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [DynamoDB](/DynamoDB)
 * [DocumentDB](/DocumentDB)
 * [Glue](/Glue)
+* [OpenSearch](/OpenSearch)
 
 ### Custom Lens for Operation
 * [Operational Readiness Review](/ORR-Lens/)

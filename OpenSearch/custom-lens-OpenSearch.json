@@ -1,0 +1,1800 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "OpenSearch Best Practice - For WA Custom Lens",
+    "description": "Best practices for configuring OpenSearch",
+    "_version":"1.0",
+    "_release_date":"2023-01-03",
+    "_release_note":"",
+    "_teams":{
+       "_authors":[
+          {
+             "name":"Shih-Yong Wang, Manager, Solutions Architect, GCR, AWS"
+          },          
+          {
+             "name":"Ray Wang, Analytics SME, GCR, AWS",
+             "email":"hsiawang@amazon.com"
+          },          
+          {
+             "name":"Ankush Agarwal, OpenSearch SME, APAC, AWS"
+          }
+       ],
+       "_tech_reviewers":[
+          {
+            "name":"Bob Yeh, Geo Solutions Architect, Well-Architected APAC, AWS"
+          }
+       ]
+    },
+    "pillars": [
+        {
+            "id": "AOSSOPS",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "aossops1",
+                    "title": "How do you monitor and analyze your Amazon OpenSearch domains performance?",
+                    "description": "Amazon OpenSearch Service emits performance metrics to Amazon CloudWatch. Regularly review your cluster and instance metrics and configure recommended CloudWatch alarms based on your workload performance.",
+                    "helpfulResource": {
+                        "displayText": "Amazon OpenSearch Service exposes OpenSearch error logs, search slow logs, indexing slow logs, and audit logs in Amazon CloudWatch Logs. You can enable log publishing through AWS Console, CLI, SDK, or CloudFormation.",
+                        "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createdomain-configure-slow-logs.html"
+                    },
+                    "choices": [
+                        {
+                            "id": "aossops1_1",
+                            "title": "Setup the recommended CloudWatch alarms for your Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "Understand what recommended CloudWatch alarms are for your Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cloudwatch-alarms.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Setup CloudWatch alarms for Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cloudwatch-alarms.html"
+                            }
+                        },
+                        {
+                            "id": "aossops1_2",
+                            "title": "Setup search slow logs, indexing slow logs, and error logs on your Amazon OpenSearch Service domain to obtain more detailed inf",
+                            "helpfulResource": {
+                                "displayText": "Index and search slow logs are useful tools to understand and troubleshoot the performance issues of your Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createdomain-configure-slow-logs.html#createdomain-configure-slow-logs-console"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Setup search and index slow logs, and error logs on your Amazon OpenSearch Service domain to get detailed information for troubleshooting performance and stability issues.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createdomain-configure-slow-logs.html#createdomain-configure-slow-logs-console"
+                            }
+                        },
+                        {
+                            "id": "aossops1_3",
+                            "title": "Enable audit logs if your Amazon OpenSearch Service domain uses fine-grained access control.",
+                            "helpfulResource": {
+                                "displayText": "Audit logs let you track user activity on your OpenSearch clusters, including authentication success and failures, requests to OpenSearch, index changes, and incoming search queries.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/audit-logs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enabling audit logs is a two-step process. First, you configure your domain to publish audit logs to CloudWatch Logs. Then, you enable audit logs in OpenSearch Dashboards and configure them to meet your needs.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/audit-logs.html#audit-log-enabling"
+                            }
+                        },
+                        {
+                            "id": "aossops1_4",
+                            "title": "Get notified from CloudWatch alarms for your Amazon OpenSearch Service domains.",
+                            "helpfulResource": {
+                                "displayText": "CloudWatch uses Amazon Simple Notification Service (SNS) to send email.",
+                                "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-configure-notifications-for-cloudwatch-logs-alarms.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set Up Amazon SNS in the CloudWatch Developer Guide.",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/US_SetupSNS.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossops1_1 && aossops1_2 && aossops1_3 && aossops1_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossops1_1) || (!aossops1_2) || (!aossops1_3) || (!aossops1_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossops2",
+                    "title": "How do you troubleshoot common issues in Amazon OpenSearch domain?",
+                    "description": "Operational runbooks can be used to troubleshoot common issues and restore service back into service.",
+                    "helpfulResource": {
+                        "displayText": "Amazon OpenSearch Service integrates with Amazon EventBridge to notify you of certain events that affect your domains.",
+                        "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/handling-errors.html "
+                    },
+                    "choices": [
+                        {
+                            "id": "aossops2_1",
+                            "title": "Identify and solve common Amazon OpenSearch Service domain issues.",
+                            "helpfulResource": {
+                                "displayText": "Have the operational runbooks can greatly reduce time to restore service when facing issues.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/handling-errors.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create the operational runbooks to describe how to identify and solve common Amazon OpenSearch Service domain issues.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/handling-errors.html"
+                            }
+                        },
+                        {
+                            "id": "aossops2_2",
+                            "title": "Identify and solve common Amazon OpenSearch Service node issues.",
+                            "helpfulResource": {
+                                "displayText": "A failed node is an instance that isn't responding to heartbeat signals from the other nodes.",
+                                "url": "https://aws.amazon.com/premiumsupport/knowledge-center/opensearch-node-crash/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Common causes of failed cluster nodes include: 1/High Java Virtual Machine (JVM) memory pressure, 2/Hardware failure.",
+                                "url": "https://aws.amazon.com/premiumsupport/knowledge-center/opensearch-node-crash/"
+                            }
+                        },
+                        {
+                            "id": "aossops2_3",
+                            "title": "Configuring alerts in Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "Configure alerts in Amazon OpenSearch Service to get notified when one or more indexes meets certain conditions.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/alerting.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define a condition to trigger the alert from the OpenSearch Dashboards main menu.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/alerting.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossops2_1 && aossops2_2 && aossops2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossops2_1) || (!aossops2_2) || (!aossops2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossops3",
+                    "title": "How do you get notification from available Amazon OpenSearch Service updates?",
+                    "description": "Do you subscribe the notification from Amazon OpenSerarch Service to get the latest software updates?",
+                    "helpfulResource": {
+                        "displayText": "Configure an Amazon EventBridge event rule that captures notifications for available service software updates in Amazon OpenSearch Service",
+                        "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/sns-events.html"
+                    },
+                    "choices": [
+                        {
+                            "id": "aossops3_1",
+                            "title": "Read the important changes from Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "Service software updates add support for new features, security patches, bug fixes, and other improvements.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/service-software.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Subscribe to notifications about important changes to Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/release-notes.html"
+                            }
+                        },
+                        {
+                            "id": "aossops3_2",
+                            "title": "Subscribe the notification from Amazon OpenSearch Service to get the lastest software updates.",
+                            "helpfulResource": {
+                                "displayText": "Amazon OpenSearch Service can publish software updates event to Amazon EventBridge.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/sns-events.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create and subscribe to an Amazon SNS topic, then register an event rule.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/sns-events.html#sns-events-create"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossops3_1 && aossops3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossops3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossops4",
+                    "title": "Do you have enough IP addresses in VPC subnets?",
+                    "description": "Do you know how many IP addresses you have where your Amazon OpenSearch Service is deployed?",
+                    "helpfulResource": {
+                        "displayText": "All VPC subnet mush with enough IP addresses for Amazon OpenSearch Service deployment.",
+                        "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-configuration-changes.html#validation"
+                    },
+                    "choices": [
+                        {
+                            "id": "aossops4_1",
+                            "title": "Check how many IP addresses you have where your Amazon OpenSearch Service is deployed.",
+                            "helpfulResource": {
+                                "displayText": "Review the IP addresses in your VPC subnets where your Amazon OpenSearch Service deployed.",
+                                "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Check the IP addresses in your VPC subnets where your Amazon OpenSearch Service deployed.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/vpc.html#reserving-ip-vpc-endpoints"
+                            }
+                        },
+                        {
+                            "id": "aossops4_2",
+                            "title": "Review the cluster health and Amazon CloudWatch metrics when blue/green deploying.",
+                            "helpfulResource": {
+                                "displayText": "Know what changes that usually cause blue/green deployments.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-configuration-changes.html#bg"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can review the cluster health and Amazon CloudWatch metrics when the blue/green deployment is active.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-configuration-changes.html#bg"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossops4_1 && aossops4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossops4_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossops5",
+                    "title": "Do you have the developer guide for the Amazon OpenSearch Service?",
+                    "description": "Do you have developer guide for application team or client side to aware the Amazon OpenSearch Service excpetion?",
+                    "choices": [
+                        {
+                            "id": "aossops5_1",
+                            "title": "Use the AWS SDKs to interact with Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "Using the AWS SDKs to interact with the Amazon OpenSearch Service configuration API.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/configuration-samples.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Send signed HTTP requests to Amazon OpenSearch Service using Elasticsearch and OpenSearch clients and other common libraries.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/request-signing.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossops5_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossops6",
+                    "title": "How do you manage indexes?",
+                    "description": "Do you enable Index State Management (ISM) in Amazon OpenSearch Service?",
+                    "choices": [
+                        {
+                            "id": "aossops6_1",
+                            "title": "Use the Index State Management (ISM) in Amazon OpenSearch Service to manage index life cycle.",
+                            "helpfulResource": {
+                                "displayText": "Understand what is Index State Management (ISM) in Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ism.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create an Index State Management (ISM) policy.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ism.html#ism-start"
+                            }
+                        },
+                        {
+                            "id": "aossops6_2",
+                            "title": "Use UltraWarm or cold storage tier for Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "Understand what is UltraWarm or Cold storage for Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ultrawarm.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable UltraWarm or Cold storage tier in Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ultrawarm.html#ultrawarm-enable"
+                            }
+                        },
+                        {
+                            "id": "aossops6_3",
+                            "title": "Use an index rollup to create a new index.",
+                            "helpfulResource": {
+                                "displayText": "Index rollups in Amazon OpenSearch Service let you reduce storage costs by periodically rolling up old data into summarized indices",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/rollup.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create an index rollup job and run it regularly.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/rollup.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossops6_1 && aossops6_2 && aossops6_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossops6_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossops7",
+                    "title": "How do you operate your multi-tenancy indexes?",
+                    "description": "Do you have your tenancy strategy?",
+                    "choices": [
+                        {
+                            "id": "aossops7_1",
+                            "title": "Understand multi-tenancy strategy and best practices.",
+                            "helpfulResource": {
+                                "displayText": "Using multi-tenancy strategy to create your indexes.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/saas-lens.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable multi-tenancy when creating your indexes.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/saas-lens.html"
+                            }
+                        },
+                        {
+                            "id": "aossops7_2",
+                            "title": "Hold the tenant position by a separate pointer.",
+                            "helpfulResource": {
+                                "displayText": "Use a database to hold a pointer for each tenant.",
+                                "url": "https://www.youtube.com/watch?v=95kQkS51VnU"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create a database to hold a pointer for each tenant.",
+                                "url": "https://www.youtube.com/watch?v=95kQkS51VnU"
+                            }
+                        },
+                        {
+                            "id": "aossops7_3",
+                            "title": "Manage your hot tenants.",
+                            "helpfulResource": {
+                                "displayText": "Use a database to hold a pointer for each tenant.",
+                                "url": "https://www.youtube.com/watch?v=95kQkS51VnU"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Move tenants by locking, reindexing, deleting, and changing pointers.",
+                                "url": "https://www.youtube.com/watch?v=95kQkS51VnU"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossops7_1 && aossops7_2 && aossops7_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "AOSSPERF",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "aossperf1",
+                    "title": "How do you ensure the instances resources are utilized efficiently?",
+                    "description": "Utilizing domains compute and storage resources efficiently helps you right size the domain.",
+                    "helpfulResource": {
+                        "displayText": "Auto-Tune uses performance and usage metrics from your OpenSearch cluster to suggest changes to queue sizes, cache sizes, and Java virtual machine (JVM) settings on your nodes.",
+                        "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/auto-tune.html"
+                    },
+                    "choices": [
+                        {
+                            "id": "aossperf1_1",
+                            "title": "Check the CPU utilization and JVMMemoryPressure metrics on the Opensearch cluster.",
+                            "helpfulResource": {
+                                "displayText": "Over-provisioned compute resources in domains lead to resources being idle.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-cloudwatchmetrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Reduce the node size to lower size if the compute resources are over-provisioned.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-configuration-changes.html"
+                            }
+                        },
+                        {
+                            "id": "aossperf1_2",
+                            "title": "Check the DiskUtilization Metric to gauge storage usage.",
+                            "helpfulResource": {
+                                "displayText": "Over-provisioned storage resources in domains lead to resources being idle.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-cloudwatchmetrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Reduce disk size if the storage layer is over-provisioned.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-configuration-changes.html"
+                            }
+                        },
+                        {
+                            "id": "aossperf1_3",
+                            "title": "Enable Auto-Tune on your domains to improve cluster speed and stability.",
+                            "helpfulResource": {
+                                "displayText": "Auto-Tune gathers and analyzes performance metrics for your domain to improve performance and stability.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/auto-tune.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable Auto-Tune on your domains to improve cluster speed and stability.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/auto-tune.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossperf1_1 && aossperf1_2 && aossperf1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossperf2",
+                    "title": "How do you ensure the storage resources are utilized efficiently?",
+                    "description": "Choose the right storage solutions for your needs in Amazon OpenSearch Service.",
+                    "choices": [
+                        {
+                            "id": "aossperf2_1",
+                            "title": "Check your storage space.",
+                            "helpfulResource": {
+                                "displayText": "If one or more nodes in your cluster has less than 20% of available storage space, or less than 20 GB of storage space, basic write operations like adding documents and creating indexes can start to fail.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/handling-errors.html#troubleshooting-cluster-block"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Monitor the FreeStorageSpace metric in the OpenSearch Service console and create CloudWatch alarms to trigger when FreeStorageSpace drops below a certain threshold.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/handling-errors.html#troubleshooting-cluster-block"
+                            }
+                        },
+                        {
+                            "id": "aossperf2_2",
+                            "title": "Check if there is storage skew.",
+                            "helpfulResource": {
+                                "displayText": "Storage skew is when one or more nodes/indexes within a cluster has significantly more storage (disk.indices) than the other nodes/indexes.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/handling-errors.html#handling-errors-node-skew"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use shard counts that are multiples of the data node count to ensure that each index is distributed evenly across data nodes.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/handling-errors.html#handling-errors-node-skew"
+                            }
+                        },
+                        {
+                            "id": "aossperf2_3",
+                            "title": "Check if the IOPS is the bottleneck.",
+                            "helpfulResource": {
+                                "displayText": "Monitor the storage IOPS with Amazon CloudWatch.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-cloudwatchmetrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Creating Amazon CloudWatch Alarms in the Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cloudwatch-alarms.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossperf2_1 && aossperf2_2 && aossperf2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossperf2_1) || (!aossperf2_2) || (!aossperf2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossperf3",
+                    "title": "How do you make sure your ingestion execute efficiently?",
+                    "description": "Integrations are a key way to reduce operational costs and improve performance.",
+                    "choices": [
+                        {
+                            "id": "aossperf3_1",
+                            "title": "Understand different ways to ingest data in Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "With Amazon OpenSearch Service, you can integrate data ingestion with Amazon Kinesis Data Firehose, Logstash, Amazon CloudWatch, or AWS IoT.",
+                                "url": "https://aws.amazon.com/opensearch-service/features/integration/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You also have to batch and buffer the data for efficient loading so that the data is available immediately for querying without overloading your cluster s compute and networking resources.",
+                                "url": "https://aws.amazon.com/opensearch-service/features/integration/"
+                            }
+                        },
+                        {
+                            "id": "aossperf3_2",
+                            "title": "Check the index performance.",
+                            "helpfulResource": {
+                                "displayText": "Monitor the index metrics with Amazon CloudWatch.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-cloudwatchmetrics.html#managedomains-cloudwatchmetrics-instance-metrics"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Creating Amazon CloudWatch Alarms in the Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cloudwatch-alarms.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossperf3_1 && aossperf3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossperf3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossperf4",
+                    "title": "How do you assess the correct bulk request size to improve ingestion performance?",
+                    "description": "Using the correct bulk request size and compression helps improve ingestion performance.",
+                    "choices": [
+                        {
+                            "id": "aossperf24_4",
+                            "title": "Tune Refresh Interval to improve indexing performance.",
+                            "helpfulResource": {
+                                "displayText": "A refresh operation makes all the updates that are performed on an index available for search.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/bp.html#bp-perf-refresh"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The less frequently that you refresh an index (higher refresh interval), the better the overall indexing performance is.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/bp.html#bp-perf-refresh"
+                            }
+                        },
+                        {
+                            "id": "aossperf4_1",
+                            "title": "Check the refresh_interval value.",
+                            "helpfulResource": {
+                                "displayText": "Increase the refresh_interval to 60 seconds or more.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-cloudwatchmetrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To prevent 429 errors, it's a best practice to increase the refresh interval.",
+                                "url": "https://aws.amazon.com/premiumsupport/knowledge-center/opensearch-resolve-429-error"
+                            }
+                        },
+                        {
+                            "id": "aossperf4_2",
+                            "title": "Tune your Bulk request size to improve ingestion performance.",
+                            "helpfulResource": {
+                                "displayText": "Bulk sizing depends on your data, analysis, and cluster configuration, but a good starting point is 3 5 MiB per bulk request.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/bp.html#bp-perf-bulk"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Tune your Bulk request size to improve ingestion performance.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/bp.html#bp-perf-bulk"
+                            }
+                        },
+                        {
+                            "id": "aossperf4_3",
+                            "title": "To reduce the size of OpenSearch responses, exclude unnecessary fields with the filter_path parameter.",
+                            "helpfulResource": {
+                                "displayText": "Responses from the _index and _bulk APIs contain quite a bit of information.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/indexing.html#indexing-size"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To reduce the size of OpenSearch responses, exclude unnecessary fields with the filter_path parameter.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/indexing.html#indexing-size"
+                            }
+                        },
+                        {
+                            "id": "aossperf4_5",
+                            "title": "Use gzip compression to reduce the payload size of requests and responses.",
+                            "helpfulResource": {
+                                "displayText": "Compress HTTP requests and responses in Amazon OpenSearch Service domains using gzip compression.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/gzip.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use gzip compression to reduce the payload size of requests and responses.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/gzip.html"
+                            }
+                        },
+                        {
+                            "id": "aossperf4_6",
+                            "title": "Use the AWS SDKs to interact with the Amazon OpenSearch Service API.",
+                            "helpfulResource": {
+                                "displayText": "Using the AWS SDKs to interact with the Amazon OpenSearch Service configuration API.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/configuration-samples.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Send signed HTTP requests to Amazon OpenSearch Service using Elasticsearch and OpenSearch clients and other common libraries.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/configuration-samples.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossperf24_4 && aossperf4_1 && aossperf4_2 && aossperf4_3 && aossperf4_5 && aossperf4_6",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossperf4_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossperf5",
+                    "title": "How do you make sure your query execute efficiently?",
+                    "description": "You can optimize the query experience by improving URI parameters, custom packages, SQL support, or asynchronous search.",
+                    "choices": [
+                        {
+                            "id": "aossperf5_1",
+                            "title": "Understand how to query the Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "Searching data in Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/searching.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Full-text query types and options.",
+                                "url": "https://opensearch.org/docs/latest/opensearch/query-dsl/full-text/"
+                            }
+                        },
+                        {
+                            "id": "aossperf5_2",
+                            "title": "Use the AWS SDKs to interact with the Amazon OpenSearch Service API.",
+                            "helpfulResource": {
+                                "displayText": "Using the AWS SDKs to interact with the Amazon OpenSearch Service configuration API.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/configuration-samples.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Send signed HTTP requests to Amazon OpenSearch Service using Elasticsearch and OpenSearch clients and other common libraries.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/configuration-samples.html"
+                            }
+                        },
+                        {
+                            "id": "aossperf5_3",
+                            "title": "Check the SQL metrics.",
+                            "helpfulResource": {
+                                "displayText": "Amazon OpenSearch Service provides the relative metrics for SQL executions.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-cloudwatchmetrics.html#managedomains-cloudwatchmetrics-sql"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Creating Amazon CloudWatch Alarms in the Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-cloudwatchmetrics.html#managedomains-cloudwatchmetrics-sql"
+                            }
+                        },
+                        {
+                            "id": "aossperf5_4",
+                            "title": "Using benchmark tools to improve your query experience.",
+                            "helpfulResource": {
+                                "displayText": "Running benchmarks and recording results.",
+                                "url": "https://github.com/opensearch-project/opensearch-benchmark"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Setup and teardown of an OpenSearch cluster for benchmarking.",
+                                "url": "https://github.com/opensearch-project/opensearch-benchmark"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossperf5_1 && aossperf5_2 && aossperf5_3 && aossperf5_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossperf5_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossperf6",
+                    "title": "How do you monitor multi-tenancy index performance?",
+                    "description": "Try to align shard count and node count.",
+                    "choices": [
+                        {
+                            "id": "aossperf6_1",
+                            "title": "Proactively monitor your index and query performance in Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "Watch for hot spots, especially CPU and IOPS.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/monitoring-data.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Watch for hot spots, especially CPU and IOPS.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/monitoring-data.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossperf6_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossperf7",
+                    "title": "How do you analyze your Amazon OpenSearch Service performance?",
+                    "description": "Try to understand your Amazon OpenSearch Service from tools.",
+                    "choices": [
+                        {
+                            "id": "aossperf7_1",
+                            "title": "Proactively analyze your Amazon OpenSearch Service performance.",
+                            "helpfulResource": {
+                                "displayText": "An official performance analyzer can help query numerous performance metrics for your Amazon OpenSearch Service domain.",
+                                "url": "https://opensearch.org/docs/latest/monitoring-plugins/pa/index/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Install the official performance analyzer.",
+                                "url": "https://opensearch.org/docs/latest/monitoring-plugins/pa/index/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossperf7_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossperf7_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "AOSSSEC",
+            "name": "Security",
+            "questions": [
+                {
+                    "id": "aosssec1",
+                    "title": "How do you protect your AWS account?",
+                    "description": "AWS is responsible for protecting the global infrastructure that runs all of the AWS Cloud. You are responsible for maintaining control over your content that is hosted on this infrastructure.",
+                    "choices": [
+                        {
+                            "id": "aosssec1_1",
+                            "title": "Use multi-factor authentication (MFA) with each account.",
+                            "helpfulResource": {
+                                "displayText": "With MFA enabled, when a user signs in to the AWS Management Console, they are prompted for their user name and password, and an authentication code from their MFA device.",
+                                "url": "https://aws.amazon.com/iam/features/mfa/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable MFA for IAM.",
+                                "url": "https://aws.amazon.com/iam/features/mfa/"
+                            }
+                        },
+                        {
+                            "id": "aosssec1_2",
+                            "title": "How do you log IAM calls?",
+                            "helpfulResource": {
+                                "displayText": "Logging IAM and AWS STS API calls with AWS CloudTrail.",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/cloudtrail-integration.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable logging IAM and AWS STS API requests.",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/cloudtrail-integration.html#cloudtrail-integration_apis"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosssec1_1 && aosssec1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aosssec1_1) || (!aosssec1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aosssec2",
+                    "title": "How do you control access to your Amazon OpenSearch Service?",
+                    "description": "Amazon OpenSearch Service provides fine-grained access control in different ways.",
+                    "choices": [
+                        {
+                            "id": "aosssec2_1",
+                            "title": "Fine-grained access control offers additional ways of controlling access to your data on Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "Understand the big picture of the fine-grained access control in Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Adopt the fine-grained access control in Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html"
+                            }
+                        },
+                        {
+                            "id": "aosssec2_2",
+                            "title": "Fine-grained access control lets you establish role based access control to who can access certain data within an OpenSearch Se",
+                            "helpfulResource": {
+                                "displayText": "Fine-grained access control offers Role-based access control, Security at the index, document, and field level OpenSearch Dashboards multi-tenancy.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Fine Grained access control for authentcation and authorization when creating new domains.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html#fgac-enabling"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosssec2_1 && aosssec2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aosssec2_1) || (!aosssec2_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aosssec3",
+                    "title": "How do you restrict your OpenSearch domains?",
+                    "description": "You can launch AWS resources, such as Amazon OpenSearch Service domains, into a virtual private cloud (VPC). A VPC is a virtual network that's dedicated to your AWS account.",
+                    "choices": [
+                        {
+                            "id": "aosssec3_1",
+                            "title": "Are Opensearch domains deployed within a VPC?",
+                            "helpfulResource": {
+                                "displayText": "Placing your OpenSearch Service domain within a virtual private cloud (VPC) helps enable secure communication between OpenSearch Service and other services within the VPC.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/vpc.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "We recommend creating your domain within a VPC since domains that reside within a VPC have an extra layer of security compared to domains that use public endpoints.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/vpc.html#prerequisites-vpc-endpoints"
+                            }
+                        },
+                        {
+                            "id": "aosssec3_2",
+                            "title": "Apply restrictive access policies and follow the principle of least privilege when granting access to the configuration API and",
+                            "helpfulResource": {
+                                "displayText": "When you set permissions with access policies, grant only the permissions required to perform a task.",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Apply restrictive access policies and follow the principle of least privilege when granting access to the configuration API and the OpenSearch API operations.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ac.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosssec3_1 && aosssec3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aosssec3_1) || (!aosssec3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aosssec4",
+                    "title": "How do you protect data at-rest and in-transit with OpenSearch?",
+                    "description": "Data should be encrypted at all times to ensure its security. Data encryption is an available feature of OpenSearch.",
+                    "choices": [
+                        {
+                            "id": "aosssec4_1",
+                            "title": "How do you communicate with Amazon OpenSearch Service?",
+                            "helpfulResource": {
+                                "displayText": "Use SSL/TLS to communicate with AWS resources. We recommend TLS 1.2 or later.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/data-protection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Only use SSL/TLS to communicate with Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/data-protection.html"
+                            }
+                        },
+                        {
+                            "id": "aosssec4_2",
+                            "title": "Enable node-to-node encryption for OpenSearch domains.",
+                            "helpfulResource": {
+                                "displayText": "Node-to-node encryption provides an additional layer of security on top of the default security features within OpenSearch Service. It implements Transport Layer Security (TLS) for all communications between the nodes.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ntn.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable node-to-node encryption for OpenSearch domains.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ntn.html#enabling-ntn"
+                            }
+                        },
+                        {
+                            "id": "aosssec4_3",
+                            "title": "Enable encryption at rest for OpenSearch domains.",
+                            "helpfulResource": {
+                                "displayText": "OpenSearch Service domains offer encryption of data at rest to help prevent unauthorized access to your data.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/encryption-at-rest.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable encryption at rest for OpenSearch domains.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/encryption-at-rest.html#enabling-ear"
+                            }
+                        },
+                        {
+                            "id": "aosssec4_4",
+                            "title": "How do you encrypt logs in Amazon CloudWatch?",
+                            "helpfulResource": {
+                                "displayText": "Encrypt all kinds of logst storing in Amazon CloudWatch.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/encryption-at-rest.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Encrypt the CloudWatch Logs log group using the same AWS KMS key as the OpenSearch Service domain.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/encryption-at-rest.html#enabling-ear"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosssec4_1 && aosssec4_2 && aosssec4_3 && aosssec4_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aosssec4_1) || (!aosssec4_2) || (!aosssec4_3) || (!aosssec4_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aosssec5",
+                    "title": "How do you track and audit the access to the OpenSearch domains?",
+                    "description": "Domains access should be tracked and audited.",
+                    "choices": [
+                        {
+                            "id": "aosssec5_1",
+                            "title": "Enable Audit-logs on the OpenSearch Domains(only for FGAC enabled domains).",
+                            "helpfulResource": {
+                                "displayText": "All audit logs should be clearly recorded for security reasons.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/audit-logs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable Audit-logs on the OpenSearch Domains(only for FGAC enabled domains)",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/audit-logs.html"
+                            }
+                        },
+                        {
+                            "id": "aosssec5_2",
+                            "title": "Monitor the CloudTrail logs for OpenSearch service.",
+                            "helpfulResource": {
+                                "displayText": "Amazon OpenSearch Service integrates with AWS CloudTrail, a service that provides a record of actions taken by a user, role, or an AWS service in OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-cloudtrailauditing.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Monitor the CloudTrail logs generated for the Opensearch service actions.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-cloudtrailauditing.html#understanding-service-name-entries"
+                            }
+                        },
+                        {
+                            "id": "aosssec5_3",
+                            "title": "Monitor domain events in real time with Amazon Eventbridge. The same events are also sent to Amazon CloudWatch Events",
+                            "helpfulResource": {
+                                "displayText": "Amazon OpenSearch Service integrates with Amazon EventBridge to notify you of certain events that affect your domains. Events from AWS services are delivered to EventBridge in near real time.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/monitoring-events.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Monitor domain events in real-time by using Amazon EventBridge.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/monitoring-events.html"
+                            }
+                        },
+                        {
+                            "id": "aosssec5_4",
+                            "title": "AWS Config can help to evaluate AWS Resource Configurations.",
+                            "helpfulResource": {
+                                "displayText": "Enable AWS Config Managed Rules check for OpenSearch Domain",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/managed-rules-by-aws-config.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Turning on AWS Config.",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/gs-cli-subscribe.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosssec5_1 && aosssec5_2 && aosssec5_3 && aosssec5_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aosssec5_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aosssec6",
+                    "title": "How do you protect an Amazon OpenSearch Service-managed VPC endpoint?",
+                    "description": "These endpoints create a private connection between your VPC and Amazon OpenSearch Service.",
+                    "choices": [
+                        {
+                            "id": "aosssec6_1",
+                            "title": "How do you communicate with your Amazon OpenSearch Service VPC endpoint?",
+                            "helpfulResource": {
+                                "displayText": "Using AWS PrivateLink to communicate with Amazon OpenSearch Service VPC endpoint.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/vpc-interface-endpoints.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish the private connection by creating an OpenSearch Service-managed interface VPC endpoint.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/vpc-interface-endpoints.html#vpc-endpoint-create"
+                            }
+                        },
+                        {
+                            "id": "aosssec6_2",
+                            "title": "How do you authorize VPC endpoint access?",
+                            "helpfulResource": {
+                                "displayText": "Refer the Amazon OpenSearch Service guideline to access the VPC endpoint.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/vpc-interface-endpoints.html#vpc-endpoint-api"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use the following API operations to manage endpoint access to VPC domains.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/APIReference/API_AuthorizeVpcEndpointAccess.html#API_AuthorizeVpcEndpointAccess_RequestSyntax"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosssec6_1 && aosssec6_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aosssec6_1) || (!aosssec6_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aosssec7",
+                    "title": "How do you protect multi-tenancy data on an Amazon OpenSearch Service?",
+                    "description": "How to design, deploy, and architect your multi-tenant document structure.",
+                    "choices": [
+                        {
+                            "id": "aosssec7_1",
+                            "title": "How to login the Amazon OpenSearch Dashboards?",
+                            "helpfulResource": {
+                                "displayText": "Enable with SAML and Cognito for Amazon OpenSearch Dashboards login.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/saml.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Integrate with SAML and Cognito for the Amazon OpenSearch Dashboards login.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/saml.html"
+                            }
+                        },
+                        {
+                            "id": "aosssec7_2",
+                            "title": "How to access the Amazon OpenSearch Service from your VPC?",
+                            "helpfulResource": {
+                                "displayText": "Enable a private endpoint  and security groups into your VPC.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/vpc.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use a private endpoint to deploy into your VPC and security groups for traffic control.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/vpc.html"
+                            }
+                        },
+                        {
+                            "id": "aosssec7_3",
+                            "title": "How to access your multi-tenancy Amazon OpenSearch Service?",
+                            "helpfulResource": {
+                                "displayText": "Enable OpenSearch fine-grained access control to secure your data and dashboards.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use OpenSearch fine-grained access control to secure your data and dashboards.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosssec7_1 && aosssec7_2 && aosssec7_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aosssec7_1) || (!aosssec7_2) || (!aosssec7_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "AOSSCOST",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "aosscost1",
+                    "title": "How do you choose the instance types for your OpenSearch domains?",
+                    "description": "With Amazon OpenSearch Service, you can select the optimal instance type and storage option for your workload easily.",
+                    "choices": [
+                        {
+                            "id": "aosscost1_1",
+                            "title": "Using latest generation instances to create domains.",
+                            "helpfulResource": {
+                                "displayText": "Amazon OpenSearch services provides options to create domains using the latest generation instance type which provide improved performance and lower costs.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/gsgcreate-domain.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use the latest generation instance types while creating domains to provide better performance and lower costs.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/supported-instance-types.html"
+                            }
+                        },
+                        {
+                            "id": "aosscost1_2",
+                            "title": "Migrate to latest generation instances.",
+                            "helpfulResource": {
+                                "displayText": "You can also migrate to new generation instance for any existing domains.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-configuration-changes.html#bg"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Migrate any existing domains running on old generation instance types to new generation instance types.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-configuration-changes.html"
+                            }
+                        },
+                        {
+                            "id": "aosscost1_3",
+                            "title": "Choose instance type for your Amazon OpenSearch Service master nodes.",
+                            "helpfulResource": {
+                                "displayText": "The size is highly correlated with the number of instances, indexes, and shards that they can manage.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-dedicatedmasternodes.html#dedicatedmasternodes-instance"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Understand your Amazon OpenSearch Service workloads before sizing the dedicated nodes.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-dedicatedmasternodes.html#dedicatedmasternodes-instance"
+                            }
+                        },
+                        {
+                            "id": "aosscost1_4",
+                            "title": "Evaluate instance type for your Amazon OpenSearch Service data nodes and testing.",
+                            "helpfulResource": {
+                                "displayText": "Hardware requirements vary dramatically by workload.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/sizing-domains.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To find the right hardware for your workload, you have to make an educated initial estimate, test with representative workloads, adjust, and test again.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/sizing-domains.html#bp-instances"
+                            }
+                        },
+                        {
+                            "id": "aosscost1_5",
+                            "title": "Change the node types to AWS Graviton-based instances to improve performance.",
+                            "helpfulResource": {
+                                "displayText": "AWS Graviton processors are designed by AWS to deliver the best price performance for your cloud workloads running in Amazon EC2.",
+                                "url": "https://aws.amazon.com/blogs/big-data/improved-performance-with-aws-graviton2-instances-on-amazon-opensearch-service/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Change the node types to Graviton based instance to improve performance.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-configuration-changes.html#bg"
+                            }
+                        },
+                        {
+                            "id": "aosscost1_6",
+                            "title": "Calculating storage requirements.",
+                            "helpfulResource": {
+                                "displayText": "Source data * (1 + number of replicas) * 1.45 = minimum storage requirement",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/sizing-domains.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Including number of index replicas, indexing overhead, operating system reserved space, and OpenSearch Service overhead.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/sizing-domains.html#bp-storage"
+                            }
+                        },
+                        {
+                            "id": "aosscost1_7",
+                            "title": "Choose the proper Amazon EBS volumes type.",
+                            "helpfulResource": {
+                                "displayText": "Consider gp3 as the best Amazon EBS option for price/performance and flexibility.",
+                                "url": "https://aws.amazon.com/blogs/big-data/lower-your-amazon-opensearch-service-storage-cost-with-gp3-amazon-ebs-volumes/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Changing storage type, then deploy to production.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-configuration-changes.html"
+                            }
+                        },
+                        {
+                            "id": "aosscost1_8",
+                            "title": "Evaluate the number of shards.",
+                            "helpfulResource": {
+                                "displayText": "The overall goal of choosing a number of shards is to distribute an index evenly across all data nodes in the cluster.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/sizing-domains.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You should decide about shard count before indexing your first document.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/sizing-domains.html#bp-sharding"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosscost1_1 && aosscost1_2 && aosscost1_3 && aosscost1_4 && aosscost1_5 && aosscost1_6 && aosscost1_7 && aosscost1_8",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aosscost2",
+                    "title": "Will your needs be consistent for the next 1-3 years with reserved capacity?",
+                    "description": "Benefit from significant cost savings of up to 72 percentages compared to On-Demand prices. Maximize your savings by following AWS Cost Explorer Savings Plans recommendations.",
+                    "choices": [
+                        {
+                            "id": "aosscost2_1",
+                            "title": "Procure Amazon EC2 Reserved Instances for Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "Amazon EC2 Reserved Instances (RI) provide a significant discount (up to 72%) compared to On-Demand pricing.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ri.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Monitor the domain operations for 15 days after creation and review Cost Explorer for Amazon OpenSearch service recommendations",
+                                "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/ri-recommendations.html"
+                            }
+                        },
+                        {
+                            "id": "aosscost2_2",
+                            "title": "Use Saving Plan for OpenSearch domain",
+                            "helpfulResource": {
+                                "displayText": "Savings Plans save up to 72% with a flexible pricing model.",
+                                "url": "https://aws.amazon.com/savingsplans/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Monitor the domain operations for 15 days after creation and review Cost Explorer for Amazon OpenSearch service recommendations",
+                                "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/ri-recommendations.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosscost2_1 && aosscost2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aosscost3",
+                    "title": "Optimizing cost with tiered storage in Amazon OpenSearch Service.",
+                    "description": "OpenSearch service provides tiered data storage for long term data retention or read-only accessed data and helps reduce costs.",
+                    "choices": [
+                        {
+                            "id": "aosscost3_1",
+                            "title": "Use UltraWarm tier to store large amount of Read-only data.",
+                            "helpfulResource": {
+                                "displayText": "Using UltraWarm tier for storing large amount of read-only indexes can help save costs.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ultrawarm.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Determine the access patterns on indices and move the read-only indices to Ultrawarm tier.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ultrawarm.html#ultrawarm-calc"
+                            }
+                        },
+                        {
+                            "id": "aosscost3_2",
+                            "title": "Use Cold tier to store infrequently accessed or historical data",
+                            "helpfulResource": {
+                                "displayText": "Using cold storage tier to store infrequently accessed data or historical log data that requires on-demand analysis",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cold-storage.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Detemine access patterns for infrequently accessed logs, data that must be preserved to meet compliance requirements, or logs that have historical value and move to Cold tier.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cold-storage.html#coldstorage-enable"
+                            }
+                        },
+                        {
+                            "id": "aosscost3_3",
+                            "title": "Rolling over with Index State Management (ISM).",
+                            "helpfulResource": {
+                                "displayText": "Understand what is Index State Management in Amazon OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ism.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create an ISM policy.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ism.html#ism-start"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosscost3_1 && aosscost3_2 && aosscost3_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aosscost3_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aosscost4",
+                    "title": "How do optimize the indexes for your tenants?",
+                    "description": "How you can secure your tenants and how you should plan for capacity to understand the performance implications of your tenancy.",
+                    "choices": [
+                        {
+                            "id": "aosscost4_1",
+                            "title": "Understand tenancy basics.",
+                            "helpfulResource": {
+                                "displayText": "OpenSearch has containers at different levels. A tenant is a distinct member of a container.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Each of the tenants of the service are consuming a single, shared system that supports the needs of these tenants through a unified experience.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant.html"
+                            }
+                        },
+                        {
+                            "id": "aosscost4_2",
+                            "title": "Understand different tenancy strategies.",
+                            "helpfulResource": {
+                                "displayText": "Each tenant gets its own container in siloed mode. All tenants go into a single container in pooled mode. Tenants are isolated based on tenant characteristics in hybrid mode.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/silo-pool-and-bridge-models.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "There are strategies and patterns that are applied when defining the footprint of a tenancy application.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/silo-pool-and-bridge-models.html"
+                            }
+                        },
+                        {
+                            "id": "aosscost4_3",
+                            "title": "Managing document-level tenancy.",
+                            "helpfulResource": {
+                                "displayText": "Manage complexity in querying documents.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/data-partitioning.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Reduces complexity in querying documents.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/data-partitioning.html"
+                            }
+                        },
+                        {
+                            "id": "aosscost4_4",
+                            "title": "Reduce the hot shards.",
+                            "helpfulResource": {
+                                "displayText": "Minimize scatter-gather with document routing."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Indexing and query are routed to a single shard."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosscost4_1 && aosscost4_2 && aosscost4_3 && aosscost4_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aosscost5",
+                    "title": "How do estimate your Amazon OpenSearch Service cost?",
+                    "description": "Calculate your Amazon OpenSearch Service and architecture cost in a single estimate tool.",
+                    "choices": [
+                        {
+                            "id": "aosscost5_1",
+                            "title": "You can get started for free on Amazon OpenSearch Service with AWS Free Tier.",
+                            "helpfulResource": {
+                                "displayText": "Amazon OpenSearch Service provides free usage of up to 750 hours per month of a t2.small.search or t3.small.search instance.",
+                                "url": "https://aws.amazon.com/opensearch-service/pricing/#Free_tier"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Getting started for free on Amazon OpenSearch Service with AWS Free Tier.",
+                                "url": "https://aws.amazon.com/opensearch-service/pricing/#Free_tier"
+                            }
+                        },
+                        {
+                            "id": "aosscost5_2",
+                            "title": "Evaluate the EC2 instances pricing model in Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "Understand On-Demand and Reserved Instance instance pricing.",
+                                "url": "https://aws.amazon.com/opensearch-service/pricing/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Calculate your Amazon OpenSearch Service EC2 instances cost from the pricing tool.",
+                                "url": "https://aws.amazon.com/opensearch-service/pricing/"
+                            }
+                        },
+                        {
+                            "id": "aosscost5_3",
+                            "title": "Evaluate the storage pricing model in Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "Understand Amazon EBS volume pricing (applies if you choose EBS volumes).",
+                                "url": "https://aws.amazon.com/opensearch-service/pricing/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Calculate Amazon EBS volume pricing (applies if you choose EBS volumes).",
+                                "url": "https://aws.amazon.com/opensearch-service/pricing/"
+                            }
+                        },
+                        {
+                            "id": "aosscost5_4",
+                            "title": "Evaluate the AWS data transfer charges.",
+                            "helpfulResource": {
+                                "displayText": "Unserstand the AWS data transfer charges.",
+                                "url": "https://aws.amazon.com/opensearch-service/pricing/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Calculate the AWS data transfer charges.",
+                                "url": "https://aws.amazon.com/opensearch-service/pricing/"
+                            }
+                        },
+                        {
+                            "id": "aosscost5_5",
+                            "title": "Evaluate the Amazon S3 costs.",
+                            "helpfulResource": {
+                                "displayText": "Understand the manual snapshots storing in Amazon S3 will incur standard Amazon S3 usage charges.",
+                                "url": "https://aws.amazon.com/opensearch-service/pricing/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Calculate the standard Amazon S3 usage charges if manual snapshots storing in Amazon S3.",
+                                "url": "https://aws.amazon.com/opensearch-service/pricing/"
+                            }
+                        },
+                        {
+                            "id": "aosscost5_6",
+                            "title": "Consult AWS pricing specialists.",
+                            "helpfulResource": {
+                                "displayText": "Understand how to request AWS pricing spectialists.",
+                                "url": "https://aws.amazon.com/contact-us/sales-support-pricing/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Request AWS pricing spectialists such as AWS Solutions Architect.",
+                                "url": "https://aws.amazon.com/contact-us/sales-support-pricing/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aosscost5_1 && aosscost5_2 && aosscost5_3 && aosscost5_4 && aosscost5_5 && aosscost5_6",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "AOSSREL",
+            "name": "Reliability",
+            "questions": [
+                {
+                    "id": "aossrel1",
+                    "title": "Does your domain uses the latest OpenSearch version and Service Software version?",
+                    "description": "Amazon OpenSearch Service regularly adds support for community-maintained versions of OpenSearch. Always upgrade to the latest OpenSearch versions when they're available.",
+                    "choices": [
+                        {
+                            "id": "aossrel1_1",
+                            "title": "There are notifications about Amazon OpenSearch Service updates.",
+                            "helpfulResource": {
+                                "displayText": "Understand about Amazon OpenSearch Service release notes.",
+                                "url": "https://aws.amazon.com/new/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Subscribe to AWS Region availability, new features, security patches, bug fixes, and other improvements about Amazon OpenSearch Service.",
+                                "url": "https://aws.amazon.com/new/"
+                            }
+                        },
+                        {
+                            "id": "aossrel1_2",
+                            "title": "Upgrade your Amazon OpenSearch Service domain to the latest available version.",
+                            "helpfulResource": {
+                                "displayText": "OpenSearch releases new versions regularly. Always keep domains updated to ensure improvements are applied to the domains.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/service-software.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Upgrade your OpenSearch version to the latest available version",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/version-migration.html#starting-upgrades"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossrel1_1 && aossrel1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossrel1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossrel2",
+                    "title": "What is your disater recovery strategy for your Amazon OpenSearch Service?",
+                    "description": "Take manual snapshots for you Amazon OpenSearch Service cluster or to replicate data from one cluster to another.",
+                    "choices": [
+                        {
+                            "id": "aossrel2_1",
+                            "title": "Do you define your disaster recovery (DR) for your Amazon OpenSearch Service strategy?",
+                            "helpfulResource": {
+                                "displayText": "For RTO (recovery time objective) and RPO (recovery point objective), lower numbers represent less downtime and data loss.",
+                                "url": "https://aws.amazon.com/blogs/architecture/disaster-recovery-dr-architecture-on-aws-part-i-strategies-for-recovery-in-the-cloud/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define the RTO (recovery time objective) and RPO (recovery point objective) for your Amazon OpenSearch Service domain.",
+                                "url": "https://aws.amazon.com/blogs/architecture/disaster-recovery-dr-architecture-on-aws-part-i-strategies-for-recovery-in-the-cloud/"
+                            }
+                        },
+                        {
+                            "id": "aossrel2_2",
+                            "title": "Considering the cross-cluster replication for Amazon OpenSearch Service.",
+                            "helpfulResource": {
+                                "displayText": "With cross-cluster replication in Amazon OpenSearch Service, you can replicate indexes, mappings, and metadata from one OpenSearch Service domain to another.",
+                                "url": "https://aws.amazon.com/opensearch-service/sla/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Using cross-cluster replication helps to ensure disaster recovery if there is an outage, and allows you to replicate data across geographically distant data centers to reduce latency.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/bp.html#bp-stability-ha"
+                            }
+                        },
+                        {
+                            "id": "aossrel2_3",
+                            "title": "Create manual snapshots for Amazon OpenSearch Service indexes.",
+                            "helpfulResource": {
+                                "displayText": "Snapshots in Amazon OpenSearch Service are backups of a cluster's indexes and state. State includes cluster settings, node information, index settings, and shard allocation.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-snapshots.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can initiate manual snapshots with less than one hour interval.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-snapshots.html#managedomains-snapshot-create"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossrel2_1 && aossrel2_2 && aossrel2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossrel2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossrel3",
+                    "title": "How do you ensure that your Amazon OpenSearch Service domains are always available?",
+                    "description": "Distributes your Amazon OpenSearch Service workloads cross multiple Availability Zones in the same Region.",
+                    "choices": [
+                        {
+                            "id": "aossrel3_1",
+                            "title": "Use dedicated master nodes.",
+                            "helpfulResource": {
+                                "displayText": "Offloading of cluster management tasks increases the stability of your domain and makes it possible for some configuration changes to happen without downtime.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-multiaz.html#managedomains-za-dm"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Uses Amazon OpenSearch Service dedicated master nodes to increase cluster stability in the production environment.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-dedicatedmasternodes.html#dedicatedmasternodes-instance"
+                            }
+                        },
+                        {
+                            "id": "aossrel3_2",
+                            "title": "Configuring a multi-AZ domain in Amazon OpenSearch Service data nodes.",
+                            "helpfulResource": {
+                                "displayText": "To prevent data loss and minimize Amazon OpenSearch Service cluster downtime in the event of a service disruption, you can distribute nodes across two or three Availability Zones in the same Region.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-multiaz.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy OpenSearch domains across mutiple AWS Availability Zones.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-multiaz.html"
+                            }
+                        },
+                        {
+                            "id": "aossrel3_3",
+                            "title": "Index shards distribution.",
+                            "helpfulResource": {
+                                "displayText": "If you enable Multi-AZ, you should create at least one replica for each index in your cluster.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-multiaz.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create at least one replica for each index in your cluster.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-multiaz.html"
+                            }
+                        },
+                        {
+                            "id": "aossrel3_4",
+                            "title": "Enable zone awareness.",
+                            "helpfulResource": {
+                                "displayText": "When zone awareness is enabled, OpenSearch Service allocates the nodes and replica index shards across two or three Availability Zones in the same AWS Region.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/APIReference/API_ZoneAwarenessConfig.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Zone awareness helps prevent downtime and data loss.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/APIReference/API_ZoneAwarenessConfig.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossrel3_1 && aossrel3_2 && aossrel3_3 && aossrel3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossrel3_1) || (!aossrel3_2) || (!aossrel3_3) || (!aossrel3_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossrel4",
+                    "title": "Do you understand Amazon OpenSearch Service quotas?",
+                    "description": "Your AWS account has default quotas, formerly referred to as limits, for each AWS service.",
+                    "choices": [
+                        {
+                            "id": "aossrel4_1",
+                            "title": "Amazon OpenSearch Service domain and instance quotas.",
+                            "helpfulResource": {
+                                "displayText": "Understand the Amazon OpenSearch Service domain and instance quotas in your Region.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/limits.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Open the Service Quotas console to view the quotas for OpenSearch Service.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/limits.html"
+                            }
+                        },
+                        {
+                            "id": "aossrel4_2",
+                            "title": "Adjust Amazon OpenSearch Service domain and instance quotas.",
+                            "helpfulResource": {
+                                "displayText": "Understand what Amazon OpenSearch Service domain and instance quotas can be adjusted.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/limits.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Request a quota increase in your Region.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/limits.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossrel4_1 && aossrel4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossrel4_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "aossrel5",
+                    "title": "Do you use EC2 instance type T-class in production environment?",
+                    "description": "Avoid using T2 or t3.small instances for the production environment.",
+                    "choices": [
+                        {
+                            "id": "aossrel5_1",
+                            "title": "Avoid using T-class instances for the production environment.",
+                            "helpfulResource": {
+                                "displayText": "Avoid using T-class instances for production domains because they can become unstable under sustained heavy load.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/bp.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For production environments, use other EC2 instances instead of T-class.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/bp.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aossrel5_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!aossrel5_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
