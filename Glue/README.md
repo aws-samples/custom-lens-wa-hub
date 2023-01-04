@@ -1,6 +1,6 @@
 # AWS Glue Well-Architected Custom Lens
 
-AWS Glue Well-Architected Custom Lens specifies best practices in Operational Excellence, Security, Performance Efficiency, Reliability and Cost Optimization pillars. The best practices are designed for Glue workload. 
+AWS Glue Well-Architected Custom Lens specifies best practices in Operational Excellence, Security, Performance Efficiency and Cost Optimization pillars. The best practices are designed for Glue workload. 
 
 ## Intended Audience
 
