@@ -38,7 +38,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 
 ## :balance_scale: License
 
-This library is licensed under the MIT-0 License. For more details, please take a look at the [LICENSE](LICENSE.txt) file.
+This library is licensed under the MIT-0 License. For more details, please take a look at the [LICENSE](LICENSE) file.
 
 ## :handshake: Contributing
 Please read our [contributing guidelines](CONTRIBUTING.md)
