@@ -1,0 +1,1128 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "WA Custom Lens - Streaming Media Lens",
+    "description": "Best practices for Streaming Media",
+    "_version":"1.0",
+    "_release_date":"2023-02-13",
+    "_release_note":"",
+    "_teams":{
+       "_authors":[
+          {
+             "name":"Jill Wang, Sr. Technical Account Manager, GCR, AWS"
+          }
+       ],
+       "_tech_reviewers":[
+          {
+             "name":"Ray Wang, Solutions Architect, AWS"
+          }
+       ]
+    },
+    "pillars": [
+        {
+            "id": "SMOPS",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "SMOPS1",
+                    "title": "How do you prepare for large scale video delivery events?",
+                    "description": "How do you prepare for large scale video delivery events?",
+                    "choices": [
+                        {
+                            "id": "SMOPS1_1",
+                            "title": "Ensure that your content delivery infrastructure can scale to expected demand",
+                            "helpfulResource": {
+                                "displayText": "For origin services, estimate load in Transactions Per Second (TPS) or Requests Per Second (RPS). We advise that you estimate peak TPS the player devices will generate based on the usage pattern, layers of caching, and unique nature of your audience.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/preparation.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For example, for a HLS stream with 6s segments and un-muxed video, audio and captions, each player will generate 1 TPS (= 3*1/6 TPS for video, audio and caption manifest requests + 3*1/6 for video, audio and caption segment requests) to the CDN. Assuming 95% cache hit ratio (CHR) for the CDN, it will result in 0.05 TPS (=1*(1-0.95)) to the origin. To calculate peak TPS to the origin, multiply the peak number of player devices expected at any time with 0.05 TPS.",
+                                "url": "https://docs.aws.amazon.com/general/latest/gr/medialive_region.html"
+                            }
+                        },
+                        {
+                            "id": "SMOPS1_2",
+                            "title": "Evaluate and adjust AWS Service Quotas to match your workload s needs in advance",
+                            "helpfulResource": {
+                                "displayText": "AWS cloud is capable of handing very large scale streaming events. However, services have soft limits in place to protect customers from inadvertently scaling resources beyond their needs and racking up unnecessary costs. Service limits for all media services are region-specific unless otherwise noted in the documentation. For more information about the limits for a specific service, refer to its documentation.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/preparation.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can centrally manage service quotas for all services in your account using the Service Quotas in the AWS Management Console where you can view your current quotas and also request increases. If you don t find your AWS service in the Service Quotas, contact AWS Support to increase service limits. Provide details of the regions in which your workflow will operate, usage patterns, and timeframe.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/preparation.html"
+                            }
+                        },
+                        {
+                            "id": "SMOPS1_3",
+                            "title": "Consider engaging AWS Support programs to assist with large-scale events",
+                            "helpfulResource": {
+                                "displayText": "Consider using Infrastructure and Event Management (IEM) and Media Events Management programs for large-scale live events that may require immediate support during an event. By engaging us through these programs, you enable AWS experts to become familiar with your workload, provide architectural and operational guidance, and real-time support for your planned event.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/preparation.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "In addition to IEM, Enterprise Support customers are eligible for a Cloud Operations Review and Well-Architected Review designed to help identify risks in your cloud operations. This cross-team engagement helps establish a common understanding of your workload and helps us contribute to your streaming events. You can always run your own architecture review for any workload by using the AWS Well-Architected Tool in the AWS console.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/preparation.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMOPS1_1 && SMOPS1_2 && SMOPS1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMOPS1_1) || (!SMOPS1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMOPS2",
+                    "title": "How do you select the most suitable media services and solutions?",
+                    "description": "How do you select the most suitable media services and solutions?",
+                    "choices": [
+                        {
+                            "id": "SMOPS2_1",
+                            "title": "Select media services based on scenarios (Live, VOD, Latency)",
+                            "helpfulResource": {
+                                "displayText": "Though there are many approaches to designing video delivery workloads on AWS, these scenarios prefer AWS managed services when possible to reduce operational overhead. We encourage you to evaluate the technology architecture that best meets your needs, whether it is an AWS managed service, a partner service, or a component built on AWS infrastructure services.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/preparation.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon Interactive Video Service (Amazon IVS) is a managed live streaming service that manages low-latency interactive live streams on your behalf. Consider using IVS if you don t want to manage your own live streaming service. \nBuilt with AWS Elemental MediaLive and AWS Elemental MediaPackage, this solution provides users with an uninterrupted live streaming experience by using a standard MediaLive channel with dual inputs and outputs as well as redundant inputs for MediaPackage.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/preparation.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMOPS2_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMOPS3",
+                    "title": "How do you create and deploy your media service pipeline?",
+                    "description": "How do you create and deploy your media service pipeline?",
+                    "choices": [
+                        {
+                            "id": "SMOPS3_1",
+                            "title": "Automate media pipeline deployment ( CDK, Terraform,..etc)",
+                            "helpfulResource": {
+                                "displayText": "In a traditional streaming media environment major changes are executed infrequently during maintenance windows with manual processes. This is high-risk as the people, processes, and tools used to update infrastructure are infrequently used. This leads to drift in documentation and institutional knowledge of the workload.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/preparation.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "We encourage you to automate deployments, testing, and rollbacks using services like AWS CloudFormation. This enables teams to make small, frequent changes on a daily basis and ensure that the infrastructure state is represented in code, managed in version control, and that your processes used for change management are well-tested.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/preparation.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMOPS3_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMOPS3_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMOPS4",
+                    "title": "How do you monitor the health of the media service pipeline?",
+                    "description": "How do you monitor the health of the media service pipeline?",
+                    "choices": [
+                        {
+                            "id": "SMOPS4_1",
+                            "title": "Service-specific metrics",
+                            "helpfulResource": {
+                                "displayText": "Monitoring your streaming infrastructure is necessary to detect system-wide performance changes, optimize resource utilization, and to baseline workload operational health. For example, if you re receiving live content from a content provider, you should monitor for the expected ingest bytes and respond to alerts when ingest fails to meet baseline expectations.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/operations.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS services, including the AWS Media Services, publish metrics and alerts like these to Amazon CloudWatch, which provides data and actionable insights to monitor your streaming media workload.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/operations.html"
+                            }
+                        },
+                        {
+                            "id": "SMOPS4_2",
+                            "title": "Centralized logging",
+                            "helpfulResource": {
+                                "displayText": "AWS services generate log data, such as audit logs for access, configuration changes, and billing events. In addition to AWS log data; web servers, applications, and operating systems all generate log files in various formats. Consolidating, managing, and analyzing these different log files is challenging to customers.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/operations.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS enables visibility into your streaming workload at all layers through log collection and monitoring features. Data on use of services, resources, application programming interfaces (APIs), network flow logs, and system traces can be collected using Amazon CloudWatch, AWS CloudTrail, VPC Flow Logs, and Amazon X-Ray. Armed with this data, you can design automated failure and remediation systems at each stage in your video application   ingest, processing, origin, delivery, and client-side.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/operations.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMOPS4_1 && SMOPS4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMOPS4_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMOPS5",
+                    "title": "How do you manage operational events for your media application?",
+                    "description": "How do you manage operational events for your media application?",
+                    "choices": [
+                        {
+                            "id": "SMOPS5_1",
+                            "title": "Remediation steps and notification when events happen",
+                            "helpfulResource": {
+                                "displayText": "Design a workflow failover runbook and notification design to simulate the fail event.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/resources-opex.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Automation script or manually switch resouces.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/resources-opex.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMOPS5_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMOPS5_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMOPS6",
+                    "title": "How are you evolving your media workload while minimizing the impact of change?",
+                    "description": "How are you evolving your media workload while minimizing the impact of change?",
+                    "choices": [
+                        {
+                            "id": "SMOPS6_1",
+                            "title": "Evolving media workload",
+                            "helpfulResource": {
+                                "displayText": "How do you design the maintanace window while Media service version change?",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/resources-opex.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For live streaming, expressing the component relationships and tracing the signal path is important for operators who need to identify and respond to issues that arise. Visual documentation or interactive dashboards that reflect the real-time status of the workflow will improve awareness and shorten time to issue resolution.\n\nConsider using or building your own tools like the Media Services Application Mapper to model your workload and better inform operations.",
+                                "url": "https://aws.amazon.com/solutions/implementations/media-services-application-mapper/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMOPS6_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMOPS6_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SMPERF",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "SMPERF1",
+                    "title": "How do you optimize media delivery through media origination and processing?",
+                    "description": "How do you optimize media delivery through media origination and processing?",
+                    "choices": [
+                        {
+                            "id": "SMPERF1_1",
+                            "title": "Select an appropriate origin technology for your workload",
+                            "helpfulResource": {
+                                "displayText": "There are two origin approaches that can be utilized to optimize performance of your workload - pass-through and dynamic.\n\nPass-through origin servers are high performance HTTP servers that are adequately scaled to respond to requests for content segments from viewers or CDNs.\n\nDynamic origins provide you with the flexibility to customize endpoints to support your target devices. With a dynamic origin, content is PUT to the origin by an encoder in a single format and dynamically formatted as requested by viewers. Note that because dynamic origins require an internal buffer to process content just-in-time, you will trade-off live stream latency when compared to pass-through origins.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/selection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For example, for a HLS stream with 6s segments and un-muxed video, audio and captions, each player will generate 1 TPS (= 3*1/6 TPS for video, audio and caption manifest requests + 3*1/6 for video, audio and caption segment requests) to the CDN. Assuming 95% cache hit ratio (CHR) for the CDN, it will result in 0.05 TPS (=1*(1-0.95)) to the origin. To calculate peak TPS to the origin, multiply the peak number of player devices expected at any time with 0.05 TPS.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/selection.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMPERF1_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMPERF1_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMPERF2",
+                    "title": "How do you approach media source contribution?",
+                    "description": "How do you approach media source contribution?",
+                    "choices": [
+                        {
+                            "id": "SMPERF2_1",
+                            "title": "Begin with the highest quality sources that you can reasonably acquire",
+                            "helpfulResource": {
+                                "displayText": "There are two ingest patterns for video applications, Real-Time and File-based. Real-Time workloads often include a business requirement for reliability and low latency, while file-based transfers for mezzanine files or archive workloads generally prioritize efficiency of data movement.\n\nReal-Time Contribution\nGetting a live source from an event site, often called a contribution feed, is the first inflection point when deciding trade-offs that will eventually impact end users. In all cases, use of an efficient codec (i.e. HEVC) for signal contribution allows for optimum bandwidth utilization and improved quality at lower cost.\n\nFile-Based Contribution\nAsset management, archive, video-on-demand, and many other media workloads manage large file transfers. AWS provides a portfolio of services designed for these specific needs.\n\n\n",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/selection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "- As with live workloads, sustained file upload architectures should use AWS Direct connect.\n\n- Always use Amazon S3 Multipart Upload when uploading content to Amazon S3.\n\n- When uploading content from a location geographically distant from an AWS region, use Amazon S3 Transfer Acceleration to leverage CloudFront edge PoPs for connectivity into AWS.\n\n- When upload duration is expected to exceed more than one week use AWS Snowball.\n\n- For hybrid architectures where on-premises infrastructure requires Amazon S3 access as NFS mounts or a virtual tape library interface to Amazon Glacier, leverage AWS Storage Gateway and AWS File Gateway.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/selection.html"
+                            }
+                        },
+                        {
+                            "id": "SMPERF2_2",
+                            "title": "Use specialized media transport and acceleration protocols",
+                            "helpfulResource": {
+                                "displayText": "Many applications use TCP-based protocols like RTMP to deliver contribution feeds, but these protocols are inefficient and can introduce un-necessary latency. We recommend a UDP-based reliable transport protocol like RTP, Reliable Internet Stream Transport (RIST), or Secure Reliable Transport (SRT) for real-time contribution.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/selection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Transport Protocol (RTP) is an additional layer designed to provide sequencing information in packet headers to allow receiving devices to be able to cope with packets arriving out of order (jitter), but RTP does not add any protection against packet loss. To mitigate against packet loss on a point to point connection using RTP, operators should consider using FEC or ARQ based protocols.",
+                                "url": "https://docs.aws.amazon.com/medialive/latest/ug/eml-metrics-input-metrics.html#eml-metrics-packets-recovered"
+                            }
+                        },
+                        {
+                            "id": "SMPERF2_3",
+                            "title": "Use private network connectivity between your content provider and media ingest",
+                            "helpfulResource": {
+                                "displayText": "Any impact to the network during live contribution of media can quickly degrade and disrupt video distribution to end-users. AWS Direct Connect, in a maximum resiliency configuration, is recommended for services requiring a dedicated, sustained connection to AWS (i.e. high visibility live events) as it provides a consistent network experience when compared to public internet transport.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/selection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For first-mile connectivity at remote live events that are subject to unmanaged networks for delivering live media, we strongly recommend using a combination of mediums, such as bonded-cellular, satellite uplink, and multiple ISPs connecting to the AWS network.",
+                                "url": "https://aws.amazon.com/directconnect/resiliency-recommendation/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMPERF2_1 && SMPERF2_2 && SMPERF2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMPERF2_1) || (!SMPERF2_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMPERF3",
+                    "title": "How do you use caching to improve content delivery performance?",
+                    "description": "How do you use caching to improve content delivery performance?",
+                    "choices": [
+                        {
+                            "id": "SMPERF3_1",
+                            "title": "Use a content delivery network and monitor your cache-hit-ratio",
+                            "helpfulResource": {
+                                "displayText": "A Content Delivery Network scales video delivery by serving content from local caches nearest the user and providing optimized routes to origination services. Caching improves time-to-first-byte for clients and reduces load on origin services. CDNs use a multi-tier architecture with two or three tiers of cache hierarchy before requests make it back to the origin server.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/review-and-monitoring.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "A Cache Hit Ratio (CHR) is the ratio of requests served from cache (hits) to the total requests (misses and hits) over a period of time. Cache hits improve client experience and cache misses result in a request directly to your origin layer which increase response latency and costs. Monitoring CHR will help you to improve delivery and origin layer performance over time.\n\nYou can enable cache hit ratio, origin latency, and HTTP error rate metrics from your Amazon CloudFront monitoring settings.",
+                                "url": "https://aws.amazon.com/blogs/networking-and-content-delivery/improve-your-website-performance-with-amazon-cloudfront/"
+                            }
+                        },
+                        {
+                            "id": "SMPERF3_2",
+                            "title": "Ensure that cache-control  headers for your content are optimized",
+                            "helpfulResource": {
+                                "displayText": "Though you can t guarantee caches will hold content for the next request, you can set Cache-Control headers on the origin to indicate the preferred duration for an object to be kept in a CDN cache. Your CDN should be configured to respect caching headers from your origin server to ensure that live content and manifests are only cached for the appropriate amount of time.\n\nCaching longer than segment duration could result in the serving of stale manifests, a delay for clients to retrieve the next media segment, and client buffer exhaustion which will negatively impact user experience.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/review-and-monitoring.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Live:\nSegment size - 10s\nManifest Update Frequency - 10s\nSegment Cache-Control Header or Cache Behavior - 21600 seconds or max DVR window\nManifest Cache-Control Header or Cache Behavior - <=5s\n\n\nVOD:\nSegment size - 10s\nManifest Update Frequency - Static\nSegment Cache-Control Header or Cache Behavior - 86400 seconds or longest possible\nManifest Cache-Control Header or Cache Behavior - 86400 seconds or longest possible",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/review-and-monitoring.html"
+                            }
+                        },
+                        {
+                            "id": "SMPERF3_3",
+                            "title": "Have a cache invalidation  runbook",
+                            "helpfulResource": {
+                                "displayText": "Have a cache invalidation runbook in place so that you can modify cached objects and invalidate the previous content. ",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/review-and-monitoring.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "This can be achieved by invalidating content with a CDN feature, using variable file names, or using query string parameters to  break  the cache when content is changed.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/review-and-monitoring.html"
+                            }
+                        },
+                        {
+                            "id": "SMPERF3_4",
+                            "title": "Minimize negative (error)  caching",
+                            "helpfulResource": {
+                                "displayText": "  Caching  of error responses from the origin, also known as Negative Caching,  should be minimized as some streaming clients may proactively  request future segments before they are published  in order to minimize latency. ",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/review-and-monitoring.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For live streaming, it should be disabled completely for manifest and segment files. At a minimum, the negative caching duration should not exceed one segment length. Amazon CloudFront caches origin errors for 5 minutes by default, but you can configure it to suit your needs.",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GeneratingCustomErrorResponses.html#custom-error-pages-expiration"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMPERF3_1 && SMPERF3_2 && SMPERF3_3 && SMPERF3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMPERF3_1) || (!SMPERF3_2) || (!SMPERF3_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMPERF4",
+                    "title": "How do you monitor client Quality of Experience and Quality of Service?",
+                    "description": "How do you monitor client Quality of Experience and Quality of Service?",
+                    "choices": [
+                        {
+                            "id": "SMPERF4_1",
+                            "title": "Collect and analyze  player-side metrics",
+                            "helpfulResource": {
+                                "displayText": "Infrastructure logging and monitoring only provides you with part of the picture. We recommend that you design a client that forwards playback data directly to monitoring and logging systems.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/review-and-monitoring.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For example, session initialization information, like playback URL, user-agent, and network connection status could help you identify issues with a specific origin, client device type, or network environment. Capturing video buffering events, which directly impact customer satisfaction, should be a key indicator of streaming health.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/review-and-monitoring.html"
+                            }
+                        },
+                        {
+                            "id": "SMPERF4_2",
+                            "title": "Recognize & respond to  playback anomalies",
+                            "helpfulResource": {
+                                "displayText": "We recommend that you capture client metrics from streaming sessions with services like Amazon Kinesis and monitor for anomalies with Amazon CloudWatch. Armed with this data, you can uncover patterns from real users, create alerting systems, and automate remediation tasks. The AWS Partner Network provides another avenue for video-specific monitoring tools that can give you actionable data from playback sessions.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/review-and-monitoring.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon Prime Video, a popular streaming media service by Amazon, has many ways of monitoring customer experience. One key metric, Zero-Impact-Rate, measures the rate of streaming sessions that have had any buffers or errors. This is used to baseline customer experience and alert when there are deviations from normal behavior.",
+                                "url": "https://www.amazon.science/blog/how-prime-video-uses-machine-learning-to-ensure-video-quality"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMPERF4_1 && SMPERF4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMPERF5",
+                    "title": "What tradeoffs have you made in media processing to improve client experience  and lower bandwidth costs?",
+                    "description": "What tradeoffs have you made in media processing to improve client experience  and lower bandwidth costs?",
+                    "choices": [
+                        {
+                            "id": "SMPERF5_1",
+                            "title": "Optimize the number of  adaptive bitrate (ABR) renditions for your workload",
+                            "helpfulResource": {
+                                "displayText": "The  ABR ladder,  or number of logical renditions available to an individual client, should be tuned to meet a specific application needs, taking into account:\n\n1.Playback quality\n2.Client and display ecosystem\n3.User geography and network connectivity\n",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/tradeoffs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "If your application is delivering to Apple devices, refer to Apple TN2224 for additional guidance on creating adaptive bitrate content. If you are using AWS Elemental MediaConvert, the  Auto ABR  capability can automatically determine an optimal ABR ladder for you based on the specific characteristics of the content.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/tradeoffs.html"
+                            }
+                        },
+                        {
+                            "id": "SMPERF5_2",
+                            "title": "Select appropriate encoding  settings for your content type and quality targets",
+                            "helpfulResource": {
+                                "displayText": "Providing too many renditions can increase encoding costs and cause clients to fluctuate frequently between renditions, reducing perceived quality. Not providing enough renditions may leave usable bandwidth underutilized and, thus, also reduce quality.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/tradeoffs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Our general recommendation is to determine the maximum bitrate first, then divide by 1.5 2 for each step down. This step in the ladder allows clients to make significant jumps in quality, but not so many that frequent changes could be perceived by end users.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/tradeoffs.html"
+                            }
+                        },
+                        {
+                            "id": "SMPERF5_3",
+                            "title": "Trade higher content  processing cost for lower delivery costs for popular content",
+                            "helpfulResource": {
+                                "displayText": "Progressive file downloads or RTMP streaming, can be slow to download, costly to scale, or inflexible. Instead, use HTTP-based Adaptive-Bitrate protocols, like Apple HLS, combined with web caching mechanisms to improve distribution efficiency.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/tradeoffs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "These protocols also enable clients to select the optimal rendition for playback based on network connection, display resolution, and other client-side characteristics, greatly improving viewer experience.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/tradeoffs.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMPERF5_1 && SMPERF5_2 && SMPERF5_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMPERF5_1) || (!SMPERF5_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMPERF6",
+                    "title": "What tradeoffs have you made to lower live glass-to-glass latency?",
+                    "description": "What tradeoffs have you made to lower live glass-to-glass latency?",
+                    "choices": [
+                        {
+                            "id": "SMPERF6_1",
+                            "title": "Optimize encoding and origin  settings for low latency",
+                            "helpfulResource": {
+                                "displayText": "Latency is inherent in any broadcasting or streaming platform. Over-the-air live broadcast glass-to-glass latency ranges between 3-12s, average value of 6 seconds is often seen in practice. Meaning, it could take up an average of 6s before the event that is captured in the camera is displayed on the playback device.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/tradeoffs.html "
+                            },
+                            "improvementPlan": {
+                                "displayText": "For instance, Apple HLS specification recommends at least 3 segments of buffer for best performance. This directly influences the latency. Other factors in the media delivery pipeline that influence latency are, the video encoding operations, the duration of ingest and packaging operations, network propagation delays, and the CDN. In most cases, the player buffer carries the largest share of the overall latency.",
+                                "url": "https://aws.amazon.com/media/tech/video-latency-in-live-streaming/"
+                            }
+                        },
+                        {
+                            "id": "SMPERF6_2",
+                            "title": "Avoid any unnecessary  processing steps",
+                            "helpfulResource": {
+                                "displayText": "There are several tradeoffs to consider with low latency media streaming design. Shorter media segment lengths will result in increased traffic on the caching servers and subsequently to the origin. This is fairly manageable by a CDN, especially if it supports HTTP 2.0 at the edge and HTTP 1.1 origins.",
+                                "url": "https://aws.amazon.com/blogs/media/how-to-compete-with-broadcast-latency-using-current-adaptive-bitrate-technologies-part-1/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For example, setting an encoder lookahead size to a low value will improve latency, but reduces output quality for demanding scene changes. If your content does not have dramatic scene changes, keeping this value low will not have a noticeable impact video quality",
+                                "url": "https://aws.amazon.com/blogs/media/how-to-compete-with-broadcast-latency-using-current-adaptive-bitrate-technologies-part-2/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMPERF6_1 && SMPERF6_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMPERF6_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SMSEC",
+            "name": "Security",
+            "questions": [
+                {
+                    "id": "SMSEC1",
+                    "title": "How do you authorize access to content and content ingest?",
+                    "description": "How do you authorize access to content and content ingest?",
+                    "choices": [
+                        {
+                            "id": "SMSEC1_1",
+                            "title": "Use an identity provider to authenticate viewers and access policies to implement least privilege access to protected content",
+                            "helpfulResource": {
+                                "displayText": "Access to private content should be granted only to authenticated and authorized viewers using an identity provider (IdP). On AWS, Amazon Cognito can be used as an identity provider (IdP) to authenticate users and authorize access to content hosted on Amazon S3, AWS Elemental MediaPackage, AWS Elemental MediaStore, or a custom origin service built on EC2. You can also establish trust between identity providers to avoid sharing credentials and simplify the authentication flow for you media player.\n\nIn addition to leveraging an IdP, centralize resource access control based on the identity established by IdP through the application API layer.\n",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/identity-and-access-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon Cognito provides both temporary AWS credentials in the form of AWS STS (Security Token Service) tokens, as well as JWTs (JSON Web Tokens), to access protected resources. Amazon Cognito also allows you to federate an identity pool or user pool with different identity providers, such as SAML providers like Active Directory Federation Services or Okta, OIDC providers such as Auth0, and other public identity providers such as Google, Twitter, or Facebook.\n\nAWS API Gateway and AWS AppSync allows you to specify a Amazon Cognito User Pool as an IdP for the resources being protected, so that bearer tokens can be validated before granting access. AWS API Gateway and AWS AppSync also allow you to create custom authorizers, so that you can perform additional application logic to allow or deny access to a resource based on claims in the access token, or if a non-supported token, such as SAML, is provided to the API.",
+                                "url": "https://aws.amazon.com/blogs/security/how-to-integrate-aws-sts-sourceidentity-with-your-identity-provider/"
+                            }
+                        },
+                        {
+                            "id": "SMSEC1_2",
+                            "title": "Restrict content origin access to allow only authorized content distribution networks",
+                            "helpfulResource": {
+                                "displayText": "Even authenticated users can act maliciously with your workloads, so you should consider how to secure the data path of your video streams. Tokenization schemes such as signed-urls, signed-cookies, or JWTs (JSON Web Tokens) should be used to grant only temporary access to content by approved front-end applications.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/identity-and-access-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon CloudFront can protect access to content origin through signed urls and signed cookies with a short duration to live, and Lambda@Edge can validate bearer tokens during viewer request.\n\nWhen leveraging content distribution networks to accelerate distribution to viewers, protect your content origin from unauthorized origin access by validating a secret header injected by the CDN transmitted over TLS at time of request and use a policy that prevents access from all other entities.\n\nWith Amazon CloudFront, your distribution can identify itself by injecting the user-agent header secret value during requests for objects within the MediaStore container. This method can also be applied to content origin services running on Amazon EC2. You can apply this secret check on the service itself and employ a web application firewall, such as AWS WAF, to perform the check on your behalf.\n\nWhen serving video-on-demand content  from Amazon S3, configure Amazon CloudFront to use an origin access identity (OAID) and then restrict access to your Amazon S3 bucket by placing an S3 bucket policy to allow access from your Amazon CloudFront distribution only if it identifies itself with that OAID",
+                                "url": "https://aws.amazon.com/solutions/implementations/secure-media-delivery-at-the-edge/?did=sl_card&trk=sl_card"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMSEC1_1 && SMSEC1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMSEC1_1) || (!SMSEC1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMSEC2",
+                    "title": "How do you monitor access to your media distribution workload?",
+                    "description": "How do you monitor access to your media distribution workload?",
+                    "choices": [
+                        {
+                            "id": "SMSEC2_1",
+                            "title": "Monitor for fraudulent access attempts",
+                            "helpfulResource": {
+                                "displayText": "You should monitor activities such as sign-in attempts from new locations and devices, assign a risk score based on the activity, and decide to either prompt users for additional verification or block the sign-in request. You can notify users of suspicious sign in attempts and prompted to secure their accounts. You can also view a history of sign in attempts and their risk scores. The Advanced Security Features in Amazon Cognito can also help you identify password sharing, re-use, or theft.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/detective-controls.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For example, content requests through Amazon CloudFront can be logged and aggregated into Amazon S3. Amazon Athena can then query this access data for abnormalities like:\n\nRequest location - are requests coming from geographic regions where you would expect? Is the user location obfuscated by a downstream provider?\n\nRequest IP - Is a specific IP address requesting content in a pattern that reflects normal viewing habits?\n\nUser Agent - Is the user-agent string from the device one that is known and valid?",
+                                "url": "https://aws.amazon.com/blogs/big-data/analyze-your-amazon-cloudfront-access-logs-at-scale/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMSEC2_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMSEC3",
+                    "title": "How do you monitor unauthorized re-distribution of your content?",
+                    "description": "How do you monitor unauthorized re-distribution of your content?",
+                    "choices": [
+                        {
+                            "id": "SMSEC3_1",
+                            "title": "Implement content or sessions forensics",
+                            "helpfulResource": {
+                                "displayText": "Implement a watermarking process  to help trace where your media was fraudulently acquired. You may have seen content on an inflight entertainment system  that has had the name of the airline embedded on the content. This overlay may appear periodically or throughout the entire piece of content and it is used for content owners to determine if leaked content originated from an airline.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/detective-controls.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Video encoders like AWS Elemental MediaConvert can burn-in these visible watermarks into your content as an identifiable image overlay. While simple and effective for a few unique watermarks, this method requires a completely unique piece of content for each watermark and is therefore limited by cost of storing multiple versions of the same content.",
+                                "url": "https://github.com/aws-samples/aws-media-services-simple-vod-workflow/blob/master/4-Outputs/README.md"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMSEC3_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMSEC4",
+                    "title": "How do you protect content ingest endpoints?",
+                    "description": "How do you protect content ingest endpoints?",
+                    "choices": [
+                        {
+                            "id": "SMSEC4_1",
+                            "title": "Encrypt content ingest traffic using TLS",
+                            "helpfulResource": {
+                                "displayText": "Streaming media services depend on reliable content ingest endpoint to upload, process, and deliver engaging content. These endpoints need to support transit protection to ensure that content being uploaded can t be intercepted or intentionally degraded during transit. Live and file-based content uploads can be accomplished in several ways:\n1) direct upload over the public network to a custom processing fleet or a managed service\n2) private network connectivity for direct uploading to a custom processing fleet or a managed service\n3) offline delivery of content to a remote facility to store and process\nTo ensure that content cannot be intercepted between the publisher and ingest endpoints, you should encrypt uploads in transit and use TLS  on both the source and destination",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/infrastructure-protection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To simplify configuration for global connectivity over public network paths, you should leverage anycast networks, such as AWS Global Accelerator, which helps clients connect to the closest available endpoint.\n\nYou can leverage AWS Direct Connect and Direct Connect Gateway to connect your network to an AWS region and bypass public network paths between content source and cloud infrastructure.\n\n\n",
+                                "url": "https://aws.amazon.com/blogs/aws/new-aws-direct-connect-gateway-inter-region-vpc-access/"
+                            }
+                        },
+                        {
+                            "id": "SMSEC4_2",
+                            "title": "Use private connectivity when working with partners",
+                            "helpfulResource": {
+                                "displayText": "When a service provider provisions a Private Link endpoint in the consumer s VPC, traffic can never initiate from that endpoint, and only receive requests from the consumer s resources. Traffic flowing through the AWS Privatelink VPC endpoint will adhere to routing rules and network access control lists placed on that subnet in which the endpoint resides.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/infrastructure-protection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS PrivateLink is recommended to establish connectivity when working with partners that also use AWS. With AWS PrivateLink, a service provider can easily expose their service endpoint to you within region, avoiding communication over the public networks.",
+                                "url": "https://aws.amazon.com/blogs/apn/using-aws-privatelink-integrations-to-access-saas-solutions-from-apn-partners/"
+                            }
+                        },
+                        {
+                            "id": "SMSEC4_3",
+                            "title": "Encrypt content at rest when delivering via physical medium",
+                            "helpfulResource": {
+                                "displayText": "When working with large content  libraries, it s possible that transmitting content over network is not feasible. This is especially important to consider if the connectivity between the studio and the video processing infrastructure is non-existent or if the bandwidth requirement to transmit the footage is beyond the available bandwidth the network provider can provide.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/infrastructure-protection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS offers AWS Snowball Edge, a petabyte-scale data transport solution that uses secure appliances to transfer large amounts of data into and out of the AWS cloud. AWS Snowball Edge encrypts all data with 256-bit encryption. You manage your encryption keys by using the AWS Key Management Service (AWS KMS).",
+                                "url": "https://aws.amazon.com/blogs/storage/optimizing-cost-with-long-term-pricing-options-for-aws-snowball/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMSEC4_1 && SMSEC4_2 && SMSEC4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMSEC4_1) || (!SMSEC4_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMSEC5",
+                    "title": "How do you protect content origin from unauthorized access and malicious attacks?",
+                    "description": "How do you protect content origin from unauthorized access and malicious attacks?",
+                    "choices": [
+                        {
+                            "id": "SMSEC5_1",
+                            "title": "Use DDoS protection service to maintain content availability",
+                            "helpfulResource": {
+                                "displayText": "You should protect your content origin layer from distributed denial of service (DDoS) attacks at both the network level (Layer 3) and application level (Layer 7), in addition to preventing unauthorized origin access.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/infrastructure-protection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "A distributed denial of service attack is when multiple systems intentionally flood your resources, which can render your content origin unavailable or hidden to your viewers. It is important to use a DDoS protection tool, such as AWS Shield, to protect your resources. AWS Shield protects AWS resources such as Amazon Cloudfront distributions and Amazon Route 53 so that your content can be located and reached globally. AWS Shield Advanced protects resources built upon services such as Elastic Load Balancing, Amazon EC2, and AWS Global Accelerator against common and most frequently occurring infrastructure (layer 3 and 4) attacks like SYN/UDP floods, reflection attacks, and others to support high availability of your applications on AWS. If you need to protect resources that your are hosting privately, put a CDN, such as a Cloudfront distribution, in front of it.",
+                                "url": "https://aws.amazon.com/blogs/security/using-aws-shield-advanced-protection-groups-to-improve-ddos-detection-and-mitigation/"
+                            }
+                        },
+                        {
+                            "id": "SMSEC5_2",
+                            "title": "Restrict content origin access to only allow known entities",
+                            "helpfulResource": {
+                                "displayText": "To reduce the likelihood of impact on your content origin from a volumetric attack such as a DDoS attack is to limit the allowed traffic sources to trusted client IP addresses, such as the IP address ranges for your CDN.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/infrastructure-protection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "When using AWS Elemental MediaPackage or a content origin built on Amazon EC2, restrict requests to originate only from known IP addresses of the CDN PoPs and, if applicable, use security groups to restrict ingress traffic. To isolate access to known Amazon CloudFront IP addresses, AWS provides a JSON resource that includes those address ranges, which is regularly updated",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/LocationsOfEdgeServers.html"
+                            }
+                        },
+                        {
+                            "id": "SMSEC5_3",
+                            "title": "Use a web application firewall to monitor and control content access",
+                            "helpfulResource": {
+                                "displayText": "If you are using AWS application load balancers or Amazon Cloudfront, you can also use AWS WAF (Web Application Firewall) to validate requests originating from known IP addresses. ",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/infrastructure-protection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS WAF lets you create rules to filter web traffic based on conditions that include IP addresses, HTTP headers and body, or custom URIs.",
+                                "url": "https://aws.amazon.com/blogs/aws/aws-web-application-firewall-waf-for-application-load-balancers/"
+                            }
+                        },
+                        {
+                            "id": "SMSEC5_4",
+                            "title": "Encrypt origin to client communication in transit using TLS",
+                            "helpfulResource": {
+                                "displayText": "To help ensure that content cannot be intercepted between the publisher and ingest endpoints, you should encrypt uploads in transit and use TLS at both the source and destination. ",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/infrastructure-protection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To simplify configuration for global connectivity over public network paths, you should use anycast networks, such as AWS Global Accelerator, which helps clients connect to the closest available endpoint.",
+                                "url": "https://d1.awsstatic.com/events/reinvent/2021/How_to_choose_the_right_load_balancer_for_your_AWS_workloads_NET202.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMSEC5_1 && SMSEC5_2 && SMSEC5_3 && SMSEC5_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMSEC5_1) || (!SMSEC5_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMSEC6",
+                    "title": "How do you protect content at-rest and in-transit to prevent unauthorized distribution?",
+                    "description": "How do you protect content at-rest and in-transit to prevent unauthorized distribution?",
+                    "choices": [
+                        {
+                            "id": "SMSEC6_1",
+                            "title": "Collaborate with business and legal stakeholders to align on content protection requirements",
+                            "helpfulResource": {
+                                "displayText": "The Well-Architected Framework covers best practices for any workload when protecting data in transit and at rest, but when you serve copyright materials or high-value content, you should also consider the technologies available to protect these works from unlawful access, replication, and re-distribution.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/data-protection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "In general, practices that protect valuable digital assets are referred to as Content Protection or Digital Rights Management (DRM). There are varying degrees of complexity and systems involved in Content Protection, but these components are common to most implementations:\n\n1) Key Provider - Manages master keys and content keys\n2) Encryptor - Encrypts media. This is often an encoder or an origin responsible for packaging.\n3) Authentication Service - Manages subscriber access and generates temporary access tokens requests to content and keys.\n4) Client - Authenticates viewer, retrieves content from an origin, keys from a key provider, decrypts and renders media\n\nIn practice there are two common content protection schemes - Clear Key Content Encryption and DRM Systems.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/data-protection.html"
+                            }
+                        },
+                        {
+                            "id": "SMSEC6_2",
+                            "title": "Select a content protection scheme that meets business objectives",
+                            "helpfulResource": {
+                                "displayText": "Use the most cost effective  content protection scheme to  meet your requirements.\nWhile DRM Systems add an additional layer of key protection and business control to your content protection, implementation of DRM varies by playback device. Though the industry is making strides to simplify DRM implementations, in practice, it s common to see multiple DRM systems implemented to achieve device compatibility across playback devices - increasing cost and complexity.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/data-protection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "With the AWS Media Services, DRM Systems are integrated into media processing and origination though the Secure Packager and Encoder Key Exchange or SPEKE. SPEKE provides an industry standard proxy interface for any Key Provider to exchange key material and metadata. You can implement your own key service or use one of many DRM System Providers that are part of the Amazon Partner Network.",
+                                "url": "https://docs.aws.amazon.com/mediapackage/latest/ug/using-encryption.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMSEC6_1 && SMSEC6_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMSEC6_1) || (!SMSEC6_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SMCOST",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "SMCOST1",
+                    "title": "What is your strategy for optimizing object storage and data transfer costs?",
+                    "description": "What is your strategy for optimizing object storage and data transfer costs?",
+                    "choices": [
+                        {
+                            "id": "SMCOST1_1",
+                            "title": "Analyze and define Object  Storage access patterns",
+                            "helpfulResource": {
+                                "displayText": "With media archive or batch transcoding workloads, you should analyze and define access patterns. Once understood, represent these patterns in Amazon S3 Lifecycle Policies, which automates the continual movement of assets to the most effective storage. This achieves the lowest storage costs, while meeting the business accessibility requirements.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/cost-effective-resources.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For applications with non-deterministic access patterns like video recordings, user-generated-content, or a large back-catalog it's is a challenge to design lifecycle policies or select outright the most cost-effective Amazon S3 storage tier for your content. To optimize storage costs, asset access patterns need to be actively monitored and managed. This can be done manually through Content Management solutions or with features like Amazon S3 Analytics Storage Class Analysis and  S3 Intelligent Tiering.",
+                                "url": "https://aws.amazon.com/blogs/storage/optimize-storage-costs-with-new-amazon-s3-lifecycle-filters-and-actions/"
+                            }
+                        },
+                        {
+                            "id": "SMCOST1_2",
+                            "title": "Trace and limit data transfer between services, Availability Zones, Regions, and clients",
+                            "helpfulResource": {
+                                "displayText": "Real-time media streams are measured in megabytes per second and source files can easily reach into the hundreds of gigabytes per file. To control data transfer and egress costs, be aware of the data transfer costs associated with transmitting the data throughout the cloud and to users.\n\nTo control costs associated with inter-AZ or inter-region transfer, you should ingest content into the region and availability zone in which it will be processed.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/cost-effective-resources.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For data egress cost control between the origin and client, consider the use Amazon CloudFront to reduce costs while improving performance for viewers. When content does need to span availability zones, regions, or incur egress costs, use the most efficient compression possible to minimize cost.",
+                                "url": "https://docs.aws.amazon.com/solutions/latest/live-streaming-on-aws/cost.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMCOST1_1 && SMCOST1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMCOST1_1) || (!SMCOST1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMCOST2",
+                    "title": "What is your strategy for optimizing content processing costs?",
+                    "description": "Baseline resources and throughput for media processing tasks",
+                    "choices": [
+                        {
+                            "id": "SMCOST2_1",
+                            "title": "Baseline resources and throughput for media processing tasks",
+                            "helpfulResource": {
+                                "displayText": "To manage costs, baseline the time and infrastructure resources necessary for your most common processing tasks. One way to understand processing speed and resource density is to calculate the real-time factor (RTF) by taking task execution time divided by source duration.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/cost-effective-resources.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "A RTF lower than 1 indicates that content is processing faster than real-time, greater than 1 is slower than real-time.\n\nFor example, a video transcoding task that takes an EC2 instance 45 minutes to process a 1 hour video has a RTF of 0.75. RTF and the resources required can be used to understand and communicate how changes to the task or infrastructure will impact business priorities.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/cost-effective-resources.html"
+                            }
+                        },
+                        {
+                            "id": "SMCOST2_2",
+                            "title": "Run media processing tasks in parallel",
+                            "helpfulResource": {
+                                "displayText": "One way to reduce RTF while accessing cost effective resources is to split jobs into smaller sub tasks and run them in parallel. With video content, you can split tasks on I-frame boundaries, process those segments, and then stitch them together when all sub-tasks are complete.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/cost-effective-resources.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Split-and-stitch and parallelization techniques create granular tasks that can be easily placed across a processing fleet, leading to more efficient use of compute resource. Splitting processor intensive tasks also reduces dependency on vertical scaling and enables access the most cost effective compute resource available through heterogeneous Amazon EC2 Spot clusters.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/cost-effective-resources.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMCOST2_1 && SMCOST2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMCOST2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMCOST3",
+                    "title": "How do you minimize distribution costs while maintaining visual quality?",
+                    "description": "How do you minimize distribution costs while maintaining visual quality?",
+                    "choices": [
+                        {
+                            "id": "SMCOST3_1",
+                            "title": "Use objective and subjective measurement techniques to benchmark and improve video compression efficiency",
+                            "helpfulResource": {
+                                "displayText": "To optimize quality while balancing delivery costs, you should focus on media processing and compression. The codec you use will be dependent on your content complexity, encoder capabilities, and client interoperability, but most codecs provide many controls that can be tuned.\n\nThough there are many options to consider while tuning video compression settings, in general, high motion content will require a higher data rate than low motion to retain the same perceptual quality.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/cost-effective-resources.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Though not always an accurate representation of human visual perception, objective measurement tools, like Peak Signal-to-Noise-Ratio (PSNR), Structural Similarity (SSIM), and Video Multi-Method Assessment Fusion (VMAF) are readily available tools to help analyze your compression performance. Given a source, varied encoding job settings, and resulting outputs, compare these metrics to tune for your unique content. In general, though there are many options to consider while tuning video compression settings, high motion content will require a higher data rate than low motion to retain the same perceptual quality. \n\nFor example, Context-aware or quality-based encoding, available as a QVBR setting for AWS Elemental MediaLive and AWS Elemental MediaConvert, can analyze the complexity of the content and optimize processing on your behalf.",
+                                "url": "https://aws.amazon.com/media/tech/quality-defined-variable-bitrate-qvbr/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMCOST3_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMCOST3_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SMREL",
+            "name": "Reliablilty",
+            "questions": [
+                {
+                    "id": "SMREL1",
+                    "title": "How does your streaming infrastructure withstand failures in ingest, processing, origination, or delivery components? ",
+                    "description": "How does your streaming infrastructure withstand failures in ingest, processing, origination, or delivery components? ",
+                    "choices": [
+                        {
+                            "id": "SMREL1_1",
+                            "title": "Document all workload dependencies and expected viewer experience in the event of component failure",
+                            "helpfulResource": {
+                                "displayText": "Closely examine both hard and soft service dependencies to ensure that failure conditions are well understood. Engage directly with service partners to understand failure conditions before issues arise. If problems do occur, notify the end-user and protect their experience by offering alternate content. Use post-mortems to learn from experiences and develop action plans.",
+                                "url": "https://aws.amazon.com/blogs/media/part1-how-to-set-up-a-resilient-end-to-end-live-workflow/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For example, if your ad-insertion platform experiences an availability outage, systems should fall back to an underlying origin source or have a process in place to remove ad insertion. This may decrease the revenue earned in the short-term, but would retain service up-time and your audience satisfaction.",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/origin-shield.html#os-use-cases-multi-cdn"
+                            }
+                        },
+                        {
+                            "id": "SMREL1_2",
+                            "title": "Design live streaming ingest architecture to withstand source failure by ingesting redundant video signals that take diverse ne",
+                            "helpfulResource": {
+                                "displayText": "A failure in either the video signal or the network path that it takes to reach AWS cloud impacts the entire workload and subsequently the end customer experience. Design your live video ingest architecture to withstand individual source failure by ingesting redundant video signals that take diverse network paths to AWS.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/workload-architecture.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For example, in the architecture (https://docs.aws.amazon.com/images/wellarchitected/latest/streaming-media-lens/images/end-to-end-live-workflow.png), Source A and Source B are redundant input mezzanine sources. The contribution encoder is designed to failover between the redundant sources in case of signal loss. To protect against failure of the contribution encoders, ensure that there are redundant contribution encoders in different physical on-premise locations. Each contribution encoder outputs two sets of contribution feeds, each with a binary identical SMPTE 2022-7 compliant network packet streams (represented by the same color arrow lines). This allows for transmission over separate network routes so if packets from one route are lost, the data can be reconstructed using packets from the second stream (as depicted by the Network Packet Failover component).",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/workload-architecture.html"
+                            }
+                        },
+                        {
+                            "id": "SMREL1_3",
+                            "title": "Design live streaming workflow to withstand individual processing and origination failures by implementing redundant video pipe",
+                            "helpfulResource": {
+                                "displayText": "Distribution encoding can be impacted by infrastructure issues, degradation of a dependent source, or by factors locally within the component. To achieve distribution encoder pipeline redundancy, ensure that the input source is being processed in at least two redundant locations within a region. In the architecture diagram above a distribution encoder in each region is receiving two redundant input sources and processing them in separate AZs. Consider replicating the processing pipeline into an additional region if your reliability targets warrant it.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/workload-architecture.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "With AWS Elemental MediaLive, a Standard Channel creates two redundant encoding pipelines (one in each AZ) with the option to provide redundant input sources with configurable failure scenarios. This allows you to architect a workload that can seamlessly fail between inputs while maintaining the integrity of the stream being published to the origin. By providing embedded timecode in your sources you can prevent input failures from impacting the viewer experience through the MediaLive pipeline locking feature. If the input to MediaLive does not have valid timecode, the live channel still has redundant encoding pipelines and can still use redundant inputs into MediaPackage. The channel remains highly available but without the seamless failover.",
+                                "url": "https://docs.aws.amazon.com/medialive/latest/ug/plan-redundancy-mode.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMREL1_1 && SMREL1_2 && SMREL1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMREL1_1) || (!SMREL1_2) || (!SMREL1_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMREL2",
+                    "title": "How does your streaming media workload adapt to viewer demand?",
+                    "description": "How does your streaming media workload adapt to viewer demand?",
+                    "choices": [
+                        {
+                            "id": "SMREL2_1",
+                            "title": "Use a CDN and plan capacity with your providers",
+                            "helpfulResource": {
+                                "displayText": "To achieve petabyte delivery scale, improve performance, or respond to intermittent delivery network issues, streaming media architectures may consider a multi-CDN delivery strategy. With multiple CDNs you award or weight traffic to specific distribution networks based on current performance for a specific user or geographic region   providing optimal viewing experience. Before you take this approach, consider the following trade-offs when compared to a single CDN approach:\n*Increased Origin Load   With multiple CDNs, you will have more caches to populate with content. This will result in a lower Cache-Hit-Ratio and increase the load to origination services. Some of this load can be offset through an origin shield component.\n*Increased Cost   Many CDNs offer tiered pricing based on utilization. By using multiple CDNs, you might not have access to lower pricing tiers.\n*Operational Overhead   Deployment, testing, and the operation of multiple CDNs adds operational overhead.\n*Lack of Feature Parity   Implementation might be hindered by the lack of feature parity across CDNs. This situation could introduce new requirements for your infrastructure and even reduce performance.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/change-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "One approach to multi-CDN uses DNS resolution to apply a weighted round-robin distribution across CDNs. This is common for organizations looking to distribute load to meet capacity requirements, to meet cost commitments, or to minimize blast radius of CDN outages. This can be accomplished using Amazon Route 53 by defining multiple record sets with a  Weighted  routing policy and the desired weight.",
+                                "url": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html"
+                            }
+                        },
+                        {
+                            "id": "SMREL2_2",
+                            "title": "Design your origin service to automatically scale to meet viewer demand",
+                            "helpfulResource": {
+                                "displayText": "As client requests come through the CDN, the origin layer must elastically respond to meet viewership demand. Implement your origin service within auto-scaling groups, across multiple availability zones, and behind application load balancers to ensure high availability. To determine the additional demand back to the origin, refer to the Performance Pillar in this paper to estimate load and inform scaling needs.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/change-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "With video content, you can split tasks on I-frame boundaries, process those segments, and then stitch them together when all sub-tasks are complete. Split-and-stitch and parallelization techniques create granular tasks that can be easily placed across a processing fleet, leading to more efficient use of compute resource. Splitting processor intensive tasks also reduces dependency on vertical scaling and enables access the most cost effective compute resource available through heterogeneous Amazon EC2 Spot clusters.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/change-management.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMREL2_1 && SMREL2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMREL2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SMREL3",
+                    "title": "How does your streaming infrastructure respond to or heal from failures in origination or delivery components? ",
+                    "description": "How does your streaming infrastructure respond to or heal from failures in origination or delivery components? ",
+                    "choices": [
+                        {
+                            "id": "SMREL3_1",
+                            "title": "Design your streaming media workflow to automatically distribute traffic to redundant origins",
+                            "helpfulResource": {
+                                "displayText": "The origin component exposes content endpoints and is at the heart of the streaming media workload. Managing failure must start with an evaluation of the failure scenarios that can be introduced at the origin component. An origin can fail to serve content due to issues with upstream dependencies or due to internal service failure cases. The most effective way of managing upstream failures is to introduce component level redundancy so that upstream failures do not impact the health of the origin. Internal service failures should be managed by routing traffic to alternate origin resources through manifest re-writes, CDN origin traffic redirection, or client-side heuristics.",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/failure-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "There are many ways to implement failover depending on your architecture and business requirements. One common approach, often used for video-on-demand assets or other static assets, is to use origin failover logic provided by a CDN. Origin health check implementations are transparent to the client, easy to setup, and typically work by redirecting traffic to alternate origins when requests from primary origin respond with failure codes or take too long.",
+                                "url": "https://github.com/awslabs/aws-clustered-video-streams"
+                            }
+                        },
+                        {
+                            "id": "SMREL3_2",
+                            "title": "Monitor live streaming manifests for expected segment update patterns and to alert on staleness",
+                            "helpfulResource": {
+                                "displayText": "CDN origin failover heuristics may not be sufficient for live streaming because frequent manifest updates are made as the stream progresses and we also need to monitor and trigger failovers based on the health of these updates. If a live stream manifest returned back from the origin does not advance in the expected real-time cadence players will re-buffer or halt playback completely, compromising playback experience. In addition to 4xx, 5xx errors, and high response latencies, you should design origin monitoring to alert on stale live manifests. The heuristics used to detect manifest staleness will depend on the configuration of your stream segment size and the client playback buffer size. For example, you might consider rerouting requests to healthy origins if the manifest remains unchanged for 2x - 5x segment size (4s-10s for a 2s segment).",
+                                "url": "https://docs.aws.amazon.com/zh_tw/wellarchitected/latest/streaming-media-lens/failure-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "When using AWS Elemental MediaStore as your live streaming origin, you can configure a Transient Data Policy on your container via the Object Lifecycle Policy API. This feature will remove an HLS manifest from the origin if it has not been recently updated enabling players to automatically switch from a primary origin to a backup origin.",
+                                "url": "https://docs.aws.amazon.com/mediastore/latest/ug/policies-object-lifecycle.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SMREL3_1 && SMREL3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SMREL3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
