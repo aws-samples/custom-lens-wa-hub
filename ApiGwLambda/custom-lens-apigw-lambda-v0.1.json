@@ -1,0 +1,1303 @@
+{
+    "schemaVersion":"2021-11-01",
+    "name":"Custom Lens - Amazon API Gateway & AWS Lambda Integration",
+    "description":"Best Practices on Amazon API Gateway & AWS Lambda Integration",
+    "_version":"0.1",
+    "_release_date":"2023-03-31",
+    "_release_note":"An internal release. The pillar list reference to both AWS Lambda operator guide and WA Framework: Application Design, Security, Monitoring and Observability, Cost and Performance.",
+    "_teams":{
+      "_authors":[
+        {
+            "name":"Paul Lu, Senior Solutions Architect, GCR, AWS",
+            "email":"weichil@amazon.com"
+        }
+      ],
+      "_tech_reviewers":[
+        {
+            "name":"Bob Yeh, Well-Architected Geo SA, APAC",
+            "email":"bobyeh@amazon.com"
+        }
+      ]
+    },
+    "pillars":[
+        {
+            "id":"APPDESIGN",
+            "name":"Application Design",
+            "questions":[
+                {
+                    "id":"APPDESIGN1",
+                    "title":"How do you understand the service quota and limitation with Amazon API Gateway and AWS Lambda?",
+                    "description":"Understanding how to work with Service Quotas, when to request increases, and architecting with quotas in mind.",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"APPDESIGN1_1",
+                            "title":"Understand Amazon API Gateway has different quota setting for API type per account and per region",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"The default throttle limit is 10,000 RPSacross HTTP APIs, REST APIs, WebSocket APIs, and WebSocket callback APIs, which isper account, per Region and can be increased",
+                                "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html#apigateway-account-level-limits-table"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN1_2",
+                            "title":"Understand API Gateway has burst capacity and limit",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"API Gateway has burst limit 5,000 requests per seconds per region",
+                                "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN1_3",
+                            "title":"Understand AWS Lambda has a default concurrency limit.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Lambda has a default concurrency limit of 1,000 and can be increased up to tens of thousands.For adjustable quotas, you can request a quota increase. Smaller increases are automatically approved, and larger requests are submitted to AWS Support.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN1_5",
+                            "title":"Understand Lambda has burst concurrency",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Lambda has burstconcurrency limit 500-3,000 (varies per Region) per minutes.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN1_6",
+                            "title":"Understand AWS Lambda has limitation of payload size.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"The max payload of Lambda is 6 MB (API Gateway is 10MB)",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN1_7",
+                            "title":"Understand the timeout limitation is different between Amazon API Gateway and AWS Lambda",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"The max timeout of API Gateway is 30 seconds, and AWS Lambda is 15 minutes.",
+                                "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"APPDESIGN1_1 && APPDESIGN1_2 && APPDESIGN1_3 && APPDESIGN1_5 && APPDESIGN1_6 && APPDESIGN1_7",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!APPDESIGN1_1) || (!APPDESIGN1_2) || (!APPDESIGN1_3) || (!APPDESIGN1_5) || (!APPDESIGN1_6) || (!APPDESIGN1_7)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"APPDESIGN2",
+                    "title":"Understanding Lambda scaling options",
+                    "description":"Lambda is engineered to provide managed scaling in a way that does not rely upon threading or any custom engineering in your code. As traffic increases, Lambda increases the number of concurrent executions of your functions.",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/scaling-concurrency.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"APPDESIGN2_1",
+                            "title":"On-demand scaling",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"The on-demand scaling is about after function initial burst, functions can scale by an additional 500 instances per minute.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/on-demand-scaling.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN2_2",
+                            "title":"Provisioned Concurrency",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Provisioned Concurrency is a Lambda feature that prepares concurrent execution environments in advance of invocations.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/provisioned-scaling.html, https://aws.amazon.com/blogs/compute/new-for-aws-lambda-predictable-start-up-times-with-provisioned-concurrency/"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN2_3",
+                            "title":"Reserved Concurrency",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"The Reserved concurrency for Lambda functions was set to ensure that they can be invoked even if the overall capacity has been exhausted.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/reserved-concurrency.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"APPDESIGN2_1 && APPDESIGN2_2 && APPDESIGN2_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"APPDESIGN3",
+                    "title":"How do you understand the performance from difference runtime environment in AWS Lambda?",
+                    "description":"Different runtimes have different performance profiles",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/intro.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"APPDESIGN3_1",
+                            "title":"Understand your programming language characters in Lambda environment.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Python and Node.js are both fast to initialize and offer reasonable overall performance.\n\nJava is much slower to initialize but can be extremely fast once running.\n\nGo can be extremely performant for both start-up and execution",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/intro.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN3_2",
+                            "title":"Use CodeGuru Profiler to visualize and optimize your code structure.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"If performance is critical to your application, then profiling and comparing runtime performance is an important first step before coding applications",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/intro.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN3_3",
+                            "title":"Import correct AWS SDK version in Lambda functions with your requirement",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"In particular case, the lambda environment might not provide consistent SDK version aligned with users' requirement.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/intro.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"APPDESIGN3_1 && APPDESIGN3_2 && APPDESIGN3_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!APPDESIGN3_2) || (!APPDESIGN3_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"APPDESIGN4",
+                    "title":"How do you understand the networking and VPC configuration with Amazon API Gateway and AWS Lambda?",
+                    "description":"Amazon API Gateway and AWS Lambda deployed and run inside of VPCs owned by the Lambda serviceas managed services. The managed VPCs are not visible to customers, the network are full managed, maintained and operated by AWS. automatically, and monitoring is managed by the service.",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":""
+                    },
+                    "choices":[
+                        {
+                            "id":"APPDESIGN4_1",
+                            "title":"Understand the network environment and topology is managed by AWS",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"API Gateway/Lambda functions always run inside VPCs owned by the API Gateway/Lambda service.",
+                                "url":""
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN4_2",
+                            "title":"Understand the ENI mechanisam for Lambda usage",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Upon attaching subnet to Lambda, all traiffic will redirect to the ENI within customer VPC.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/dg/foundation-networking.html#foundation-nw-eni"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN4_3",
+                            "title":"Understand the constraint for VPC integration",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"REST API Gateway can ONLY connect to customer's NLB via API Gateway VPCLink\n\nPrivate API Gateway can ONLY be accessed via interface vpc endpoint within VPC\n\nPublic API Gateway CANNOT be accessed vi interface vpc endpoint within VPC",
+                                "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-nlb-for-vpclink-using-console.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"APPDESIGN4_1 && APPDESIGN4_2 && APPDESIGN4_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!APPDESIGN4_1) || (!APPDESIGN4_2) || (!APPDESIGN4_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"APPDESIGN5",
+                    "title":"How do you understand the invocation model of AWS Lambda?",
+                    "description":"Lambda functions can be invoked in synchronously, asynchronously, and polling behavior, depending upon the trigger services.",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/invocation-modes.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"APPDESIGN5_1",
+                            "title":"In synchronous Lambda invocations, the caller waits for the function to complete execution and the function can return a value\n",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"In synchronous Lambda invocations, the caller waits for the function to complete execution and the function can return a value.\n\nSynchronous invocations are well suited for short-lived Lambda functions. Although Lambda functions can run for up to 15 minutes, synchronous callers may have shorter timeouts. For example, API Gateway has a 29-second integration timeout, so a Lambda function running for more than 29 seconds will not return a value successfully. In synchronous invocations, if the Lambda function fails, retries are the responsibility of the trigger.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN5_2",
+                            "title":"In asynchronous Lambda operation, the caller places the event on an internal queue, which is then processed by the Lambda funct",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"In asynchronous Lambda operation, the caller places the event on an internal queue, which is then processed by the Lambda function.\n\nIn asynchronous invocations, the caller continues with other work and cannot receive a return value from the Lambda function. The function can send the result to a destination, configurable based on success or failure. The internal queue between the caller and the function ensures that messages are stored durably. The Lambda service scales up the concurrency of the processing function as this internal queue grows. If an error occurs in the Lambda function, the retry behavior is determined by the Lambda service.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"APPDESIGN5_1 && APPDESIGN5_2",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"APPDESIGN6",
+                    "title":"How do you understand the connection types of Amazon API Gateway?",
+                    "description":"-",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"APPDESIGN6_1",
+                            "title":"Follow protocol format in communication.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Amazon API Gateway support HTTP and REST communication, both type will follow the HTTP request &response model.",
+                                "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN6_2",
+                            "title":"Websocket API Gateway can push message to client.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Websocket API Gateway can push message to client.",
+                                "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN6_3",
+                            "title":"Knowing the difference b/t REST APIs and HTTP APIs",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Knowing the difference b/t REST APIs and HTTP APIs",
+                                "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN6_4",
+                            "title":"Understand that Edge-Optimized REST API Gateway",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Using CloudFront caching in front of API Gateway for calls that return data that doesnt frequently change. This increases the CloudFront cost but reduces the API Gateway and Lambda costs.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/architecture-best-practice.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"APPDESIGN6_1 && APPDESIGN6_2 && APPDESIGN6_3 && APPDESIGN6_4",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!APPDESIGN6_4)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"APPDESIGN7",
+                    "title":"How do you control the traffic flow when interact with other services?",
+                    "description":"If your API Gateway/Lambda functions interact with other services downstream, its possible to overwhelm those services with data or connection requests.",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/traffic-server-based.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"APPDESIGN7_1",
+                            "title":"Understand the downstream service limit (eq. Max number of connection)",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"While Lambda can scale up quickly in response to traffic, many non-serverless services cannot. If your Lambda functions interact with those services downstream, its possible to overwhelm those services with data or connection requests.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/traffic-server-based.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN7_2",
+                            "title":"Understand REST API Gateway Usage plan",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"A usage plan specifies who can access one or more deployed API stages and methodsand optionally sets the target request rate to start throttling requests. The plan uses API keys to identify API clients and who can access the associated API stages for each key.",
+                                "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN7_3",
+                            "title":"Understand HTTP API Gateway Throttling",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"API Gateway throttles requests to your API using the token bucket algorithm, where a token counts for a request. Specifically, API Gateway examines the rate and a burst of request submissions against all APIs in your account, per Region. In the token bucket algorithm, a burst can allow pre-defined overrun of those limits, but other factors can also cause limits to be overrun in some cases.",
+                                "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-throttling.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"APPDESIGN7_1 && APPDESIGN7_2 && APPDESIGN7_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!APPDESIGN7_1) || (!APPDESIGN7_2) || (!APPDESIGN7_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"APPDESIGN8",
+                    "title":"How do you understand the service quota of AWS Lambda Invocation?",
+                    "description":"AWS Lambda has different quota and limitation for invocation types.",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/quotas.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"APPDESIGN8_1",
+                            "title":"Understand the quota and limitation for synchronous invocation",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Each instance of your execution environment can serve up to 10 requests per second. In other words, the total invocation limit is 10 times your concurrency limit.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/dg/lambda-concurrency.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN8_2",
+                            "title":"Understand the quota and limitation for asynchronous invocation",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Each instance of your execution environment can serve an unlimited number of requests. In other words, the total invocation limit is based only on concurrency available to your function.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/dg/lambda-concurrency.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"APPDESIGN8_3",
+                            "title":"Understand the quota and limitation per version or alias",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"10 x allocated provisioned concurrency\n(This quota applies only to functions that use provisioned concurrency.)",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"APPDESIGN8_1 && APPDESIGN8_2 && APPDESIGN8_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!APPDESIGN8_1) || (!APPDESIGN8_2) || (!APPDESIGN8_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id":"SEC",
+            "name":"Security",
+            "questions":[
+                {
+                    "id":"SEC1",
+                    "title":"How do you protect your Lambda function within execution environments?",
+                    "description":"When your functions are invoked, the Lambda service runs your code inside an execution environment. Lambda scrubs the memory before it is assigned to an execution environment. Execution environments are run on hardware virtualized virtual machines (MicroVMs) which are dedicated to a single AWS account. Execution environments are never shared across functions and MicroVMs are never shared across AWS accounts.",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/execution-environment.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"SEC1_1",
+                            "title":"Understand Lambda function life cycle",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"-"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC1_2",
+                            "title":"Understand Lambda process invocation structure",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Knowing that all of these invocations are handled by a single process, so any process-wide state (such as static state in Java) is available across all invocations within the same execution environment."
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"SEC1_1 && SEC1_2",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!SEC1_1) || (!SEC1_2)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"SEC2",
+                    "title":"How do you secure your data in AWS Lambda execution lifecycle?",
+                    "description":"It is possible for data from one Lambda function to be shared with another invocation of the same function. This may be intended, when used for caching common values or sharing libraries. However, if you have information only intended for a single invocation.",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":""
+                    },
+                    "choices":[
+                        {
+                            "id":"SEC2_1",
+                            "title":"Ensure that data is only used in a local variable scope.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"-"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC2_2",
+                            "title":"Ensure all the critical local data been clean out before resource release",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Delete any /tmp files before exiting, and use UUID naming to prevent different instances from accessing the same temporary files."
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC2_3",
+                            "title":"Ensure that any callbacks are complete before exiting.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"<a href=\"https://quip-amazon.com/aQf9EAgGKru\">Paul Lu</a>"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"SEC2_2 && SEC2_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!SEC2_2) || (!SEC2_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"SEC3",
+                    "title":"How do you securely build your AWS Lambda functions?",
+                    "description":"Developers should always take precautions against common risks such as misconfiguration, injection flaws, and handling user input.",
+                    "helpfulResource":{
+                        "displayText":"-"
+                    },
+                    "choices":[
+                        {
+                            "id":"SEC3_1",
+                            "title":"Review OWASP Top 10 Web Application Security Risks",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"The OWASP Top 10 is a standard awareness document for developers and web application security. It represents a broad consensus about the most critical security risks to web applications.",
+                                "url":"https://owasp.org/www-project-top-ten/"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC3_2",
+                            "title":"Review OWASP Serverless Top 10",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"OWASP Serverless Top 10 aims at educating practitioners and organizations about the consequences of the most common serverless application security vulnerabilities, as well as providing basic techniques to identify and protect against them.",
+                                "url":"https://owasp.org/www-project-serverless-top-10/"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC3_3",
+                            "title":"Use fo static code analysis tools",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"-"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"SEC3_1 && SEC3_2 && SEC3_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!SEC3_1) || (!SEC3_2) || (!SEC3_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"SEC4",
+                    "title":"How do you manage the permission setting for your API Gateway and Lambda functions?",
+                    "description":"-",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/least-privilege.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"SEC4_1",
+                            "title":"Review security best practices -Applying the principles of least privilege",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Grant the only necessary privileges to your IAM setting.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/least-privilege-iam.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC4_2",
+                            "title":"Understand API Gateway permission model",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"API Gateway has different way in authentication, which include resource policy, IAM, Amazon Cognito and Lambda authorizer. A correct sequenc should be applied."
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC4_3",
+                            "title":"Understand Lambda permission model",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Lambda is fully integrated with IAM, allowing you to control precisely what each Lambda function can do within the AWS Cloud. There are two important policies that define the scope of permissions in Lambda functions. The event source uses a resource policy that grants permission to invoke the Lambda function, whereas the Lambda service uses an execution role to constrain what the function is allowed to do."
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"SEC4_1 && SEC4_2 && SEC4_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!SEC4_1) || (!SEC4_2) || (!SEC4_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"SEC5",
+                    "title":"How do you secure your workloads with public endpoints?",
+                    "description":"For workloads that are accessible publicly, AWS provides a number of features and services that can help mitigate certain risks.",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/public-endpoints.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"SEC5_1",
+                            "title":"Understand how API Gateway evaluating policy",
+                            "description":"-",
+                            "helpfulResource":{
+                                "displayText":"-"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC5_2",
+                            "title":"Understand how API Gateway controlling and manageing access",
+                            "description":"-",
+                            "helpfulResource":{
+                                "displayText":"<a href=\"https://quip-amazon.com/aQf9EAgGKru\">Paul Lu</a>"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC5_3",
+                            "title":"Not using API Gateway's API Key to AuthN/AuthZ request",
+                            "helpfulResource":{
+                                "displayText":"The API Key for APIGateway is majorly use for usage-plan and throttling control. Suggest to use JWT or Lambda Authorizer, IAM, etc."
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"SEC5_1 && SEC5_2 && SEC5_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!SEC5_1) || (!SEC5_2) || (!SEC5_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"SEC6",
+                    "title":"How do you encrypt your data and protect your secrets for AWS Lambda functions?",
+                    "description":"-",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":""
+                    },
+                    "choices":[
+                        {
+                            "id":"SEC6_3",
+                            "title":"Separate the secrect from source code.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Ensure you do not embed secrets directly in function code, or commit these secrets to code repositories."
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC6_1",
+                            "title":"Use encryption services for secret store",
+                            "description":"Both the AWS Systems Manager Parameter Store and AWS Secrets Manager provide a robust approach to storing and managing secrets used in Lambda functions.",
+                            "helpfulResource":{
+                                "displayText":"Both the AWS Systems Manager Parameter Store and AWS Secrets Manager provide a robust approach to storing and managing secrets used in Lambda functions.",
+                                "url":"https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html  https://aws.amazon.com/secrets-manager/"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC6_2",
+                            "title":"No plaintext secrets in Lambda environment variables. ",
+                            "description":"Do not store plaintext secrets or API keys in Lambda environment variables. Instead, use the AWS Key Management Service (KMS) to encrypt environment variables.",
+                            "helpfulResource":{
+                                "displayText":"Do not store plaintext secrets or API keys in Lambda environment variables. Instead, use the AWS Key Management Service (KMS) to encrypt environment variables.",
+                                "url":"https://aws.amazon.com/kms/"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"SEC6_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!SEC6_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"SEC7",
+                    "title":"Governance controls with AWS CloudTrail",
+                    "description":"For compliance and operational auditing of application usage, AWS CloudTrail logs activity related to your AWS account usage",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/governance-controls.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"SEC7_1",
+                            "title":"Ensure the traceability for invocation",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Log who creates and invokes API Gateway/functions, together with any changes to IAM roles via CloudTrail"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"SEC7_3",
+                            "title":"Build up the incidence response procedure",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"By integrating CloudTrail with EventBridge, you can create alerts in response to certain activities, and then take action accordingly"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"SEC7_1 && SEC7_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!SEC7_1) || (!SEC7_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id":"MNO",
+            "name":"Monitoring and Observability",
+            "questions":[
+                {
+                    "id":"MONITOR1",
+                    "title":"How do we build the request telemetry with Amazon API Gateway and AWS Lambda?",
+                    "description":"When building our service with Amazon API Gateway and AWS Lambda, we should setup tracing mechanism to understand the request telemetry between the managed services.",
+                    "helpfulResource":{
+                        "displayText":"-"
+                    },
+                    "choices":[
+                        {
+                            "id":"MONITOR1_1",
+                            "title":"Tracing requests with AWS X-Ray",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"API Gateway and Lambda are natively integrated with AWS X-ray.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/trace-requests.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"MONITOR1_1",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!MONITOR1_1)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"MONITOR2",
+                    "title":"How do we monitor the code storage for AWS Lambda functions?",
+                    "description":"The Lambda service stores your function code in an internal S3 bucket that’s private to your account. Each AWS account is allocated 75 GB of storage in each Region. Code storage includes the total storage used by both Lambda functions and layers.",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/code-storage-best-practice.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"MONITOR2_1",
+                            "title":"Understand the Code Storage limitation is regional",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"The Lambda service stores your function code in an internal S3 bucket thats private to your account. Each AWS account is allocated 75 GB of storage in each Region. Code storage includes the total storage used by both Lambda functions and layers.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/code-storage-best-practice.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"MONITOR2_2",
+                            "title":"Using Lambda Layer to store share libraries",
+                            "description":"Code storage includes the total storage used by both Lambda functions and layers. A layer is a zip archive that contains libraries and other dependencies. You can include a layer in your function deployment as a way to keep deployment packages small.",
+                            "helpfulResource":{
+                                "displayText":"Code storage includes the total storage used by both Lambda functions and layers. A layer is a zip archive that contains libraries and other dependencies. You can include a layer in your function deployment as a way to keep deployment packages small.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/code-storage-best-practice.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"MONITOR2_1 && MONITOR2_1",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!MONITOR2_1) || (!MONITOR2_1)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"MONITOR3",
+                    "title":"Logging and metrics with Amazon CloudWatch",
+                    "description":"To leverage Amazon Cloudwatch for moniroting Amazon API Gateway and AWS Lambda, and setup metrics for observability.",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/logging-metrics.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"MONITOR3_1",
+                            "title":"Do you know how CloudWatch structure logs?",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Lambda automatically streams details about each function invocation, along with logs and other output from your functions code to CloudWatch Logs.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/log-structure.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"MONITOR3_2",
+                            "title":"Important metrics for API Gateway",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Amazon API Gateway sends metric data to CloudWatch every minute, which helps to understand the status of your endpoints.You can use the dimensions to filter API Gateway metrics.",
+                                "url":"https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-metrics-and-dimensions.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"MONITOR3_3",
+                            "title":"Important metrics for Lambda",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"There are a number of important integrated Lambda metrics that you can monitor to understand the performance of your workload, please refer to official document.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/important-metrics.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"MONITOR3_4",
+                            "title":"Aware customized CloudWatch Metrics",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Custom metrics can be used for tracking statistics in the application domain, instead of measuring performance related to the Lambda function (for example, duration). A single statistic may have multiple dimensions to use for later analysis. Each custom metric must be published to a namespace, which isolates groups of custom metrics, so often a namespace equates to an application or workload domain.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/custom-metrics.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"MONITOR3_5",
+                            "title":"Using AWS Resource Groups to organize your workload",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"AWS Resource groups can make it easier to group and organize resources used by your workload. You can group resources around a project, environment, department, or team.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/organize-workload.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"MONITOR3_1 && MONITOR3_2 && MONITOR3_3 && MONITOR3_4 && MONITOR3_5",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!MONITOR3_2) || (!MONITOR3_3) || (!MONITOR3_5)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id":"CnP",
+            "name":"Cost and Performance",
+            "questions":[
+                {
+                    "id":"CnP1",
+                    "title":"How do you understand the service quota and limitation with Amazon API Gateway and AWS Lambda?",
+                    "description":"Lambda execution environments",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/execution-environments.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"CnP1_1",
+                            "title":"Understand cold starts and latency",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Lambda have cold start and invocation stage when an execution request first time coming in. Code start refer to the duration time of setting up environment and code.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/execution-environments.html#cold-start-latency"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"CnP1_2",
+                            "title":"Understand the execution environment lifecycle",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"The Lambda service retains the execution environment instead of destroying it immediately after execution. There are also operational factors in the Lambda services that influence the retention time.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/execution-environments.html#execution-lifecycle"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"CnP1_3",
+                            "title":"Understand invocation patterns",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Lambda execution environments handle one request at a time. After the invocation has ended, the execution environment is retained for a period of time. If another request arrives, the environment is reused to handle the subsequent request.\nIf requests arrive simultaneously, the Lambda service scales up the Lambda function to provide multiple execution environments. Each environment has to be set up independently, so each invocation experiences a full cold start.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/execution-environments.html#invocation-patterns"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"CnP1_1 && CnP1_2 && CnP1_3",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!CnP1_1) || (!CnP1_2) || (!CnP1_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"CnP2",
+                    "title":"How do you optimize your memory and computing resource allocation for your AWS Lambda function?",
+                    "description":"Memory and computing power",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/computing-power.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"CnP2_1",
+                            "title":"Understand the memory usage",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Understand the amount of memory also determines the amount of virtual CPU available to a function",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/computing-power.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"CnP2_2",
+                            "title":"Profiling functions with AWS Lambda Power Tuning",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Using Lambda Power tuning to profile your lambda function.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/computing-power.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"CnP2_1 && CnP2_2",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!CnP2_1) || (!CnP2_2)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id":"CnP3",
+                    "title":"How do you optimize your spending by reuse available resources?",
+                    "description":"Optimize the static initialization part in a Lambda Function",
+                    "helpfulResource":{
+                        "displayText":"-",
+                        "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/static-initialization.html"
+                    },
+                    "choices":[
+                        {
+                            "id":"CnP3_1",
+                            "title":"Understand the static initialization and cold start",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"The static initialization run for the first time when a new execution environment is up, or whenever a function scales up and the Lambda service is creating new environments for the function. The initialization code is not run again if an invocation uses a warm execution environment.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/static-initialization.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"CnP3_2",
+                            "title":"Understand that the initilzation is only run once and static.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"The initialization code is not run again if an invocation uses a warm execution environment",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/static-initialization.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"CnP3_3",
+                            "title":"Only import necessary libaries.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Only import the necessary libraries and dependencies which can make sure there is not resource wasted.",
+                                "url":"https://docs.aws.amazon.com/lambda/latest/operatorguide/static-initialization.html"
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        },
+                        {
+                            "id":"CnP3_4",
+                            "title":"Initiated DB connection pool outside the handler.",
+                            "description":"",
+                            "helpfulResource":{
+                                "displayText":"Static initialization is often the best place to open database connections to allow a function to reuse connections over multiple invocations to the same execution environment."
+                            },
+                            "improvementPlan":{
+                                "displayText":"-"
+                            }
+                        }
+                    ],
+                    "riskRules":[
+                        {
+                            "condition":"CnP3_1 && CnP3_2 && CnP3_3 && CnP3_4",
+                            "risk":"NO_RISK"
+                        },
+                        {
+                            "condition":"(!CnP3_1) || (!CnP3_2) || (!CnP3_3)",
+                            "risk":"HIGH_RISK"
+                        },
+                        {
+                            "condition":"default",
+                            "risk":"MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
