@@ -1,6 +1,8 @@
 [submodule "SAP-Lens"]
 	path = SAP-Lens
 	url = https://github.com/aws-samples/aws-sap-lens-well-architected
+	branch = main
 [submodule "ORR-Lens"]
 	path = ORR-Lens
 	url = https://github.com/awslabs/operational-readiness-review-custom-war-lens
+	branch = main
