@@ -1,4 +1,4 @@
-# API Gateway and Lambda Custom Lens Custom Lens
+# API Gateway and Lambda Custom Lens
 
 API Gateway and Lambda Custom Lens specifies best practices in Application Design, Security, Monitoring and Cost and Performance pillars. The best practices are designed for API Gateway and Lambda workload. 
 
