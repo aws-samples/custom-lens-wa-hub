@@ -8,7 +8,8 @@ CTO, Technical Leader or technical owner for an AWS API Gateway and Lambda workl
 
 ## Contributing
 
-- [Paul Lu](mailto:weichil@amazon.com), AWS Solution Architect, API Gateway SME
+- [Paul Lu](mailto:weichil@amazon.com), AWS Senior Solution Architect, API Gateway SME
 - [Haipeng Qi](mailto:haipenq@amazon.com), AWS Senior Solution Architect
 - [Zhe Zhang](mailto:zzhe@amazon.com), AWS Support Pratice Leader
 - [Yunfei Lu](mailto:yunfeilu@amazon.com), AWS Solution Architect
+- [Jun-Tin Yeh](mailto:bobyeh@amazon.com), AWS Well-Architected Geo SA
