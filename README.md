@@ -36,6 +36,25 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 ### Custom Lens for Operation
 * [Operational Readiness Review](/ORR-Lens/)
 
+### Custom Lens for AWS Solutions
+* [Streaming Media Lens](/Streaming Media Lens/)
+* [SAP Lens](/SAP-Lens/)
+
+## :bookmark: Whitepaper to describe candidate new Custom Lenses
+* [Container Build Lens](https://docs.aws.amazon.com/wellarchitected/latest/container-build-lens/container-build-lens.html)
+* [SAP Lens](https://docs.aws.amazon.com/wellarchitected/latest/sap-lens/sap-lens.html)
+* [Serverless Applications Lens](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html)
+* [Hybrid Networking Lens](https://docs.aws.amazon.com/wellarchitected/latest/hybrid-networking-lens/hybrid-networking-lens.html)
+* [Games Industry Lens](https://docs.aws.amazon.com/wellarchitected/latest/games-industry-lens/games-industry-lens.html)
+* [Data Analytics Lens](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html)
+* [Machine Learning Lens](https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/machine-learning-lens.html)
+* [Streaming Media Lens](https://docs.aws.amazon.com/wellarchitected/latest/streaming-media-lens/streaming-media-lens.html)
+* [SaaS Lens](https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/saas-lens.html)
+* [Financial Services Industry Lens](https://docs.aws.amazon.com/wellarchitected/latest/financial-services-industry-lens/welcome.html)
+* [IoT Lens](https://docs.aws.amazon.com/wellarchitected/latest/iot-lens/abstract-and-introduction.html)
+* [IoT Lens Checklist](https://docs.aws.amazon.com/wellarchitected/latest/iot-lens-checklist/overview.html)
+* [High Performance Computing Lens](https://docs.aws.amazon.com/wellarchitected/latest/high-performance-computing-lens/welcome.html)
+
 ## :balance_scale: License
 
 This library is licensed under the MIT-0 License. For more details, please take a look at the [LICENSE](LICENSE) file.
