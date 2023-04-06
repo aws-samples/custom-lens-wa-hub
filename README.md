@@ -28,17 +28,19 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 
 ## :clipboard: Repository
 ### Custom Lens for AWS Key Services
-* [DynamoDB](/DynamoDB)
-* [DocumentDB](/DocumentDB)
-* [Glue](/Glue)
-* [OpenSearch](/OpenSearch)
+* [DynamoDB](/DynamoDB/)
+* [DocumentDB](/DocumentDB/)
+* [Glue](/Glue/)
+* [OpenSearch](/OpenSearch/)
+* [API Gateway and Lambda](/ApiGwLambda/)
 
 ### Custom Lens for AWS Solutions
 * [Streaming Media Lens](/Streaming-Media-Lens/)
 * [SAP Lens](https://github.com/aws-samples/aws-sap-lens-well-architected/)
 * [Operational Readiness Review](https://github.com/awslabs/operational-readiness-review-custom-war-lens/)
 
-## :bookmark: Whitepaper to describe candidate new Custom Lenses
+## :bookmark: Whitepaper
+Whitepaper to describe candidate new Custom Lenses, which you can reference as following:
 * [Container Build Lens](https://docs.aws.amazon.com/wellarchitected/latest/container-build-lens/container-build-lens.html)
 * [SAP Lens](https://docs.aws.amazon.com/wellarchitected/latest/sap-lens/sap-lens.html)
 * [Serverless Applications Lens](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html)
