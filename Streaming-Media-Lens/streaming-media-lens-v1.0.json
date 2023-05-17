@@ -1,7 +1,7 @@
 {
     "schemaVersion": "2021-11-01",
     "name": "WA Custom Lens - Streaming Media Lens",
-    "description": "Best practices for Streaming Media",
+    "description": "The Streamming Media Lens provides a set of additional questions for you to consider for your Media Workload.",
     "_version":"1.0",
     "_release_date":"2023-02-13",
     "_release_note":"",
