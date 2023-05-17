@@ -1,8 +1,8 @@
 {
     "schemaVersion": "2021-11-01",
-    "name": "WA Custom Lens - Streaming Media Lens",
+    "name": "Streaming Media Lens",
     "description": "The Streamming Media Lens provides a set of additional questions for you to consider for your Media Workload.",
-    "_version":"1.0",
+    "_version":"1.02",
     "_release_date":"2023-02-13",
     "_release_note":"",
     "_teams":{
