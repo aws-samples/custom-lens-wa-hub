@@ -386,7 +386,7 @@
                     "choices": [
                         {
                             "id": "docdb_perf1_1",
-                            "title": "Optimize access patterns for compute , NOT storage",
+                            "title": "Optimize access patterns for compute, NOT storage",
                             "helpfulResource": {
                                 "displayText": "Storing infrequently accessed fields in a separate document helps reduce I/O utilization and improve performance.",
                                 "url": "https://aws.amazon.com/blogs/database/document-modeling-with-amazon-documentdb-and-hackolade/"
@@ -485,22 +485,22 @@
                         },
                         {
                             "id": "docdb_perf2_2",
-                            "title": "Use operators with optimizations such as $hint, $project",
+                            "title": "Use operators with optimizations such as hint and project",
                             "helpfulResource": {
-                                "displayText": "Customers who want control over their query plan can use the $hint operator to enforce selection of a preferred index. Use (0024)project to return only those fields you need so as to avoid processing more data than is necessary."
+                                "displayText": "Customers who want control over their query plan can use the hint() operator to enforce selection of a preferred index. Use the project() operator return only those fields you need so as to avoid processing more data than is necessary."
                             },
                             "improvementPlan": {
-                                "displayText": "Use operators with optimizations like (0024)hint, (0024)project"
+                                "displayText": "Use operators with optimizations such as hint() and project()"
                             }
                         },
                         {
                             "id": "docdb_perf2_3",
-                            "title": "Avoid sub optimal operators like (0024)distinct (for multi key), (0024)ne,(0024)nin",
+                            "title": "Avoid sub optimal operators such as distinct(), ne(), nin()",
                             "helpfulResource": {
-                                "displayText": "Avoidsub-optimaloperators like aggregation operator (0024)distinct,Comparison Operators (0024)ne, (0024)nin"
+                                "displayText": "Avoid sub-optimal operators such as  aggregation operator distinct(), Comparison Operators ne(), nin()"
                             },
                             "improvementPlan": {
-                                "displayText": "Avoid sub optimal operators like (0024)distinct (for multi key), (0024)ne,(0024)nin"
+                                "displayText": "Avoid sub optimal operators like $distinct (for multi key), $ne, $nin"
                             }
                         },
                         {
@@ -574,7 +574,7 @@
                 {
                     "id": "docdb_perf4",
                     "title": "How does your application connect to your Amazon DocumentDB cluster(s)?",
-                    "description": "",
+                    "description": "_",
                     "choices": [
                         {
                             "id": "docdb_perf4_1",
@@ -2005,7 +2005,7 @@
                     ],
                     "riskRules": [
                         {
-                            "condition": "docdb_sust1_1 && docdb_sust1_2 && docdb_cost1_3",
+                            "condition": "docdb_sust1_1 && docdb_sust1_2 && docdb_sust1_3",
                             "risk": "NO_RISK"
                         },
                         {
@@ -2109,7 +2109,7 @@
                             "id": "docdb_sust4_2",
                             "title": "No, using other instance classes",
                             "helpfulResource": {
-                                "displayText": ""
+                                "displayText": "_"
                             },
                             "improvementPlan": {
                                 "displayText": "Use Graviton, R6G or T4G instance classes, for better efficiency and lower cost.",
