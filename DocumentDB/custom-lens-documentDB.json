@@ -2046,12 +2046,26 @@
                                 "displayText": "Keep a check on CloudWatch metrics to find unused resources.",
                                 "url": "https://docs.aws.amazon.com/documentdb/latest/developerguide/monitoring_docdb.html"
                             }
+                        },
+                        {
+                            "id": "docdb_sust2_3",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
                         }
                     ],
                     "riskRules": [
                         {
                             "condition": "docdb_sust2_1 && docdb_sust2_2",
                             "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!docdb_sust2_3)",
+                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -2074,6 +2088,16 @@
                             "improvementPlan": {
                                 "displayText": "If the other systems used are serverless then this is good practice for sustainability.",
                                 "url": "https://docs.aws.amazon.com/wellarchitected/latest/sustainability-pillar/design-principles-for-sustainability-in-the-cloud.html"
+                            }
+                        },
+                        {
+                            "id": "docdb_sust3_2",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
                             }
                         }
                     ],
@@ -2143,6 +2167,16 @@
                             "improvementPlan": {
                                 "displayText": "Combining TTl index, change streams and AWS Lambda can help simplify archiving data.",
                                 "url": "https://catalog.us-east-1.prod.workshops.aws/workshops/464d6c17-9faa-4fef-ac9f-dd49610174d3/en-US/change-streams"
+                            }
+                        },
+                        {
+                            "id": "docdb_sust5_2",
+                            "title": "None of above",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
                             }
                         }
                     ],
