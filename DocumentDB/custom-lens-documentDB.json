@@ -92,13 +92,13 @@
                             }
                         }
                     ],
-                    "riskRules": [
+		    "riskRules": [
                         {
-                            "condition": "docdb_ops1_1 && docdb_ops1_2 && docdb_ops1_3 && docdb_ops1_4 && docdb_ops1_5 && docdb_ops1_6",
+                            "condition": "docdb_ops1_1 && docdb_ops1_3 && docdb_ops1_4 && docdb_ops1_5 && docdb_ops1_6",
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "(!docdb_ops1_1) || (!docdb_ops1_2) || (!docdb_ops1_3) || (!docdb_ops1_4) || (!docdb_ops1_6)",
+                            "condition": "(!docdb_ops1_1) || (!docdb_ops1_3) || (!docdb_ops1_4) || (!docdb_ops1_6)",
                             "risk": "HIGH_RISK"
                         },
                         {
