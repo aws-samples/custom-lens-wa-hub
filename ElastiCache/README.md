@@ -14,10 +14,10 @@ The well-architected lens for ElastiCache will provide the following benefits:
 * Improve the reliability and performance of applications that use ElastiCache.
 
 ## Contributors:
-* Ravi Thakur (@rrrthakur)
-* Steven Hancz (@shancz)
-* Lakshmi Peri (@lvperi)
+* [Ravi Thakur](mailto:rrthakur@amazon.com), Sr Solutions Architect, AWS 
+* [Steven Hancz](mailto:shancz@amazon.com), Sr ElastiCache/MemDB SA, AWS 
+* [Lakshmi Peri](mailto:lvperi@amazon.com), Sr ElastiCache/MemDB SA, AWS 
 
 ## Reviewers:
-* Damon LaCaille (@lacdamon)
-* Roberto Luna Rojas (@rberoj)
+* [Damon LaCaille](mailto:lacdamon@amazon.com), Sr ElastiCache/MemDB SA, AWS
+* [Roberto Luna Rojas](mailto:rberoj@amazon.com), Sr ElastiCache/MemDB SA, AWS
