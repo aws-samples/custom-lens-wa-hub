@@ -33,6 +33,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [Glue](/Glue/)
 * [OpenSearch](/OpenSearch/)
 * [API Gateway and Lambda](/ApiGwLambda/)
+* [ElastiCache](/ElastiCache/)
 
 ### Custom Lens for AWS Solutions
 * [Streaming Media Lens](/Streaming-Media-Lens/)
