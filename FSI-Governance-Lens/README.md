@@ -1,9 +1,7 @@
-# AWS Well-Architected Custom Lens for Regulated Organisations
+# FSI Enterprise Cloud Governance Lens for Regulated Organisations
 
-Enterprise Cloud Governance for APRA, MAS, HKMA, PRA.
-
-The FSI Enterprise Governance Lens for Regulated Organisations is designed to assist customers
-assessing their compliance with regulatory principles across APRA, RBMZ, MAS, HKMA and PRA.
+The FSI Enterprise Cloud Governance Lens for Regulated Organisations is designed to assist customers
+assessing their compliance with principles-based regulators such as APRA, RBMZ, MAS, HKMA and PRA.
 
 While not a replacement for a formal engagement, this Lens provides directional guidance
 to help customers understand their compliance obligations. Principles-based regulators require 
