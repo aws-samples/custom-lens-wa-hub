@@ -39,6 +39,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [Streaming Media Lens](/Streaming-Media-Lens/)
 * [SAP Lens](https://github.com/aws-samples/aws-sap-lens-well-architected/)
 * [Operational Readiness Review](/ORR-Lens/)
+* [FSI Governance Lens](/FSI-Governance-Lens/)
 
 ## :bookmark: Whitepaper
 Whitepaper to describe candidate new Custom Lenses, which you can reference as following:
