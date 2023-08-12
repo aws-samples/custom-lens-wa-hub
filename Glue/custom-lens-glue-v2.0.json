@@ -2,20 +2,23 @@
     "schemaVersion": "2021-11-01",
     "name": "Glue Best Practice Lens",
     "description": "Best practices for configuring Glue",
-    "_version":"1.0",
-    "_release_date":"2022-11-22",
+    "_version":"2.0",
+    "_release_date":"2023-08-12",
     "_release_note":"",
     "_teams":{
        "_authors":[
           {
-             "name":"Ray Wang, Analytics SME, GCR, AWS",
-             "email":"hsiawang@amazon.com"
+            "name":"Noritaka Sekiyama, Principal Big Data Architect, AWS"
+          },
+          {
+            "name":"Ray Wang, Analytics SME, GCR, AWS",
+            "email":"hsiawang@amazon.com"
+          },
+          {
+            "name":"Hsu, Chia-Wei, Glue SME"
           }
        ],
        "_tech_reviewers":[
-          {
-             "name":"Hsu, Chia-Wei, Glue SME"
-          },
           {
             "name":"Bob Yeh, Geo Solutions Architect, Well-Architected APAC, AWS"
           }
@@ -28,26 +31,62 @@
             "questions": [
                 {
                     "id": "PERF1",
-                    "title": "How do you select file formats and compression to store your data?",
-                    "description": "How do you select file formats and compression to store your data?",
+                    "title": "Do konw how file formats, file size, file layout and compression effect your job performance?",
+                    "description": "To reduce the amount of data loaded into your job when reading from Amazon S3, you need to consider FileSize, Compression, FileFormat and FileLayout (Partitions) for your dataset.",
                     "choices": [
                         {
                             "id": "PERF1_1",
-                            "title": "Feature support across data formats in AWS Glue",
+                            "title": "Choice the suitable file format for you Glue ETL Job",
                             "helpfulResource": {
-                                "displayText": "Each data format may support different AWS Glue features. The document offer information about feature support and configuration parameters for data formats supported by AWS Glue.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-format.html"
+                                "displayText": "Have you use a columnar format. Apache Parquet and Apache ORC are popular columnar data formats?\n\nWhen using columnar formats, you can skip blocks of data that correspond to columns you do not plan to use.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
                             },
                             "improvementPlan": {
-                                "displayText": "Certain AWS Glue connection types support multiple format types, requiring you to specify information about your data format with a format_options object",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-format.html"
+                                "displayText": "Use input/output parquet, orc dataformat",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
                             }
                         },
                         {
                             "id": "PERF1_2",
-                            "title": "Parameters used to interact with data formats in AWS Glue",
+                            "title": "Choice the suitable file size for you Glue ETL Job",
                             "helpfulResource": {
-                                "displayText": "AWS Glue Jobs can be configured with the arguments listed in this document.",
+                                "displayText": "Large number of small file will impact perfomrnace a lot. We will need to keep Inputs and Outputs within a moderate range of sizes (ex. 128MB)",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "If you would like to use Apache Spark frame work to control file size, you will need repartition to control file number insteads.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            }
+                        },
+                        {
+                            "id": "PERF1_3",
+                            "title": "Choice the suitable compression for you Glue ETL Job",
+                            "helpfulResource": {
+                                "displayText": "Have you notice the difference between splittable and non splittable compression?",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-to-scale-apache-spark-jobs-and-partition-data-with-aws-glue/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "File splitting also benefits block-based compression formats such as bzip2. You can read each compression block on a file split boundary and process them independently. Unsplittable compression formats such as gzip do not benefit from file splitting.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-to-scale-apache-spark-jobs-and-partition-data-with-aws-glue/"
+                            }
+                        },
+                        {
+                            "id": "PERF1_4",
+                            "title": "Choice the suitable file layout for you Glue ETL Job",
+                            "helpfulResource": {
+                                "displayText": "File layout can help AWS Glue partition your data",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-partitions.html#aws-glue-programming-etl-partitions-pushdowns."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider store data in hive style naming convetion such as s3://bucket/column1=value2/column2=value2.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-partitions.html#aws-glue-programming-etl-partitions-pushdowns."
+                            }
+                        },
+                        {
+                            "id": "PERF1_5",
+                            "title": "Parameters used to interact with data formats and compression in AWS Glue",
+                            "helpfulResource": {
+                                "displayText": "AWS Glue Jobs can be configured with the arguments listed in this document. Compression is also recommended approach.",
                                 "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-glue-arguments.html"
                             },
                             "improvementPlan": {
@@ -58,11 +97,11 @@
                     ],
                     "riskRules": [
                         {
-                            "condition": "PERF1_1 && PERF1_2",
+                            "condition": "PERF1_1 && PERF1_2 && PERF1_3 && PERF1_4 && PERF1_5",
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "(!PERF1_1)",
+                            "condition": "(!PERF1_1) || (!PERF1_2) || (!PERF1_3) || (!PERF1_4)",
                             "risk": "HIGH_RISK"
                         },
                         {
@@ -123,15 +162,27 @@
                                 "displayText": "You can use job metrics in AWS Glue to estimate the number of data processing units (DPUs) that can be used to scale out an AWS Glue job.",
                                 "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-capacity.html"
                             }
+                        },
+                        {
+                            "id": "PERF2_5",
+                            "title": "Have you enable Auto Scaling in Glue?",
+                            "helpfulResource": {
+                                "displayText": "Applicable to AWS Glue 3.0 and 4.0. AWS Glue automatically adds and removes workers from the cluster depending on the parallelism at each stage or microbatch of the job run.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/auto-scaling.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can enable AWS Glue auto scaling in Glue job console",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/auto-scaling.html"
+                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "PERF2_1 && PERF2_2 && PERF2_3 && PERF2_4",
+                            "condition": "PERF2_1 && PERF2_2 && PERF2_3 && PERF2_4 && PERF2_5",
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "(!PERF2_2) || (!PERF2_3) || (!PERF2_4)",
+                            "condition": "(!PERF2_2) || (!PERF2_3) || (!PERF2_4) || (!PERF2_5)",
                             "risk": "HIGH_RISK"
                         },
                         {
@@ -168,15 +219,39 @@
                                 "displayText": "When you create a partition index, you specify a list of partition keys that already exist on a given table. Partition index is sub list of partition keys defined in the table. A partition index can be created on any permutation of partition keys defined on the table.",
                                 "url": "https://docs.aws.amazon.com/glue/latest/dg/partition-indexes.html"
                             }
+                        },
+                        {
+                            "id": "PERF3_3",
+                            "title": "Avoid too many S3 partitions",
+                            "helpfulResource": {
+                                "displayText": "Too many partitions may cause: Increased latency for retrieving partition metadata from Glue Data Catalog; Increased number of small files which requires more Amazon S3 API requests (List/Get/Head)",
+                                "url": "https://aws.amazon.com/blogs/big-data/get-started-managing-partitions-for-amazon-s3-tables-backed-by-the-aws-glue-data-catalog/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You should not partition your S3 data on columns that contain a wide range of values, such as an ID column with thousands of values. This can substantially increase the number of partitions in your bucket, since the number of possible partitions is the product of all of the fields you have partitioned by.",
+                                "url": "https://aws.amazon.com/blogs/big-data/get-started-managing-partitions-for-amazon-s3-tables-backed-by-the-aws-glue-data-catalog/"
+                            }
+                        },
+                        {
+                            "id": "PERF3_4",
+                            "title": "For database and JDBC, Specify a where predicate in a SQL query to reduce data scan",
+                            "helpfulResource": {
+                                "displayText": "Glue pushdown predicate sql can help to reduce data scan when using JDBC datasource",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-connect.html#aws-glue-programming-etl-connect-jdbc"
+                            },
+                            "improvementPlan": {
+                                "displayText": "set enablePartitioningForSampleQuery and sampleQuery in create_dynamic_frame.from_catalog or create_dynamic_frame.from_options",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-connect.html#aws-glue-programming-etl-connect-jdbc"
+                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "PERF3_1 && PERF3_2",
+                            "condition": "PERF3_1 && PERF3_2 && PERF3_3 && PERF3_4",
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "(!PERF3_1) || (!PERF3_2)",
+                            "condition": "(!PERF3_1) || (!PERF3_2) || (!PERF3_3) || (!PERF3_4)",
                             "risk": "HIGH_RISK"
                         },
                         {
@@ -187,11 +262,116 @@
                 },
                 {
                     "id": "PERF4",
+                    "title": "Do you know how to parallelize tasks based on your parition?",
+                    "description": "It is important to parallelize tasks for data loads and transformations",
+                    "choices": [
+                        {
+                            "id": "PERF4_1",
+                            "title": "Monitor parallelize tasks",
+                            "helpfulResource": {
+                                "displayText": "Do you know how to monitor your job's parallelism?",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitoring-awsglue-with-cloudwatch-metrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use spark ui and glue metrics  numberMaxNeededExecutors to see thee reosurce you provsioned can fully parallelism your job ",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitoring-awsglue-with-cloudwatch-metrics.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_2",
+                            "title": "Parallelize data load from S3",
+                            "helpfulResource": {
+                                "displayText": "Do you know the parallelism you will have when reading data on s3?",
+                                "url": "https://spark.apache.org/docs/3.1.3/api/python/reference/api/pyspark.sql.DataFrame.repartition.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The RDD partition (parallelism) will base on data format and datasize. You can use repartition df.repartition(N) to control the rdd partition to control the task (job parallelism)",
+                                "url": "https://spark.apache.org/docs/3.1.3/api/python/reference/api/pyspark.sql.DataFrame.repartition.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_3",
+                            "title": "Parallelize data load from JDBC",
+                            "helpfulResource": {
+                                "displayText": "Do you know how to control the parallelism when reading data from jdbc source?",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/run-jdbc-parallel-read-job.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Using hashexpression and hashpartitions to control the parallelis",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/run-jdbc-parallel-read-job.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_4",
+                            "title": "Parallelize data load from DynamoDB using traditional ETL connector",
+                            "helpfulResource": {
+                                "displayText": "Do you know how to control the parallelism when reading data from Dynamodb source?",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-connect.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "set dynamodb.splits when using connection_type=\"dynamodb\" to scan dynamodb resource",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-connect.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_5",
+                            "title": "Parallelize data load from Kinesis Data Streams",
+                            "helpfulResource": {
+                                "displayText": "Do you know the parallelism you will have when reading data from kniesis source?",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-to-optimize-cost-and-performance-for-aws-glue-streaming-etl-jobs/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "parallelism will be the same as kinesis shard",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-to-optimize-cost-and-performance-for-aws-glue-streaming-etl-jobs/"
+                            }
+                        },
+                        {
+                            "id": "PERF4_6",
+                            "title": "Parallelize tasks after data load",
+                            "helpfulResource": {
+                                "displayText": "Do you know how to control the parallelism after loading data into spark dataframe/Glue Dynamicframe?",
+                                "url": "https://spark.apache.org/docs/3.1.3/api/python/reference/api/pyspark.sql.DataFrame.repartition.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "by maunlly invoke repartition() or set parameter spark.sql.shuffle.partitions. spark.sql.shuffle.partitions will affect the partitions when shuffle",
+                                "url": "https://spark.apache.org/docs/3.1.3/api/python/reference/api/pyspark.sql.DataFrame.repartition.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_7",
+                            "title": "Monitor data scan",
+                            "helpfulResource": {
+                                "displayText": "Do you know how to monitor data scan size in AWS Glue?",
+                                "url": "https://docs.aws.amazon.com/glue/latest/ug/monitoring-chapter.html#monitoring-job-run-metrics"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use AWS Cloudwatch metrics or spark UI to monitor your job data scan size ",
+                                "url": "https://docs.aws.amazon.com/glue/latest/ug/monitoring-chapter.html#monitoring-job-run-metrics"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF4_1 && PERF4_2 && PERF4_3 && PERF4_4 && PERF4_5 && PERF4_6 && PERF4_7",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF4_1) || (!PERF4_2) || (!PERF4_3) || (!PERF4_4) || (!PERF4_5) || (!PERF4_6) || (!PERF4_7)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF5",
                     "title": "How do you identified and improve your slow running job?",
                     "description": "How do you identified and improve your slow running job?",
                     "choices": [
                         {
-                            "id": "PERF4_1",
+                            "id": "PERF5_1",
                             "title": "Identify your slow stage in spark history",
                             "helpfulResource": {
                                 "displayText": "You can compare the slow and the fast runs. For this you can even use your local pyspark and calculate a ratio between slow and fast run for each stage metrics.",
@@ -203,7 +383,7 @@
                             }
                         },
                         {
-                            "id": "PERF4_2",
+                            "id": "PERF5_2",
                             "title": "Identify too big DAG in spark history and log",
                             "helpfulResource": {
                                 "displayText": "Spark uses lazy evaluation and creates a DAG (directed acyclic graph) of the operations needed to compute a peice of data. Even if the data is persisted or cached, Spark will keep this DAG in memory on the driver so that if an executor fails it can re-create this data later.",
@@ -215,7 +395,7 @@
                             }
                         },
                         {
-                            "id": "PERF4_3",
+                            "id": "PERF5_3",
                             "title": "Identify your job is waiting for cluster resources",
                             "helpfulResource": {
                                 "displayText": "Sometimes the cluster manager may choke or otherwise not be able to allocate resources and we don't have a good way of detecting this situation making it difficult for the user to debug and tell apart from Spark not scaling up correctly.",
@@ -225,15 +405,87 @@
                                 "displayText": "As of Spark3.4, an executor will note when and for how long it waits for cluster resources. Check the JVM metrics for this information.",
                                 "url": "https://holdenk.github.io/spark-flowchart/details/slow-job-slow-cluster/"
                             }
+                        },
+                        {
+                            "id": "PERF5_4",
+                            "title": "Know the difference between AWS Glue Dynamic frame, Apache Spark Dataframe, Apache Spark RDD",
+                            "helpfulResource": {
+                                "displayText": "Spark Dataframe has Catalyst Optimizer which will help you optmize the DAG workflow",
+                                "url": "https://www.databricks.com/glossary/catalyst-optimizer"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider to use Spark Dataframe if you enconter performance issue. It will use cataluyst optimizer automatically.",
+                                "url": "https://www.databricks.com/glossary/catalyst-optimizer"
+                            }
+                        },
+                        {
+                            "id": "PERF5_5",
+                            "title": "Identify and optimize data skew",
+                            "helpfulResource": {
+                                "displayText": "When enable both spark.sql.adaptive.enabled and  spark.sql.adaptive.skewJoin.enabled config, spark sql will use sort-merge join algorithm to handle skew data.",
+                                "url": "https://www.hadoopinrealworld.com/how-does-shuffle-sort-merge-join-work-in-spark/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "We can set it configuration  such as spark.conf.set(\"spark.sql.adaptive.enabled\", \"true\")",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_6",
+                            "title": "Optimze shuffles and related action",
+                            "helpfulResource": {
+                                "displayText": "Do you know shuffle is one of the most substantial factors in degraded performance of your Spark application",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider to optimze join,Use Bucket Table,Repartition DataFrames on Join keys before the Join, Use cache, remove unnesscary action(such as collect) on your job",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_7",
+                            "title": "Minimize planning overhead",
+                            "helpfulResource": {
+                                "displayText": "Do you know how to monitor the bottleneck on plaing phase?",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Monitor cloudwatch glue cpu and memory usage and spark ui submitted time.",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_8",
+                            "title": "Optimize User Defined Functions",
+                            "helpfulResource": {
+                                "displayText": "Do you know Python udf may degrade your job performance?",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-catalog-functions.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider to use UDFs written in Java/Scala than Python UDFs.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-catalog-functions.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_9",
+                            "title": "Updage your spark and Glue version to lasest version",
+                            "helpfulResource": {
+                                "displayText": "We recommend using the latest Glue version. For example, Glue 4.0 \nuse new optimized Apache Spark 3.3.0 runtime",
+                                "url": "https://spark.apache.org/releases/spark-release-3-3-0.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The AWS Glue version determines the versions of Apache Spark and Python that AWS Glue supports.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/release-notes.html"
+                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "PERF4_1 && PERF4_2 && PERF4_3",
+                            "condition": "PERF5_1 && PERF5_2 && PERF5_3 && PERF5_4 && PERF5_5 && PERF5_6 && PERF5_7 && PERF5_8 && PERF5_9",
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "(!PERF4_1) || (!PERF4_2) || (!PERF4_3)",
+                            "condition": "(!PERF5_1) || (!PERF5_2) || (!PERF5_3) || (!PERF5_5) || (!PERF5_6) || (!PERF5_7) || (!PERF5_8) || (!PERF5_9)",
                             "risk": "HIGH_RISK"
                         },
                         {
@@ -745,8 +997,8 @@
             "questions": [
                 {
                     "id": "COST1",
-                    "title": "How are you choosing the right compute unit for Glue Job?",
-                    "description": "How are you choosing the right compute unit for Glue Job?",
+                    "title": "How are you choosing the right compute unit and worker type for Glue Job?",
+                    "description": "How are you choosing the right compute unit and worker type for Glue Job?",
                     "choices": [
                         {
                             "id": "COST1_1",
@@ -774,24 +1026,141 @@
                         },
                         {
                             "id": "COST1_3",
-                            "title": "Monitoring for DPU capacity utilization",
+                            "title": "Using auto scaling for AWS Glue",
                             "helpfulResource": {
-                                "displayText": "Applicable to AWS Glue versions 0.9 and 1.0. Later versions of AWS Glue contain cost-saving features that introduce additional considerations when capacity planning.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-capacity.html"
+                                "displayText": "One of the most common challenges to reduce cost is to identify the right amount of resources to run jobs.",
+                                "url": "https://aws.amazon.com/blogs/big-data/introducing-aws-glue-auto-scaling-automatically-resize-serverless-computing-resources-for-lower-cost-with-optimized-apache-spark/"
                             },
                             "improvementPlan": {
-                                "displayText": "You can use job metrics in AWS Glue to estimate the number of data processing units (DPUs) that can be used to scale out an AWS Glue job.",
-                                "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-debug-capacity.html"
+                                "displayText": "Starting with AWS Glue version 3.0, AWS Glue auto scaling helps you dynamically scale resources up and down based on the workload",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/auto-scaling.html"
+                            }
+                        },
+                        {
+                            "id": "COST1_4",
+                            "title": "Smaller worker type for streaming jobs",
+                            "helpfulResource": {
+                                "displayText": "Processing data in real time is a common use case for customers, but sometimes these streams have sporadic and low data volumes.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "G.1X and G.2X worker types could be too big for these workloads, especially if we consider streaming jobs may need to run 24/7. To help you reduce costs, in 2022 we released G.025X, a new quarter DPU worker type for streaming ETL jobs.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            }
+                        },
+                        {
+                            "id": "COST1_5",
+                            "title": "Flex-based jobs for non-urgent ETL jobs",
+                            "helpfulResource": {
+                                "displayText": "Flex-based jobs offer the same capabilities, including access to custom connectors, a visual job authoring experience, and a job scheduling system.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For non-urgent data integration workloads that don t require fast job start times or can afford to rerun the jobs in case of a failure, Flex could be a good option.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
                             }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "COST1_1 && COST1_2 && COST1_3",
+                            "condition": "COST1_1 && COST1_2 && COST1_3 && COST1_4 && COST1_5",
                             "risk": "NO_RISK"
                         },
                         {
                             "condition": "(!COST1_2) || (!COST1_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST2",
+                    "title": "Have you monitor and optimize cost on AWS Glue for Apache Spark?",
+                    "description": "Have you monitor and optimize cost on AWS Glue for Apache Spark?",
+                    "choices": [
+                        {
+                            "id": "COST2_1",
+                            "title": "Monitor overall costs on AWS Glue for Apache Spark",
+                            "helpfulResource": {
+                                "displayText": "AWS Glue for Apache Spark charges an hourly rate in 1-second increments with a minimum of 1 minute based on the number of data processing units (DPUs).",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "In AWS Cost Explorer, you can see overall trends of DPU hours.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            }
+                        },
+                        {
+                            "id": "COST2_2",
+                            "title": "Monitor individual job run costs",
+                            "helpfulResource": {
+                                "displayText": "Monitor individual job run costs on AWS Glue for Apache Spark.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "On the Monitoring page in AWS Glue Studio, you can monitor the DPU hours you spent on a specific job run.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            }
+                        },
+                        {
+                            "id": "COST2_3",
+                            "title": "Set the job s timeout period appropriately",
+                            "helpfulResource": {
+                                "displayText": "Your job might idle when encounter issue, use job timeout can help you reduce the cost when idle happening.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set job timeout period iaccording to your expcted job run time in 'job details'",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            }
+                        },
+                        {
+                            "id": "COST2_4",
+                            "title": "Interactive sessions",
+                            "helpfulResource": {
+                                "displayText": "Use interactive sesion to test your code so that you don't need to rerun the whole job every time",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use it on Glue console",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            }
+                        },
+                        {
+                            "id": "COST2_5",
+                            "title": "Upgrade to the latest version",
+                            "helpfulResource": {
+                                "displayText": "Latest Glue version will use new spark version. It will have new feature to benefit your job",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Chose Latest glue version in glue  job details'",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            }
+                        },
+                        {
+                            "id": "COST2_6",
+                            "title": "Performance tuning to optimize cost",
+                            "helpfulResource": {
+                                "displayText": "Performance tuning plays an important role in reducing cost. The first action for performance tuning is to identify the bottlenecks.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "It s highly recommended to enable Spark UI for your jobs and then view the UI to identify the bottleneck.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-optimize-cost-glue-spark/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST2_1 && COST2_2 && COST2_3 && COST2_4 && COST2_5 && COST2_6",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST2_1) || (!COST2_2) || (!COST2_3) || (!COST2_4) || (!COST2_5) || (!COST2_6)",
                             "risk": "HIGH_RISK"
                         },
                         {
