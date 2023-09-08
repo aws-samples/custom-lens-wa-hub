@@ -44,6 +44,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 ## :bookmark: Whitepaper
 Whitepaper to describe candidate new Custom Lenses, which you can reference as following:
 * [Container Build Lens](https://docs.aws.amazon.com/wellarchitected/latest/container-build-lens/container-build-lens.html)
+* [Amazon ECS Lens](https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/intro.html)
 * [SAP Lens](https://docs.aws.amazon.com/wellarchitected/latest/sap-lens/sap-lens.html)
 * [Serverless Applications Lens](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html)
 * [Hybrid Networking Lens](https://docs.aws.amazon.com/wellarchitected/latest/hybrid-networking-lens/hybrid-networking-lens.html)
