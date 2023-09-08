@@ -1,0 +1,2149 @@
+{
+    "schemaVersion":"2021-11-01",
+    "name":"Amazon ECS Lens",
+    "description":"The Amazon ECS Lens covers many of the most important operational best practices for Amazon ECS. Topics such as best practices for container build best practices is covered in the Container Build Lens. Other architecture topics are addressed in other AWS publications. See the Resources sections under Pillars of the Well-Architected Framework for more information.",
+    "pillars":[
+       {
+          "id":"RUN",
+          "name":"Running your application with Amazon ECS",
+          "questions":[
+             {
+                "id":"RUN1",
+                "title":"Make container images complete and static",
+                "description":"Store all application dependencies as static files inside the container image.",
+                "choices":[
+                   {
+                      "id":"RUN1_1",
+                      "title":"Download one container image from one place",
+                      "helpfulResource":{
+                         "displayText":"Ideally, a container image is intended to be a complete snapshot of everything that the application requires to function. With a complete container image, you can run an application by downloading one container image from one place. You don't need to download several separate pieces from different locations. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Store all application dependencies as static files in one container image."
+                      }
+                   },
+                   {
+                      "id":"RUN1_2",
+                      "title":"Include libraries, dependencies, or critical data as static files in the container image",
+                      "helpfulResource":{
+                         "displayText":"Don't dynamically download libraries, dependencies, or critical data during application startup. Instead, include these things as static files in the container image.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Including all dependencies as static files in the container image reduces the number of potentially breaking events that can happen during deployments, optimizes downloading of the image and makes your deployments reliable and reproducible. Later on, if you want to change something in the container image, build a new container image with the changes applied to it."
+                      }
+                   },
+                   {
+                    "id":"RUN1_3_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"RUN1_1 && RUN1_2",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"RUN2",
+                "title":"Maintain fast container launch times by keeping container images as small as possible",
+                "description":"The main benefit of using smaller container images is that these images can be downloaded onto compute hardware faster. This allows your application to scale out faster and quickly recover from unexpected crashes or restarts.",
+                "choices":[
+                   {
+                      "id":"RUN2_1",
+                      "title":"Use shared layers to keep container image small",
+                      "helpfulResource":{
+                         "displayText":"For example, if you have multiple applications that use the same data set, you can create a shared base image that has that data set. Then, build two different image variants off of the same shared base image. This allows the container image layer with the dataset to be downloaded one time, rather than twice.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"The main benefit of using smaller container images is that these images can be downloaded onto compute hardware faster. This allows your application to scale out faster and quickly recover from unexpected crashes or restarts."
+                      }
+                   },
+                   {
+                      "id":"RUN2_2",
+                      "title":"Run a single application process with a container image",
+                      "helpfulResource":{
+                         "displayText":"In a traditional virtual machine environment, it's typical to run a high-level daemon like systemd as the root process. This daemon is then responsible for starting your application process, and restarting the application process if it crashes. We don't recommend this when using containers. Instead, only run a single application process with a container.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"If the application process crashes or ends, the container also ends. If the application must be restarted on crash, let Amazon ECS manage the application restart externally. The Amazon ECS agent reports to the Amazon ECS control plane that the application container crashed. Then, the control plane determines whether to launch a replacement container, and if so where to launch it. The replacement container may be placed onto the same host, or onto a different host in the cluster. "
+                      }
+                   },
+                   {
+                    "id":"RUN2_3_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"RUN2_1 && RUN2_2",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"(!RUN2_2)",
+                      "risk":"HIGH_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"RUN3",
+                "title":"Best practices for error handling",
+                "description":" Tasks may be stopped due to application errors, health check failures, completion of business workflows or even manual termination by a user.",
+                "choices":[
+                   {
+                      "id":"RUN3_1",
+                      "title":"Handle SIGTERM within the application",
+                      "helpfulResource":{
+                         "displayText":"There are other times when a task may be stopped that are outside the application's control. Tasks may be stopped due to application errors, health check failures, completion of business workflows or even manual termination by a user. To prepare your application, you need to identify how long it takes your application to complete its work, and ensure that your applications handles the SIGTERM signal. Within the application's signal handling, you need to stop the application from taking new work and complete the work that is in-progress, or save unfinished work to storage outside of the task if it would take too long to complete.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"If you use an init process in your container, use a lightweight init process such as tini. This init process takes on the responsibility of reaping zombie processes if your application spawns worker processes. If your application doesn't handle the SIGTERM signal properly, tini can catch that signal for you and terminate your application process. However, if your application process crashes tini doesn't restart it. Instead tini exits, allowing the container to end and be replaced by container orchestration. For more information, see tini on GitHub."
+                      }
+                   },
+                   {
+                      "id":"RUN3_2",
+                      "title":"Configure containerized applications to write logs to stdout and stderr",
+                      "helpfulResource":{
+                         "displayText":"When an application is containerized, you configure it to write application logs directly to the stdout and stderr streams. Docker includes a variety of logging drivers that take the stdout and stderr log streams and handle them. You can choose to write the streams to syslog, to disk on the local instance that's running the container, or use a logging driver to send the logs to Fluentd, Splunk, CloudWatch, and other destinations. With Amazon ECS, you can choose to configure the FireLens logging driver. This driver can attach Amazon ECS metadata to logs, filter logs, and route logs to different destinations based on criteria such as HTTP status code. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information about Docker logging drivers, see Configure logging drivers. For more information about FireLens, see Using FireLens. When you decouple log handling from your application code, it gives you greater flexibility to adjust log handling at the infrastructure level. Assume that you want to switch from one logging system to another. You can do so by adjusting a few settings at the container orchestrator level, rather than having to change code in all your services, build a new container image, and deploy it."
+                      }
+                   },
+                   {
+                    "id":"RUN3_3_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"RUN3_1 && RUN3_2",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"RUN4",
+                "title":"Version container images using tags",
+                "description":"We recommend that you use the latest tag only for testing purposes.",
+                "choices":[
+                   {
+                      "id":"RUN4_1",
+                      "title":"Tag container images with a unique tag for each build",
+                      "helpfulResource":{
+                         "displayText":"Container images are stored in a container registry. Each image in a registry is identified by a tag. There's a tag called latest. This tag functions as a pointer to the latest version of the application container image, similar to the HEAD in a git repository. We recommend that you use the latest tag only for testing purposes. As a best practice, tag container images with a unique tag for each build. We recommend that you tag your images using the git SHA for the git commit that was used to build the image.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"As a best practice, tag container images with a unique tag for each build. We recommend that you tag your images using the git SHA for the git commit that was used to build the image."
+                      }
+                   },
+                   {
+                      "id":"RUN4_2",
+                      "title":"Build a new container image when commiting code to production",
+                      "helpfulResource":{
+                         "displayText":"You don’t need to build a container image for every commit. However, we recommend that you build a new container image each time you release a particular code commit to the production environment. We also recommend that you tag the image with a tag that corresponds to the git commit of the code that's inside the image. If you tagged the image with the git commit, you can more quickly find which version of the code the image is running.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You don’t need to build a container image for every commit. However, we recommend that you build a new container image each time you release a particular code commit to the production environment. We also recommend that you tag the image with a tag that corresponds to the git commit of the code that's inside the image. If you tagged the image with the git commit, you can more quickly find which version of the code the image is running."
+                      }
+                   },
+                   {
+                      "id":"RUN4_3",
+                      "title":"Turn on immutable image tags in Amazon Elastic Container Registry (ECR)",
+                      "helpfulResource":{
+                         "displayText":"With this setting, you can't change the container image that a tag points at. Instead Amazon ECR enforces that a new image must be uploaded to a new tag, rather than overwriting a pre-existing tag. For more information, see Image tag mutability in the Amazon ECR User Guide.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"With immutable image tags, you can't change the container image that a tag points at. Instead Amazon ECR enforces that a new image must be uploaded to a new tag, rather than overwriting a pre-existing tag. For more information, see Image tag mutability in the Amazon ECR User Guide."
+                      }
+                   },
+                   {
+                    "id":"RUN4_4_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"RUN4_1 && RUN4_2 && RUN4_3",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"(!RUN4_1) && (!RUN4_2)",
+                      "risk":"HIGH_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"RUN5",
+                "title":"Best practices for Task definition",
+                "description":"Detailed best practices for Task definitions within ECS.",
+                "choices":[
+                   {
+                      "id":"RUN5_1",
+                      "title":"Use each task definition family for only one business purpose",
+                      "helpfulResource":{
+                         "displayText":"You can use an Amazon ECS task definition to specify multiple containers. All the containers that you specify are deployed along the same compute capacity. Don't use this feature to add multiple application containers to the same task definition because this prevents copies of each application scaling separately. For example, consider this situation. Assume that you have a web server container, an API container, and a worker service container. As a best practice, use a separate task definition family for each of these pieces of containerized code.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"As a best practice, use a separate task definition family for each of these pieces of containerized code. The purpose of having multiple containers in a single task definition is so that you can deploy sidecars, small addon containers that enhance a single type of container. A sidecar might help with logging and observability, traffic routing, or other addon features. We recommend that you use sidecars to attach extra functionality, but that the task has a single business function."
+                      }
+                   },
+                   {
+                      "id":"RUN5_2",
+                      "title":"Match each application version with a task definition revision within a task definition family",
+                      "helpfulResource":{
+                         "displayText":"Make sure that there's a one-to-one mapping between a version of application code, a container image tag, and a task definition revision. A typical release process involves a git commit that gets turned into a container image that's tagged with the git commit SHA. Then, that container image tag gets its own Amazon ECS task definition revision. Last, the Amazon ECS service is updated to tell it to deploy the new task definition revision.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"By using this approach, you can maintain consistency between settings and application code when rolling out new versions of your application. For example, assume that you make a new version of your application that uses a new environment variable. The new task definition that corresponds to that change also defines the value for the environment variable."
+                      }
+                   },
+                   {
+                      "id":"RUN5_3",
+                      "title":"Use different IAM roles for each task definition family",
+                      "helpfulResource":{
+                         "displayText":"You can define different IAM roles for different tasks in Amazon ECS. Use the task definition to specify an IAM role for that application. When the containers in that task definition are run, they can call AWS APIs based on the policies that are defined in the IAM role.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Define each task definition with its own IAM role. This recommendation should be done in tandem with our recommendation for providing each business component its own task definition family. By implementing both of these best practices, you can limit how much access each service has to resources in your AWS account."
+                      }
+                   },
+                   {
+                    "id":"RUN5_4_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"RUN5_1 && RUN5_2 && RUN5_3",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"((!RUN5_1 || !RUN5_2) && !RUN5_3)",
+                      "risk":"HIGH_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"RUN6",
+                "title":"Amazon ECS service",
+                "description":"Detailed best practices for Amazon ECS service.",
+                "choices":[
+                   {
+                      "id":"RUN6_1",
+                      "title":"Use awsvpc network mode and give each service its own security group",
+                      "helpfulResource":{
+                         "displayText":"We recommend that you use awsvpc network mode for tasks on Amazon EC2. This allows each task to have a unique IP address with a service-level security group. Doing so creates per-service security group rules, instead of instance-level security groups that are used in other network modes. Using per-service security group rules, you can, for example, authorize one service to talk to an Amazon RDS database. Another service with a different security group is denied from opening a connection to that Amazon RDS database.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"As a best practice, use awsvpc network mode for tasks on Amazon EC2."
+                      }
+                   },
+                   {
+                      "id":"RUN6_2",
+                      "title":"Turn on Amazon ECS managed tags and tag propagation",
+                      "helpfulResource":{
+                         "displayText":"After you turn on Amazon ECS managed tags and tag propagation, Amazon ECS can attach and propagate tags on the tasks that the service launches. You can customize these tags and use them to create tag dimensions such as environment=production or team=web or application=storefront. These tags are used in usage and billing reports. If you set up the tags correctly, you can use them to see how many vCPU hours or GB hours that a particular environment, team, or application used. This can help you to estimate the overall cost of your infrastructure along different dimensions.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/application.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You can customize these tags and use them to create tag dimensions such as environment=production or team=web or application=storefront. These tags are used in usage and billing reports. If you set up the tags correctly, you can use them to see how many vCPU hours or GB hours that a particular environment, team, or application used. This can help you to estimate the overall cost of your infrastructure along different dimensions."
+                      }
+                   } ,
+                   {
+                    "id":"RUN6_3_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"RUN6_1 && RUN6_2",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             }
+          ]
+       },
+       {
+          "id":"NET",
+          "name":"Networking",
+          "questions":[
+             {
+                "id":"NET1",
+                "title":"How is your containerized application connecting to the internet? Choose one option",
+                "description":"Most containerized applications have a least some components that need outbound access to the internet.",
+                "choices":[
+                   {
+                      "id":"NET1_1",
+                      "title":"Using a public subnet and internet gateway",
+                      "helpfulResource":{
+                         "displayText":"By using a public subnet that has a route to an internet gateway, your containerized application can run on a host inside a VPC on a public subnet. The host that runs your container is assigned a public IP address.This network architecture facilitates direct communication between the host that runs your application and other hosts on the internet. The communication is bi-directional. This means that not only can you establish an outbound connection to any other host on the internet, but other hosts on the internet might also attempt to connect to your host. Therefore, you should pay close attention to your security group and firewall rules. Using public subnets for networking is suitable for public applications that require large amounts of bandwidth or minimal latency. Applicable use cases include video streaming and gaming services.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-outbound.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Using Amazon EC2 — You can launch EC2 instances on a public subnet. Amazon ECS uses these EC2 instances as cluster capacity, and any containers that are running on the instances can use the underlying public IP address of the host for outbound networking. This applies to both the host and bridge network modes. However, the awsvpc network mode doesn't provide task ENIs with public IP addresses. Therefore, they can’t make direct use of an internet gateway. Using Fargate — When you create your Amazon ECS service, specify public subnets for the networking configuration of your service, and ensure that the Assign public IP address option is enabled. Each Fargate task is networked in the public subnet, and has its own public IP address for direct communication with the internet."
+                      }
+                   },
+                   {
+                      "id":"NET1_2",
+                      "title":"Using a private subnet and NAT gateway",
+                      "helpfulResource":{
+                         "displayText":"By using a private subnet and a NAT gateway, you can run your containerized application on a host that's in a private subnet. As such, this host has a private IP address that's routable inside your VPC, but isn't routable from the internet. This means that other hosts inside the VPC can make connections to the host using its private IP address, but other hosts on the internet can't make any inbound communications to the host. This configuration is often preferred for security reasons because it means that your VPC is protected from direct access by attackers on the internet",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-outbound.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Using Amazon EC2 — You can launch EC2 instances on a private subnet. The containers that run on these EC2 hosts use the underlying hosts networking, and outbound requests go through the NAT gateway. Using Fargate — When you create your Amazon ECS service, specify private subnets for the networking configuration of your service, and don't enable the Assign public IP address option. Each Fargate task is hosted in a private subnet. Its outbound traffic is routed through any NAT gateway that you have associated with that private subnet."
+                      }
+                   },
+                   {
+                      "id":"NET1_3",
+                      "title":"Using both private and public subnets",
+                      "helpfulResource":{
+                      "displayText":"By using a private subnet and a public subnet, you can communicate on hosts on the internet and within your VPC.",
+                      "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-outbound.html"
+                    },
+                      "improvementPlan":{
+                         "displayText":"If you have a public facing application that requires communicating to public hosts as well as internal hosts, you can launch EC2 instances on a private subnet. The containers that run on these EC2 hosts use the underlying hosts networking, and outbound requests go through the NAT gateway. Using Fargate — When you create your Amazon ECS service, specify private subnets for the networking configuration of your service, and don't enable the Assign public IP address option. Each Fargate task is hosted in a private subnet. Its outbound traffic is routed through any NAT gateway that you have associated with that private subnet.Using Amazon EC2 — You can launch EC2 instances on a public subnet. Amazon ECS uses these EC2 instances as cluster capacity, and any containers that are running on the instances can use the underlying public IP address of the host for outbound networking. This applies to both the host and bridge network modes. However, the awsvpc network mode doesn't provide task ENIs with public IP addresses. Therefore, they can’t make direct use of an internet gateway. Using Fargate — When you create your Amazon ECS service, specify public subnets for the networking configuration of your service, and ensure that the Assign public IP address option is enabled. Each Fargate task is networked in the public subnet, and has its own public IP address for direct communication with the internet."
+                    }
+                 },
+                 {
+                    "id":"NET1_4_no",
+                    "title":"None of these"
+                 }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"NET1_2 && !NET1_1 || NET1_3",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"NET2",
+                "title":"How do you receive inbound connections from the internet? Choose one option",
+                "description":"If you run a public service, you must accept inbound traffic from the internet. For example, your public website must accept inbound HTTP requests from browsers.",
+                "choices":[
+                   {
+                      "id":"NET2_1",
+                      "title":"Use an Application Load Balancer for public HTTP services",
+                      "helpfulResource":{
+                         "displayText":"An Application Load Balancer has the following advantages. SSL/TLS termination — An Application Load Balancer can sustain secure HTTPS communication and certificates for communications with clients. It can optionally terminate the SSL connection at the load balancer level so that you don’t have to handle certificates in your own application. Advanced routing — An Application Load Balancer can have multiple DNS hostnames. It also has advanced routing capabilities to send incoming HTTP requests to different destinations based on metrics such as the hostname or the path of the request. This means that you can use a single Application Load Balancer as the input for many different internal services, or even microservices on different paths of a REST API. gRPC support and websockets — An Application Load Balancer can handle more than just HTTP. It can also load balance gRPC and websocket based services, with HTTP/2 support. Security — An Application Load Balancer helps protect your application from malicious traffic. It includes features such as HTTP de sync mitigations, and is integrated with AWS Web Application Firewall (AWS WAF). AWS WAF can further filter out malicious traffic that might contain attack patterns, such as SQL injection or cross-site scripting.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-inbound.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"With this architecture, you create an Application Load Balancer in a public subnet so that it has a public IP address and can receive inbound connections from the internet. When the Application Load Balancer receives an inbound connection, or more specifically an HTTP request, it opens a connection to the application using its private IP address. Then, it forwards the request over the internal connection."
+                      }
+                   },
+                   {
+                      "id":"NET2_2",
+                      "title":"Use an Network Load Balancer for non-HTTP protocols or scenarios where end-to-end encryption is necessary",
+                      "helpfulResource":{
+                         "displayText":"Because the Network Load Balancer operates at a lower level of the networking stack, it doesn't have the same set of features that Application Load Balancer does. However, it does have the following important features. End-to-end encryption — Because a Network Load Balancer operates at the fourth layer of the OSI model, it doesn't read the contents of packets. This makes it suitable for load balancing communications that need end-to-end encryption. TLS encryption — In addition to end-to-end encryption, Network Load Balancer can also terminate TLS connections. This way, your backend applications don’t have to implement their own TLS. UDP support — Because a Network Load Balancer operates at the fourth layer of the OSI model, it's suitable for non HTTP workloads and protocols other than TCP.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-inbound.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"When a Network Load Balancer is used as an input, it functions similarly to an Application Load Balancer. This is because it's created in a public subnet and has a public IP address that can be accessed on the internet. The Network Load Balancer then opens a connection to the private IP address of the host running your container, and sends the packets from the public side to the private side."
+                      }
+                   },
+                   {
+                      "id":"NET2_3",
+                      "title":"Amazon API Gateway HTTP API for HTTP applications with sudden bursts in request volumes or low request volumes",
+                      "helpfulResource":{
+                         "displayText":"The API Gateway operation is similar to a load balancer, but has additional capabilities unique to API management. The API Gateway provides additional capabilities around client authorization, usage tiers, and request/response modification. For more information, see Amazon API Gateway features. The API Gateway can support edge, regional, and private API gateway endpoints. Edge endpoints are available through a managed CloudFront distribution. Regional and private endpoints are both local to a Region. SSL/TLS termination. Routing different HTTP paths to different backend microservices",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-inbound.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"The pricing model for both Application Load Balancer and Network Load Balancer include an hourly price to keep the load balancers available for accepting incoming connections at all times. In contrast, API Gateway charges for each request separately. This has the effect that, if no requests come in, there are no charges. Under high traffic loads, an Application Load Balancer or Network Load Balancer can handle a greater volume of requests at a cheaper per-request price than API Gateway. However, if you have a low number of requests overall or have periods of low traffic, then the cumulative price for using the API Gateway should be more cost effective."
+                      }
+                   },
+                   {
+                    "id":"NET2_4_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"NET2_1",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"!NET2_1",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"NET3",
+                "title":"How do you choose a network mode? Choose one",
+                "description":"When running containers on AWS, you need to consider another level of networking. One of the main advantages of using containers is that you can pack multiple containers onto a single host. When doing this, you need to choose how you want to network the containers that are running on the same host",
+                "choices":[
+                   {
+                      "id":"NET3_1",
+                      "title":"Use host mode to tie directly to the underlying host that's running the container",
+                      "helpfulResource":{
+                         "displayText":"There are significant drawbacks to using this network mode. You can’t run more than a single instantiation of a task on each host. This is because only the first task can bind to its required port on the Amazon EC2 instance. There's also no way to remap a container port when it's using host network mode. There are also security implications when using the host network mode. This mode allows containers to impersonate the host, and it allows containers to connect to private loopback network services on the host. This mode is only supported for ECS tasks hosted on Amazon EC2 instances.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-networkmode-host.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"If you use the host network mode for a ECS task on EC2 launch type, the network stack of the task is not isolated from the underlying EC2 host. The containers do not get its own IP-addresses allocated. Host mode networking can be useful to optimize performance, and in situations where a container needs to handle a large range of ports, as it does not require network address translation (NAT), and no “userland-proxy” is created for each port. There are also security implications when using the host network mode. This mode allows containers to impersonate the host, and it allows containers to connect to private loopback network services on the host"
+                      }
+                   },
+                   {
+                      "id":"NET3_2",
+                      "title":"Use bridge mode to create port mappings that remap a host port to a container port",
+                      "helpfulResource":{
+                         "displayText":"With bridge mode, you're using a virtual network bridge to create a layer between the host and the networking of the container. This way, you can create port mappings that remap a host port to a container port. The mappings can be either static or dynamic. The bridge network mode is only supported for Amazon ECS tasks hosted on Amazon EC2 instances. It is not supported when using Amazon ECS on Fargate.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-networkmode-bridge.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Amazon ECS helps you to keep track of the randomly assigned ports for each task. It does this by automatically updating load balancer target groups and AWS Cloud Map service discovery to have the list of task IP addresses and ports. This makes it easier to use services operating using bridge mode with dynamic ports."
+                      }
+                   },
+                   {
+                      "id":"NET3_3",
+                      "title":"Use awsvpc network mode to create an Elastic Network Interface (ENI) for each task",
+                      "helpfulResource":{
+                         "displayText":"The advantage of using the awsvpc network mode is that each task has a separate security group to allow or deny traffic. This means you have greater flexibility to control communications between tasks and services at a more granular level. You can also configure a task to deny incoming traffic from another task located on the same host. The awsvpc network mode is supported for Amazon ECS tasks hosted on both Amazon EC2 and Fargate. Be mindful that, when using Fargate, the awsvpc network mode is required. There are also considerations such as EC2 instances having a limit on the number of ENIs that can be attached to them. Also plan for preventing IP address exhaustion with a large CIDR range above /20 if needed. Also IPv6 dual stack mode is available in awsvpc network mode.",
+                         "url":"https://docs.aws.amazon.com/wellarchitected/latest/container-build-lens/detective-controls.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"With the awsvpc network mode, Amazon ECS creates and manages an Elastic Network Interface (ENI) for each task and each task receives its own private IP address within the VPC. This ENI is separate from the underlying hosts ENI. If an Amazon EC2 instance is running multiple tasks, then each task’s ENI is separate as well."
+                      }
+                   },
+                   {
+                    "id":"NET3_4_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"NET3_3",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"NET3_2",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                      "condition":"NET3_1",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"NET4",
+                "title":"How do you connect to AWS services from inside your VPC? Choose one",
+                "description":"For Amazon ECS to function properly, the ECS container agent that runs on each host must communicate with the Amazon ECS control plane.",
+                "choices":[
+                   {
+                      "id":"NET4_1",
+                      "title":"Use a NAT gateway so that ECS tasks can access other AWS services",
+                      "helpfulResource":{
+                         "displayText":"Using a NAT gateway is the easiest way to ensure that your Amazon ECS tasks can access other AWS services.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-connecting-vpc.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"The following are the disadvantages to using NAT gateway: You can't limit what destinations the NAT gateway can communicate with. You also can't limit which destinations your backend tier can communicate to without disrupting all outbound communications from your VPC. NAT gateways charge for every GB of data that passes through. If you use the NAT gateway for downloading large files from Amazon S3, or doing a high volume of database queries to DynamoDB, you're charged for every GB of bandwidth. Additionally, NAT gateways support 5 Gbps of bandwidth and automatically scale up to 45 Gbps. If you route through a single NAT gateway, applications that require very high bandwidth connections might encounter networking constraints. As a workaround, you can divide your workload across multiple subnets and give each subnet its own NAT gateway."
+                      }
+                   },
+                   {
+                      "id":"NET4_2",
+                      "title":"Use AWS PrivateLink for private connectivity between VPCs, AWS services, and your on-premises networks",
+                      "helpfulResource":{
+                         "displayText":"VPC endpoint enables private connections between your VPC and supported AWS services and VPC endpoint services. Traffic between your VPC and the other service doesn't leave the Amazon network. A VPC endpoint doesn't require an internet gateway, virtual private gateway, NAT device, VPN connection, or AWS Direct Connect connection. Amazon EC2 instances in your VPC don't require public IP addresses to communicate with resources in the service. There are VPC endpoints for Amazon S3, AWS DynamoDB, Amazon ECS and Amazon ECR among others.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-connecting-vpc.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Many other AWS services support VPC endpoints. If you make heavy usage of any AWS service, you should look up the specific documentation for that service and how to create a VPC endpoint for that traffic."
+                      }
+                   },
+                   {
+                    "id":"NET4_3_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"(NET4_1 && NET4_2) || (!NET4_1 && NET4_2)",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"NET4_1 && !NET4_2",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"NET5",
+                "title":"How do you handle networking between Amazon ECS services in a VPC?",
+                "description":"Handling communication between ECS services within a VPC.",
+                "choices":[
+                   {
+                      "id":"NET5_1",
+                      "title":"Use service discovery",
+                      "helpfulResource":{
+                         "displayText":"One approach for service-to-service communication is direct communication using service discovery. In this approach, you can use the AWS Cloud Map service discovery integration with Amazon ECS. Using service discovery, Amazon ECS syncs the list of launched tasks to AWS Cloud Map, which maintains a DNS hostname that resolves to the internal IP addresses of one or more tasks from that particular service. Other services in the Amazon VPC can use this DNS hostname to send traffic directly to another container using its internal IP address.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-connecting-services.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"This approach to service-to-service communication provides low latency. At first glance, it's also simple as there are no extra components between the containers Traffic travels directly from one container to the other container.This approach is suitable when using the awsvpc network mode, where each task has its own unique IP address."
+                      }
+                   },
+                   {
+                      "id":"NET5_2",
+                      "title":"Use an internal load balancer",
+                      "helpfulResource":{
+                         "displayText":"Another approach to service-to-service communication is to use an internal load balancer. An internal load balancer exists entirely inside of your VPC and is only accessible to services inside of your VPC. This approach is advantageous to all network modes. The load balancer can keep track of task IP addresses when using the awsvpc network mode, as well as more advanced combinations of IP addresses and ports when using the bridge network mode. It evenly distributes traffic across all the IP address and port combinations, even if several containers are actually hosted on the same Amazon EC2 instance, just on different ports.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-connecting-services.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"The load balancer maintains high availability by deploying redundant resources into each subnet. When a container from serviceA needs to communicate with a container from serviceB, it opens a connection to the load balancer. The load balancer then opens a connection to a container from service B. The load balancer serves as a centralized place for managing all connections between each service."
+                      }
+                   },
+                   {
+                      "id":"NET5_3",
+                      "title":"Use a service mesh",
+                      "helpfulResource":{
+                         "displayText":"Amazon ECS Service Connect provides management of service-to-service communication as Amazon ECS configuration. It does this by building both service discovery and a service mesh in Amazon ECS. This provides the complete configuration inside each Amazon ECS service that you manage by service deployments, a unified way to refer to your services within namespaces that doesn't depend on the Amazon VPC DNS configuration, and standardized metrics and logs to monitor all of your applications on Amazon ECS. You can also consider AWS App Mesh as a service mesh that can help you manage a large number of services and have better control of how traffic gets routed among services. App Mesh functions as an intermediary between basic service discovery and load balancing. App Mesh may be useful for end-to-end encryption use cases using private certificates with AWS Certificate Manager.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-connecting-services.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Consult the documentation for ECS Service Connect or AWS App Mesh that suits your requirements."
+                      }
+                   },
+                   {
+                    "id":"NET5_4_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"(NET5_1 && NET5_2) || (!NET5_1 && !NET5_2 && NET5_3)",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"(NET5_1 && !NET5_2 && !NET5_3) || (!NET5_1 && NET5_2 && !NET5_3)",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"NET6",
+                "title":"How do you handle Networking services across AWS accounts and VPCs?",
+                "description":"Handling networking services across AWS accounts and VPCs.",
+                "choices":[
+                   {
+                      "id":"NET6_1",
+                      "title":"Use AWS Transit Gateway",
+                      "helpfulResource":{
+                         "displayText":"You should consider this networking service first. This service serves as a central hub for routing your connections between Amazon VPCs",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-connecting-services-crossaccount.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Refer to the URL listed for more information on Transit Gateway."
+                      }
+                   },
+                   {
+                      "id":"NET6_2",
+                      "title":"Use Amazon VPC and VPN support",
+                      "helpfulResource":{
+                         "displayText":"You can use this service to create site-to-site VPN connections for connecting on-premises networks to your VPC.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-connecting-services.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Refer to the URL listed for more information on VPC and VPN support"
+                      }
+                   },
+                   {
+                      "id":"NET6_3",
+                      "title":"Use VPC peering",
+                      "helpfulResource":{
+                         "displayText":"You can use Amazon VPC peering to help you to connect multiple VPCs, either in the same account, or across accounts.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-connecting-services.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Refer to the URL listed for more information on VPC peering."
+                      }
+                   },
+                   {
+                      "id":"NET6_4",
+                      "title":"Use Shared VPCs",
+                      "helpfulResource":{
+                         "displayText":"You can use a VPC and VPC subnets across multiple AWS accounts.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-connecting-services.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Refer to the URL listed for more information on Shared VPCs."
+                      }
+                   },
+                   {
+                    "id":"NET6_5_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"NET6_1",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"!NET6_1",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"NET7",
+                "title":"How do you optimize and troubleshoot your network?",
+                "description":"Gain insights about your network and service configurations",
+                "choices":[
+                   {
+                      "id":"NET7_1",
+                      "title":"Use CloudWatch Container Insights",
+                      "helpfulResource":{
+                         "displayText":"CloudWatch Container Insights collects, aggregates, and summarizes metrics and logs from your containerized applications and microservices. Metrics include the utilization of resources such as CPU, memory, disk, and network. They're available in CloudWatch automatic dashboards.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-troubleshooting.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information, see Setting up Container Insights on Amazon ECS in the Amazon CloudWatch User Guide."
+                      }
+                   },
+                   {
+                      "id":"NET7_2",
+                      "title":"Use AWS X-Ray",
+                      "helpfulResource":{
+                         "displayText":"AWS X-Ray is a tracing service that you can use to collect information about the network requests that your application makes. You can use the SDK to instrument your application and capture timings and response codes of traffic between your services, and between your services and AWS service endpoints.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-troubleshooting.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You can use AWS X-Ray to identify if there's a networking bottleneck or if a specific service within your network isn't performing as expected. For more information, see What is AWS X-Ray in the AWS X-Ray Developer Guide."
+                      }
+                   },
+                   {
+                      "id":"NET7_3",
+                      "title":"Use VPC Flow Logs",
+                      "helpfulResource":{
+                         "displayText":"You can use Amazon VPC flow logs to analyze network performance and debug connectivity issues. With VPC flow logs enabled, you can capture a log of all the connections in your VPC. These include connections to networking interfaces that are associated with Elastic Load Balancing, Amazon RDS, NAT gateways, and other key AWS services that you might be using.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-troubleshooting.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information, see VPC Flow Logs in the Amazon VPC User Guide."
+                      }
+                   },
+                   {
+                    "id":"NET7_4_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"NET7_1 && NET7_2 && NET7_3",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"!NET7_1 || !NET7_2 || !NET7_3",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"NET8",
+                "title":"How do you tune your network?",
+                "description":"There are a few settings that you can fine tune in order to improve your networking.",
+                "choices":[
+                   {
+                      "id":"NET8_1",
+                      "title":"Use nofile ulimit",
+                      "helpfulResource":{
+                         "displayText":"If you expect your application to have high traffic and handle many concurrent connections, you should take into account the system quota for the number of files allowed. When there are a lot of network sockets open, each one must be represented by a file descriptor. If your file descriptor quota is too low, it will limit your network sockets. This results in failed connections or errors. You can update the container specific quota for the number of files in the Amazon ECS task definition. If you're running on Amazon EC2 (instead of AWS Fargate), then you might also need to adjust these quotas on your underlying Amazon EC2 instance.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-troubleshooting.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You can update the container specific quota for the number of files in the Amazon ECS task definition. If you're running on Amazon EC2 (instead of AWS Fargate), then you might also need to adjust these quotas on your underlying Amazon EC2 instance."
+                      }
+                   },
+                   {
+                      "id":"NET8_2",
+                      "title":"Adjust the sysctl net settings",
+                      "helpfulResource":{
+                         "displayText":"Another category of tunable setting is the sysctl net settings. You should refer to the specific settings for your Linux distribution of choice. Many of these settings adjust the size of read and write buffers. This can help in some situations when running large-scale Amazon EC2 instances that have a lot of containers on them.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/networking-troubleshooting.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You should refer to the specific settings for your Linux distribution of choice."
+                      }
+                   },
+                   {
+                    "id":"NET8_3_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"NET8_1 && NET8_2",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"(NET8_1 && !NET8_2) || (!NET8_1 && NET8_2)",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             }
+          ]
+       },
+       {
+          "id":"AUTO",
+          "name":"Auto scaling and capacity management",
+          "questions":[
+             {
+                "id":"AUTO1",
+                "title":"Meet your service-level objectives while operating cost-effectively.",
+                "description":"One of the most important choices to make when deploying containers on Amazon ECS is your container and task sizes. Your container and task sizes are both essential for scaling and capacity planning.",
+                "choices":[
+                   {
+                      "id":"AUTO1_1",
+                      "title":"Use load testing to configure RAM and CPU limits",
+                      "helpfulResource":{
+                         "displayText":"By default, a running container will use the full RAM and CPU of the host system. This can lead to performance bottlenecks on the host and put your workload in a degraded state. Setting limits on your running container will improve the availability of the host system and the workload. Use application load testing for understanding your application's requirements.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/capacity-tasksize.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"In Amazon ECS, update the CPU and memory parameters in the task definition to limit the CPU and RAM a container will consume."
+                      }
+                   },
+                   {
+                      "id":"AUTO1_2",
+                      "title":"Use monitoring solutions to determine RAM and CPU for Stateless applications",
+                      "helpfulResource":{
+                         "displayText":"Determine the amount of memory that your application consumes when it serves requests. To do this, you can use traditional tools such as ps or top, or monitoring solutions such as CloudWatch Container Insights. When determining a CPU reservation, consider how you want to scale your application to meet your business requirements. You can use smaller CPU reservations, such as 256 CPU units (or 1/4 vCPU), to scale out in a fine-grained way that minimizes cost.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/capacity-tasksize.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Determine the amount of memory that your application consumes when it serves requests. To do this, you can use traditional tools such as ps or top, or monitoring solutions such as CloudWatch Container Insights. When determining a CPU reservation, consider how you want to scale your application to meet your business requirements. You can use smaller CPU reservations, such as 256 CPU units (or 1/4 vCPU), to scale out in a fine-grained way that minimizes cost."
+                      }
+                   },
+                   {
+                    "id":"AUTO1_3_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"AUTO1_1 && AUTO1_2",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                    "condition":"(AUTO1_1 && !AUTO1_2) || (!AUTO1_1 && AUTO1_2)",
+                    "risk":"MEDIUM_RISK"
+                 },
+                   {
+                    "condition":"default",
+                    "risk":"HIGH_RISK"
+                   }
+                  
+                ]
+             },
+             {
+                "id":"AUTO2",
+                "title":"How do you configure service auto scaling?",
+                "description":"Amazon ECS service auto scaling is implemented through the Application Auto Scaling service. Application Auto Scaling uses CloudWatch metrics as the source for scaling metrics. It also uses CloudWatch alarms to set thresholds on when to scale your service in or out.",
+                "choices":[
+                   {
+                      "id":"AUTO2_1",
+                      "title":"Identify utilization metric",
+                      "helpfulResource":{
+                         "displayText":"The best way to identify a utilization metric is through load testing in a pre-production environment such as a staging environment. Commercial and open-source load testing solutions are widely available. These solutions typically can either generate synthetic load or simulate real user traffic.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/capacity-autoscaling.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"The best way to identify a utilization metric is through load testing in a pre-production environment such as a staging environment. Commercial and open-source load testing solutions are widely available."
+                      }
+                   },
+                   {
+                      "id":"AUTO2_2",
+                      "title":"Choose application model and scaling properties",
+                      "helpfulResource":{
+                         "displayText":"Understand your application model. Is it an efficient CPU-bound server, efficient memory-bound server, a worker-bound server, a waiting server, a Java-based server, or a server that use other garbage-collected runtimes or job processors?",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/capacity-autoscaling.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Software of all kinds are run on AWS. Many workloads are homegrown, whereas others are based on popular open-source software. Regardless of where they originate, we have observed some common design patterns for services. How to scale effectively depends in large part on the pattern."
+                      }
+                   },
+                   {
+                    "id":"AUTO2_3_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"AUTO2_1",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"!AUTO2_1 && AUTO2_2",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"AUTO3",
+                "title":"How do you determine capacity and availability?",
+                "description":"Application availability is crucial for providing an error-free experience and for minimizing application latency. Availability depends on having resources that are accessible and have enough capacity to meet demand.",
+                "choices":[
+                   {
+                      "id":"AUTO3_1",
+                      "title":"Maximize scaling speed",
+                      "helpfulResource":{
+                         "displayText":"Minimize image size, keep your images close by hosting your images in a repository in the same AWS Region that your workload is in. Reduce load balancer health check thresholds. Consider cold-start performance. Use step scaling, not target-tracking scaling policies. Use larger Amazon EC2 instances and faster Amazon EBS volumes. Use bridge network mode for tasks running on Amazon EC2 instances.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/capacity-availability.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Minimize image size, keep your images close by hosting your images in a repository in the same AWS Region that your workload is in. Reduce load balancer health check thresholds. Consider cold-start performance. Use step scaling, not target-tracking scaling policies. Use larger Amazon EC2 instances and faster Amazon EBS volumes. Use bridge network mode for tasks running on Amazon EC2 instances."
+                      }	
+                   },
+                   {
+                      "id":"AUTO3_2",
+                      "title":"How are you handling demand shocks?",
+                      "helpfulResource":{
+                         "displayText":"Some applications experience sudden large shocks in demand. This can happen for a variety of reasons: a news event, big sale, media event, or some other event that goes viral and causes traffic to quickly and significantly increase in a very short span of time. If unplanned, this can cause demand to quickly outstrip available resources. If you have Enterprise Support, work with your Technical Account Manager. You can consider breaking apart monolithic services to better deal with demand shocks. If your application is a monolithic service that's expensive to run and slow to scale, you might be able to extract or rewrite performance-critical pieces and run them as separate services. These new services then can be scaled independently from less-critical components",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/capacity-availability.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"The best way to handle demand shocks is to anticipate them and plan accordingly. Because autoscaling can take time, we recommend that you scale out your application before the demand shock begins. For the best results, we recommend having a business plan that involves tight collaboration between teams that use a shared calendar. "
+                      }
+                   } ,
+                   {
+                    "id":"AUTO3_3_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"AUTO3_1 && AUTO3_2",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"AUTO3_1 && !AUTO3_2",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"AUTO4",
+                "title":"How do you provide cluster capacity to your ECS cluster?",
+                "description":"You can provide capacity to an Amazon ECS cluster in several ways.",
+                "choices":[
+                   {
+                      "id":"AUTO4_1",
+                      "title":"Use ECS capacity providers to manage resource scaling",
+                      "helpfulResource":{
+                         "displayText":"You can launch Amazon EC2 instances and register them with the cluster at start-up using the Amazon ECS container agent. However, this method can be challenging because you need to manage scaling on your own. Therefore, we recommend that you use Amazon ECS capacity providers. There are three kinds of capacity providers: Amazon EC2, Fargate, and Fargate Spot.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/capacity-cluster.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information about Amazon ECS capacity providers, see Amazon ECS capacity providers in the Amazon Elastic Container Service Developer Guide."
+                      }
+                   },
+                   {
+                    "id":"AUTO4_2_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"AUTO4_1",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"AUTO5",
+                "title":"How do you choose Fargate task sizes?",
+                "description":"For AWS Fargate task definitions, you're required to specify CPU and memory at the task level, and do not need to account for any overhead.",
+                "choices":[
+                   {
+                      "id":"AUTO5_1",
+                      "title":"Plan for health checks in all containers builds and deployments",
+                      "helpfulResource":{
+                         "displayText":"You can also specify CPU and memory at the container level for Fargate tasks. However, doing so isn't required. The resource limits must be greater than or equal to any reservations that you declared. In most cases, you can set them to the sum of the reservations of each of the containers that's declared in your task definition. Then, round the number up to the nearest Fargate size. For more information about the available sizes.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/fargate-task-size.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information about the available sizes, see Task CPU and memory in the Amazon Elastic Container Service Developer Guide."
+                      }
+                   },
+                   {
+                    "id":"AUTO5_2_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"AUTO5_1",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"AUTO6",
+                "title":"How do you speed up cluster capacity provisioning with capacity providers on Amazon EC2?",
+                "description":"Customers who run Amazon ECS on Amazon EC2 can take advantage of Amazon ECS Cluster Auto Scaling (CAS) to manage the scaling of Amazon EC2 Auto Scaling groups (ASG).",
+                "choices":[
+                   {
+                      "id":"AUTO6_1",
+                      "title":"Determine Capacity provider step scaling sizes",
+                      "helpfulResource":{
+                         "displayText":"Amazon ECS capacity providers will eventually grow/shrink the container instances to meet the demands of your application. The minimum number of instances that Amazon ECS will launch is set to 1 by default. This may add additional time to your deployments, if several instances are required for placing your pending tasks. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/capacity-cluster-speed-up-ec2.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You can increase the minimumScalingStepSize via the Amazon ECS API to increase the minimum number of instances that Amazon ECS scales in or out at a time. A maximumScalingStepSize that is too low can limit how many container instances are scaled in or out at a time, which can slow down your deployments."
+                      }
+                   },
+                   {
+                      "id":"AUTO6_2",
+                      "title":"Determine Instance warm-up period",
+                      "helpfulResource":{
+                         "displayText":"The instance warm-up period is the period of time after which a newly launched Amazon EC2 instance can contribute to CloudWatch metrics for the Auto Scaling group. Once the specified warm-up period expires, the instance is counted toward the aggregated metrics of the ASG, and CAS proceeds with its next iteration of calculations to estimate the number instances required.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/capacity-cluster-speed-up-ec2.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"The default value for instanceWarmupPeriod is 300 seconds, which you can configure to a lower value via the CreateCapacityProvider or UpdateCapacityProvider APIs for more responsive scaling."
+                      }
+                   },
+                   {
+                      "id":"AUTO6_3",
+                      "title":"Determine spare capacity",
+                      "helpfulResource":{
+                         "displayText":"If your capacity provider has no container instances available for placing tasks, then it needs to increase (scale out) cluster capacity by launching Amazon EC2 instances on the fly, and wait for them to boot up before it can launch containers on them. This can significantly lower the task launch rate.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/capacity-cluster-speed-up-ec2.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"In this case, having spare Amazon EC2 capacity already launched and ready to run tasks will increase the effective task launch rate. You can use the Target Capacity configuration to indicate that you wish to maintain spare capacity in your clusters. An alternate approach you can consider is adding headroom to your service, not to the capacity provider. This means that instead of reducing Target Capacity configuration to launch spare capacity, you can increase the number of replicas in your service by modifying the target tracking scaling metric or the step scaling thresholds of the service auto scaling. "
+                      }
+                   },
+                   {
+                      "id":"AUTO6_4",
+                      "title":"Choose the EC2 instance type",
+                      "helpfulResource":{
+                         "displayText":"If you use Amazon EC2 to provide capacity for your ECS cluster, you can choose from a large selection of instance types. All Amazon EC2 instance types and families are compatible with ECS. To determine which instance types you can use, start by eliminating the instance types or instance families that don't meet the specific requirements of your application. For example, if your application requires a GPU, you can exclude any instance types that don't have a GPU. However, you should also consider other requirements, too. For example, consider the CPU architecture, network throughput, and if instance storage is a requirement. Next, examine the amount of CPU and memory provided by each instance type. As a general rule, the CPU and memory must be large enough to hold at least one replica of the task that you want to run. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/ec2-instance-type.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You can choose from the instance types that are compatible with your application. With larger instances, you can launch more tasks at the same time. And, with smaller instances, you can scale out in a more fine-grained way to save costs. You don't need to choose a single Amazon EC2 instance type that to fit all the applications in your cluster. Instead, you can create multiple Auto Scaling Groups."
+                      }
+                   },
+                   {
+                      "id":"AUTO6_5",
+                      "title":"Use Amazon EC2 Spot and FARGATE_SPOT",
+                      "helpfulResource":{
+                         "displayText":"Spot capacity can provide significant cost savings over on-demand instances. Spot capacity is excess capacity that's priced significantly lower than on-demand or reserved capacity. Spot capacity is suitable for batch processing and machine-learning workloads, and development and staging environments. More generally, it's suitable for any workload that tolerates temporary downtime. To help minimize Spot capacity shortages, consider the following recommendations; Use multiple Regions and Availability Zones. Use multiple Amazon EC2 instance types. Use the capacity-optimized Spot allocation strategy. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/ec2-and-fargate-spot.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Spot capacity is excess capacity that's priced significantly lower than on-demand or reserved capacity. Spot is suitable for any workload that tolerates temporary downtime. "
+                      }
+                   },
+                   {
+                    "id":"AUTO6_6_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"AUTO6_1 && AUTO6_2 && AUTO6_3",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"(!AUTO6_1) || (!AUTO6_2) || (!AUTO6_3)",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             }
+          ]
+       },
+       {
+          "id":"STO",
+          "name":"Persistent storage",
+          "questions":[
+             {
+                "id":"STO1",
+                "title":"How do you provide data persistence to your containers?",
+                "description":"Use Amazon ECS to run stateful containerized applications at scale by using AWS storage services, such as Amazon EFS, Amazon EBS, or FSx for Windows File Server.",
+                "choices":[
+                   {
+                      "id":"STO1_1",
+                      "title":" Identify the right storage type for your containers",
+                      "helpfulResource":{
+                         "displayText":"For Amazon ECS clusters that contain Linux instances or Linux containers used with Fargate, Amazon ECS integrates with Amazon EFS to provide container storage. Amazon EBS can only be used with Amazon ECS clusters using container instances. The most distinctive difference between Amazon EFS and Amazon EBS is that you can simultaneously mount an Amazon EFS filesystem on thousands of Amazon ECS tasks. In contrast, Amazon EBS volumes don't support concurrent access. Given this, Amazon EFS is the recommended storage option for containerized applications that scale horizontally. Suppose you have an application such as a transactional database that requires sub-millisecond latency and doesn’t need a shared filesystem when it's scaled horizontally. For such an application, we recommend using Amazon EBS volumes for persistent storage. Currently, Amazon ECS supports Amazon EBS volumes for tasks hosted on Amazon EC2 only. For clusters that contain Windows instances, FSx for Windows File Server provides persistent storage for containers. FSx for Windows File Server filesystems supports multi-AZ deployments. You can also use Amazon EC2 instance storage for data persistence for Amazon ECS tasks that are hosted on Amazon EC2 using bind mounts or Docker volumes. One limitation of using a host filesystem for container storage is that the data is only available on a single container instance at a time.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/storage.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Identify whether EFS, EBS, FSx for Windows File Server or Docker volumes is right for your application."
+                      }
+                   },
+                   {
+                      "id":"STO1_2",
+                      "title":"Consider best practices for EFS",
+                      "helpfulResource":{
+                         "displayText":"Consider security and access controls such as ensuring that the data stored in an Amazon EFS file system is secure and accessible only from applications that need it. You can secure data by enabling encryption at rest and in-transit. Amazon EFS offers two performance modes: General Purpose and Max I/O. General Purpose is suitable for latency-sensitive applications such as content management systems and CI/CD tools. In contrast, Max I/O file systems are suitable for workloads such as data analytics, media processing, and machine learning. All Amazon EFS file systems have an associated metered throughput that's determined by either the amount of provisioned throughput for file systems using Provisioned Throughput or the amount of data stored in the EFS Standard or One Zone storage class for file systems using Bursting Throughput. Look at cost optimization practices such as EFS Standard-Infrequent Access (IA) storage class and lifecycle policies to automatically save money by moving infrequently accessed files to Amazon EFS IA storage. Consider using Amazon EFS One Zone storage class for workloads that don't require multi-AZ resilience. You can further reduce the cost of Amazon EFS One Zone storage by moving infrequently accessed files to Amazon EFS One Zone-Infrequent Access. For Amazon EFS data, that best practice includes a functioning, regularly tested backup using AWS Backup. File systems using Amazon EFS One Zone storage classes are configured to automatically back up files by default at file system creation unless you choose to disable this functionality.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/storage-efs.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Amazon EFS provides parallel shared access that automatically grows and shrinks as files are added and removed. As a result, Amazon EFS is suitable for any application that requires a storage with functionalities like low latency, high throughput, and read-after-write consistency. Amazon EFS is an ideal storage backend for applications that scale horizontally and require a shared file system. Workloads such as data analytics, media processing, content management, and web serving are some of the common Amazon EFS use cases. "
+                      }
+                   },
+                   {
+                      "id":"STO1_3",
+                      "title":"Consider best practices for Docker volumes",
+                      "helpfulResource":{
+                         "displayText":"Docker volumes are a feature of the Docker container runtime that allow containers to persist data by mounting a directory from the filesystem of the host. Docker volume drivers (also referred to as plugins) are used to integrate container volumes with external storage systems, such as Amazon EBS. Docker volumes are only supported when hosting Amazon ECS tasks on Amazon EC2 instances. When using EBS to persist container data, it's a best practice to use task placement constraints to limit the placement of the task to a single host with the EBS volume attached. The second is when the lifecycle of the volume is independent from the task lifecycle. This is especially useful for applications that require high-performing and low latency storage but don’t need to persist data after the task terminates. For example, an ETL workload that process large volumes of data may require a high throughput storage. As long as the task has access to a storage backend that can meet its performance requirements, the task can perform its function. Therefore, no task placement constraints are necessary in this case. If the Amazon EC2 instances in your cluster have multiple types of Amazon EBS volumes attached to them, you can use task placement constraints to ensure that tasks are placed on instances with an appropriate Amazon EBS volume attached. We also recommend that you set a placement constraint that limits the Availability Zone a task can be placed in. This ensures that your tasks and their corresponding volumes are always located in the same Availability Zone. Docker plugins such as Portworx provide an abstraction between the Docker volume and the Amazon EBS volume.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/storage-dockervolumes.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"We recommend creating container instances in each Availability Zone, attaching Amazon EBS volumes using launch templates, and adding custom attributes to the instances to differentiate them from other container instances in the Amazon ECS cluster. When creating services, configure task placement constraints to ensure that Amazon ECS places tasks in the right Availability Zone and instance. For more information, see Task placement constraint examples in the Amazon Elastic Container Service Developer Guide."
+                      }
+                   },
+                   {
+                      "id":"STO1_4",
+                      "title":"Consider best practices for FSx for Windows File Server",
+                      "helpfulResource":{
+                         "displayText":"FSx for Windows File Server provides fully managed, highly reliable, and scalable file storage that is accessible over the industry-standard Server Message Block (SMB) protocol. Consider best practices on data encryption, folder level access control using Windows ACLs. Some containerized .NET applications might require local folders as persistent storage to save application outputs. FSx for Windows File Server offers a local folder in the container. This allows for multiple containers to read-write on the same file system that's backed by a SMB Share. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/storage-fsx.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"To setup the FSx for Windows File Server and Amazon ECS integration, the Windows container instance must be a domain member on an Active Directory Domain Service (AD DS), hosted by an AWS Directory Service for Microsoft Active Directory, on-premises Active Directory or self-hosted Active Directory on Amazon EC2. AWS Secrets Manager is used to store sensitive data like the username and password of an Active Directory credential which is used to map the share on the Windows container instance. To use FSx for Windows File Server file system volumes for your containers, you must specify the volume and mount point configurations in your task definition. "
+                      }
+                   },
+                   {
+                    "id":"STO1_5_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"STO1_1 && STO1_2",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"!STO1_1",
+                      "risk":"HIGH_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             }
+          ]
+       },
+       {
+          "id":"PERF",
+          "name":"Improvements to speed up your workload",
+          "questions":[
+             {
+                "id":"PERF1",
+                "title":"How do you speed up task launch?",
+                "description":"There are several improvements that you can make to shorten the time that it takes Amazon ECS to launch your tasks.",
+                "choices":[
+                   {
+                      "id":"PERF1_1",
+                      "title":"Are you aware of the ECS Task launch workflow?",
+                      "helpfulResource":{
+                         "displayText":"Amazon ECS selects the appropriate compute capacity for your task based on your launch type or capacity provider configuration. The launch types are AWS Fargate (Fargate) and Amazon EC2 on AWS, and the EXTERNAL type used with Amazon ECS Anywhere. Capacity providers and capacity provider strategies can be used with both the Fargate and Amazon EC2 launch types. With Fargate, you don’t have to think about provisioning, configuring, and scaling of your cluster capacity. Fargate takes care of all infrastructure management for your tasks. For Amazon ECS with Amazon EC2, you can either manage your cluster capacity by registering Amazon EC2 instances to your cluster, or you can use Amazon ECS Cluster Auto Scaling (CAS) to simplify your compute capacity management. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/task.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Understanding how Amazon ECS provisions your tasks is helpful in reasoning about optimizations to speed up your task launches. When you launch Amazon ECS tasks (standalone tasks or by Amazon ECS services), a task is created and initially put into the PROVISIONING state before it is successfully launched into RUNNING state (for details, see Task lifecycle in the Amazon ECS Developer Guide). In the PROVISIONING state, neither the task nor the containers exist as Amazon ECS needs to find compute capacity for placing the task."
+                      }
+                   },
+                   {
+                      "id":"PERF1_2",
+                      "title":"Are you aware of the ECS Service Scheduler workflow",
+                      "helpfulResource":{
+                         "displayText":"Amazon ECS provides a service scheduler for managing the state of your services. The service scheduler ensures that the scheduling strategy that you specify is followed and reschedules failing tasks. For example, if the underlying infrastructure fails, the service scheduler can reschedule tasks. A key responsibility of the service scheduler is to ensure that your application is always running the desired number of tasks – based on the desired count that you specify in service configuration or the auto scaled count of tasks based on application load if you use service autoscaling. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/task.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"To understand how the service scheduler functions, imagine that you create an Amazon ECS service for a large web API that receives heavy traffic. You expect this service to serve a lot of web traffic, and determine that the appropriate desired count for the service is 1,000 tasks. When you deploy this service, Amazon ECS service scheduler will not launch all 1,000 tasks at once. Instead, it will begin executing workflow cycles to bring the current state (0 tasks) towards the desired state (1,000 tasks), with each workflow cycle launching a batch of new tasks. The service scheduler can provision up to 500 tasks for Fargate and up to 250 tasks for Amazon EC2 per service per minute. For more information about the allowed rates and quotas in Amazon ECS, see Amazon ECS service quotas."
+                      }
+                   },
+                   {
+                      "id":"PERF1_3",
+                      "title":"Consider caching container images and binpack instances",
+                      "helpfulResource":{
+                         "displayText":"If you are running Amazon ECS on Amazon EC2, you can configure the Amazon ECS container agent to cache previously used container images to reduce image pull-time for subsequent launches. The effect of caching is even greater when you have a high task density in your container instances, which you can configure using the binpack placement strategy. Caching container images is especially beneficial for windows-based workloads which usually have large (tens of GBs) container image sizes. When using the binpack placement strategy, you can also consider using Elastic Network Interface (ENI) trunking to place more tasks with the awsvpc network mode on each container instance. ENI trunking increases the number of tasks you can run on awsvpc mode.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/task.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"If you are running Amazon ECS on Amazon EC2, you can configure the Amazon ECS container agent to cache previously used container images to reduce image pull-time for subsequent launches. The effect of caching is even greater when you have a high task density in your container instances, which you can configure using the binpack placement strategy. Caching container images is especially beneficial for windows-based workloads which usually have large (tens of GBs) container image sizes. When using the binpack placement strategy, you can also consider using Elastic Network Interface (ENI) trunking to place more tasks with the awsvpc network mode on each container instance. ENI trunking increases the number of tasks you can run on awsvpc mode."
+                      }
+                   },
+                   {
+                      "id":"PERF1_4",
+                      "title":"Choose an optimal network mode.",
+                      "helpfulResource":{
+                         "displayText":"Although there are many instances where awsvpc network mode is ideal, this network mode can inherently increase task launch latency – for each task in awsvpc mode, Amazon ECS workflows need to provision and attach an ENI by invoking Amazon EC2 APIs which adds an overhead of several seconds to your task launches. By contrast, a key advantage of using awsvpc network mode is that each task has a security group to allow or deny traffic. If the benefits of deployment speed outweigh benefits from awsvpc mode, you can consider using bridge mode to speed up task launches.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/task.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":" For further reading on relative advantages of each network mode, see AWSVPC mode and Bridge mode."
+                      }
+                   },
+                   {
+                      "id":"PERF1_5",
+                      "title":"Track your task launch lifecycle to find optimization opportunities.",
+                      "helpfulResource":{
+                         "displayText":"It is often difficult to realize the amount of time it takes for your application to start-up. Launching your container image, running start-up scripts, and other configurations during application start-up can take a surprising amount of time. You can use the ECS Agent Metadata endpoint to post metrics to track application start-up time from ContainerStartTime to when your application is ready to serve traffic. With this data, you can understand how your application is contributing to the total launch time, and find areas where you can reduce unnecessary application-specific overhead and optimize your container images. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/task.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You can use the ECS Agent Metadata endpoint to post metrics to track application start-up time from ContainerStartTime to when your application is ready to serve traffic. With this data, you can understand how your application is contributing to the total launch time, and find areas where you can reduce unnecessary application-specific overhead and optimize your container images. "
+                      }
+                   },
+                   {
+                      "id":"PERF1_6",
+                      "title":"Choose an optimal instance type (when using Amazon ECS on Amazon EC2)",
+                      "helpfulResource":{
+                         "displayText":"Choosing the correct Instance type is based on the resource reservation (i.e. CPU, Memory, ENI, GPU) that you configure on your task, hence when sizing the instance, you can calculate how many tasks can be placed on a single instance. A simple example of a well-placed task, will be hosting 4 tasks requiring 0.5 vCPU and 2GB of memory reservations in an m5.large instance (supporting 2 vCPU and 8 GB memory). The reservations of this task definition take full advantage of the instance’s resources.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/task.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Choosing the correct Instance type is based on the resource reservation (i.e. CPU, Memory, ENI, GPU) that you configure on your task, hence when sizing the instance, you can calculate how many tasks can be placed on a single instance. A simple example of a well-placed task, will be hosting 4 tasks requiring 0.5 vCPU and 2GB of memory reservations in an m5.large instance (supporting 2 vCPU and 8 GB memory). The reservations of this task definition take full advantage of the instance’s resources."
+                      }
+                   },
+                   {
+                      "id":"PERF1_7",
+                      "title":"Use Amazon ECS service scheduler to concurrently launch services.",
+                      "helpfulResource":{
+                         "displayText":"As discussed in the previous section, the service scheduler can concurrently launch tasks for multiple services using asynchronous workflows. Thus, you can achieve faster deployment speed by designing your applications as smaller services with fewer tasks rather than a large service with a large number of tasks. For instance, instead of having a single service with 1,000 tasks, having 10 services each with 100 tasks will result in a much faster deployment speed, since service scheduler will initiate task provisioning for all services in parallel.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/task.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You can achieve faster deployment speed by designing your applications as smaller services with fewer tasks rather than a large service with a large number of tasks."
+                      }
+                   },
+                   {
+                    "id":"PERF1_8_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"PERF1_1 && PERF1_2 && PERF1_3 && PERF1_4 && PERF1_5 && PERF1_6 && PERF1_7",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"PERF2",
+                "title":"How do you speed up deployments?",
+                "description":"To speed up deployment times, modify the default load balancer, Amazon ECS agent, service and task definition options.",
+                "choices":[
+                   {
+                      "id":"PERF2_1",
+                      "title":"Configure load balancer health check parameters",
+                      "helpfulResource":{
+                         "displayText":"Two Elastic Load Balancing health check parameters affect deployment speed: You can speed up the health-check process if your service starts up and stabilizes in under 10 seconds. To speed up the process, reduce the number of checks and the interval between the checks. HealthCheckIntervalSeconds (Elastic Load Balancing API name) or Interval (Amazon EC2 console name): 5. HealthyThresholdCount (Elastic Load Balancing API name) or Healthy threshold (Amazon EC2 console name): 2",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/load-balancer-healthcheck.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information about the Elastic Load Balancing health check parameters, see TargetGroup in the Elastic Load Balancing API Reference."
+                      }
+                   },
+                   {
+                      "id":"PERF2_2",
+                      "title":"Configure load balancer connection draining",
+                      "helpfulResource":{
+                         "displayText":"The amount of time that the load balancer waits is the deregistraion delay. You can configure the following load balancer setting to speed up your deployments.When you have a service with a response time that's under one second, set the parameter to the following value to have the load balancer only wait five seconds before it breaks the connection between the client and the backend service: deregistration_delay.timeout_seconds: 5. Do not set the value to 5 seconds when you have a service with long-lived requests, such as slow file uploads or streaming connections.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/load-balancer-connection-draining.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"When you tell the load balancer to stop traffic to the container, it periodically checks to see if the client closed the keep alive connection. The Amazon ECS agent monitors the load balancer and waits the load balancer to report that the keep alive connection is closed."
+                      }
+                   },
+                   {
+                      "id":"PERF2_3",
+                      "title":"Configure SIGTERM responsiveness",
+                      "helpfulResource":{
+                         "displayText":"Amazon ECS first sends a SIGTERM signal to the task to notify the application needs to finish and shut down, and then Amazon ECS sends a SIGKILL message. When applications ignore the SIGTERM, the Amazon ECS service must wait to send the SIGKILL signal to terminate the process. The amount of time that Amazon ECS waits is determined by the following Amazon ECS agent option:ECS_CONTAINER_STOP_TIMEOUT: 30 (default). To speed up the waiting period, set the Amazon ECS agent option to the following value: ECS_CONTAINER_STOP_TIMEOUT: 2. In this case, the Amazon ECS waits two seconds for the container to shut down, and then Amazon ECS sends a SIGKILL message when the application didn't stop. If your application takes more than one second, multiply the value by two and use that number as the value.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/load-balancer-connection-draining.html#sigterm"
+                      },
+                      "improvementPlan":{
+                         "displayText":"To allow for optimization, clients maintain a keep alive connection to the container service. This is so that subsequent requests from that client can reuse the existing connection. When you want to stop traffic to a container, you notify the load balancer. "
+                      }
+                   },
+                   {
+                      "id":"PERF2_4",
+                      "title":"Consider container image type",
+                      "helpfulResource":{
+                         "displayText":"The time that it takes a container to start up varies, based on the underlying container image. For example, a fatter image (full versions of Debian, Ubuntu, and Amazon1/2) might take longer to start up because there are a more services that run in the containers compared to their respective slim versions (Debian-slim, Ubuntu-slim, and Amazon-slim) or smaller base images (Alpine).",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/container-type.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"The time that it takes a container to start up varies, based on the underlying container image. For example, a fatter image (full versions of Debian, Ubuntu, and Amazon1/2) might take longer to start up because there are a more services that run in the containers compared to their respective slim versions (Debian-slim, Ubuntu-slim, and Amazon-slim) or smaller base images (Alpine)."
+                      }
+                   },
+                   {
+                      "id":"PERF2_5",
+                      "title":"Consider container image pull behavior",
+                      "helpfulResource":{
+                         "displayText":"The following are our recommendations for images used for Fargate tasks: Use a larger task size with additional vCPUs. The larger task size can help reduce the time that is required to extract the image when a task launches. Use a smaller base image. Have the repository that stores the image in the same Region as the task. Fargate windows AMIs cache the most recent base image provided by Microsoft. When the Amazon ECS agent starts a task, it pulls the Docker image from its remote registry, and then caches a local copy. When you use a new image tag for each release of your application, this behavior is unnecessary. To speed up deployment, set the Amazon ECS agent parameter to one of the following values:ECS_IMAGE_PULL_BEHAVIOR: once or prefer-cached.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/pull-behavior.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Consider container image pull behavior for your selected compute type."
+                      }
+                   },
+                   {
+                      "id":"PERF2_6",
+                      "title":"Configure task deployment",
+                      "helpfulResource":{
+                         "displayText":"To ensure that there's no application downtime, the deployment process is as follows: 1. Start the new application containers while keeping the exiting containers running. 2. Check that the new containers are healthy. 3. Stop the old containers. Depending on your deployment configuration and the amount of free, unreserved space in your cluster it may take multiple rounds of this to complete replace all old tasks with new tasks. There are two ECS service configuration options that you can use to modify the number: minimumHealthyPercent: 100% (default) and maximumPercent: 200% (default). Use the following values for the ECS service configuration options when your tasks are idle for some time and don't have a high utilization rate. minimumHealthyPercent: 50% maximumPercent: 200%",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/service-options.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Depending on your deployment configuration and the amount of free, unreserved space in your cluster it may take multiple rounds of this to complete replace all old tasks with new tasks. "
+                      }
+                   },
+                   {
+                    "id":"PERF2_7_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"PERF2_1 && PERF2_2 && PERF2_3 && PERF2_4 && PERF2_5 && PERF2_6",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default", 
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             }
+          ]
+       },
+       {
+          "id":"OPS",
+          "name":"Operating ECS at scale",
+          "questions":[
+             {
+                "id":"OPS1",
+                "title":"How do you design for operating ECS at scale?",
+                "description":"As you begin operating Amazon ECS at scale, consider how service quotas and API throttles for Amazon ECS and the AWS services that integrate with Amazon ECS might affect you.",
+                "choices":[
+                   {
+                      "id":"OPS1_1",
+                      "title":"Configure Service quotas and API throttling limits",
+                      "helpfulResource":{
+                         "displayText":"Amazon ECS is integrated with several AWS services, including Elastic Load Balancing, AWS Cloud Map, and Amazon EC2. With this tight integration, Amazon ECS includes several features such as service load balancing, service discovery, task networking, and cluster auto scaling. Amazon ECS and the other AWS services that it integrates with all maintain service quotas and API rate limits to ensure consistent performance and utilization. These service quotas also prevent the accidental provisioning of more resources than needed and protect against malicious actions that might increase your bill. By familiarizing yourself with your service quotas and the AWS API rate limits, you can plan for scaling your workloads without worrying about unexpected performance degradation. AWS Fargate has quotas that limit the number of concurrent running tasks in each AWS Region. There are quotas for both On-Demand and Fargate Spot tasks on Amazon ECS. Each service quota also includes any Amazon ECS tasks that you run on Fargate. For tasks that run on Amazon EC2 instances, the maximum number of Amazon EC2 instances that you can register for each cluster is 5,000. If you use Amazon ECS cluster auto scaling with an Auto Scaling group capacity provider, when scaling your services consider the Tasks in the PROVISIONING state per cluster quota.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/operating-at-scale-service-quotas.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information, see Amazon ECS service quotas and Request throttling for the Amazon ECS API. When scaling your workloads on Amazon ECS, we recommend that you consider the following service quota. For instructions on how to request a service quota increase, see Managing your Amazon ECS and AWS Fargate service quotas in the AWS Management Console."
+                      }
+                   },
+                   {
+                      "id":"OPS1_2",
+                      "title":"Configure Elastic Load Balancing service quotas",
+                      "helpfulResource":{
+                         "displayText":"When you scale your workloads, consider the following Elastic Load Balancing service quotas. Most Elastic Load Balancing service quotas are adjustable, and you can request an increase in the Service Quotas console. When you use an Application Load Balancer, depending on your use case, you might need to request a quota increase for: The \"Targets per Application Load Balancer\" quota which is the number of targets behind your Application Load Balancer. The \"Targets per Target Group per Region\" quota which is the number of targets behind your Target Groups. There are stricter limitations on the number of targets you can register with a Network Load Balancer. When using a Network Load Balancer, you often will want to enable cross-zone support, which comes with additional scaling limitations on the \"Targets per Availability Zone Per Network Load Balancer\" quota, which limits the maximum number of targets per Availability Zone for each Network Load Balancer. If you have a large number of services configured with load balancers in your account, you might have slower service deployments because of potential throttling specifically for the RegisterTarget, DeregisterTarget, and DescribeTargetHealth Elastic Load Balancing API operations. When throttling occurs, throttling errors occur in your Amazon ECS service event messages. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/operating-at-scale-service-quotas.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"When you scale your workloads, consider the following Elastic Load Balancing service quotas. Most Elastic Load Balancing service quotas are adjustable, and you can request an increase in the Service Quotas console."
+                      }
+                   },
+                   {
+                      "id":"OPS1_3",
+                      "title":"Configure Elastic network interface service quotas",
+                      "helpfulResource":{
+                         "displayText":"When you run tasks that use the awsvpc network mode, a unique elastic network interface is attached to each task. If those tasks must be reached over the internet, assign a public IP address to the elastic network interface for those tasks. When you scale your Amazon ECS workloads, consider these two important quotas: The \"Network interfaces per Region\" quota which is the maximum number of network interfaces in an AWS Region for your account. The \"Elastic IP addresses per Region\" quota which is the maximum number of elastic IP addresses in an AWS Region. For Amazon ECS workloads that are hosted on Amazon EC2 instances, when running tasks that use the awsvpc network mode consider the \"Maximum network interfaces\" service quota, the maximum number of network instances for each Amazon EC2 instance. This quota limits the number of tasks that you can place on an instance. Each of these APIs have different API throttles. For more information, see Request throttling for the Amazon EC2 API.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/operating-at-scale-service-quotas.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"If the Amazon EC2 API calls are throttled during the elastic network interface provisioning workflows, the Amazon ECS service scheduler automatically retries with exponential back-offs. These automatic retires might sometimes lead to a delay in launching tasks, which results in slower deployment speeds. For more information about monitoring and troubleshooting throttling errors, see Handling throttling issues."
+                      }
+                   },
+                   {
+                      "id":"OPS1_4",
+                      "title":"Consider AWS Cloud Map service quotas",
+                      "helpfulResource":{
+                         "displayText":"When Amazon ECS services are configured to use service discovery, the Tasks per service quota which is the maximum number of tasks for the service, is affected by the \"AWS Cloud Map Instances per service\" service quota which is the maximum number of instances for that service. In particular, the AWS Cloud Map service quota decreases the amount of tasks that you can run to at most 1,0000 tasks for service. You cannot change the AWS Cloud Map quota. Amazon ECS calls the ListInstances, GetInstancesHealthStatus, RegisterInstance, and DeregisterInstance AWS Cloud Map APIs on your behalf. If you experience throttling from these, you can contact AWS Support for guidance on increasing your API throttling limits.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/operating-at-scale-service-quotas.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Amazon ECS calls the ListInstances, GetInstancesHealthStatus, RegisterInstance, and DeregisterInstance AWS Cloud Map APIs on your behalf. If you experience throttling from these, you can contact AWS Support for guidance on increasing your API throttling limits."
+                      }
+                   },
+                   {
+                    "id":"OPS1_5_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"OPS1_1 && OPS1_2 && OPS1_3 && OPS1_4",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"OPS2",
+                "title":"How do you handle throttling issues?",
+                "description":"Overview of some strategies that you can use to monitor and troubleshoot API throttling errors.",
+                "choices":[
+                   {
+                      "id":"OPS2_1",
+                      "title":"Identify the type of throttling",
+                      "helpfulResource":{
+                         "displayText":"Synchronous vs Asynchronous throttling. When synchronous throttling occurs, you immediately receive an error response from Amazon ECS. This category of throttling typically occurs when you call Amazon ECS APIs while running tasks or creating services. Asynchronous throttling occurs because of asynchronous workflows where Amazon ECS or AWS CloudFormation might be calling APIs on your behalf to provision resources. It's important to know which AWS APIs that Amazon ECS invokes on your behalf. For example, the CreateNetworkInterface API is invoked for tasks that use the awsvpc network mode, and the DescribeTargetHealth API is invoked when performing health checks for tasks registered to a load balancer. When your workloads reach a considerable scale, these API operations might be throttled.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/operating-at-scale-dealing-with-throttles.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For synchronous throttling by using the AWS CLI or an AWS SDK, you can remediate API throttling. You can do this by either architecting your application to handle the errors or by implementing an exponential backoff and jitter strategy with retry logic for the API calls. For more information, see Timeouts, retries, and backoff with jitter.If you use an AWS SDK, the automatic retry logic is already built-in and configurable. For asynchronous throttling, if you deploy hundreds of services, each having hundreds of tasks concurrently that use the awsvpc network mode, Amazon ECS invokes Amazon EC2 API operations such as CreateNetworkInterface and Elastic Load Balancing API operations such as RegisterTarget or DescribeTargetHealth to register the elastic network interface and load balancer, respectively. These API calls can exceed the API limits, resulting in throttling errors."
+                      }
+                   },
+                   {
+                      "id":"OPS2_2",
+                      "title":"How do you monitor throttling?",
+                      "helpfulResource":{
+                         "displayText":"To monitor throttling, it's important to identify which API requests are throttled and who issues these requests. You can use AWS CloudTrail to do it. This service monitors throttling, and can be integrated with CloudWatch, Amazon Athena and Amazon EventBridge. You can configure CloudTrail to send specific events to CloudWatch Logs. These events are then parsed and analyzed using CloudWatch Logs log insights. This identifies details in throttling events such as the user or IAM role that made the call and the number of API calls that were made. CloudWatch offers API usage monitoring on the Usage namespace under By AWS Resource. These metrics are logged with type API and metric name CallCount. CloudWatch also offers anomaly detection. This feature uses machine learning to analyze and establish baselines based on the particular behavior of the metric that you enabled it on. If there's unusual API activity, you can use this feature together with CloudWatch alarms.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/operating-at-scale-dealing-with-throttles.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information about CloudWatch Logs insights and instructions on how to query log files, see Analyzing log data with CloudWatch Logs Insights. With Amazon Athena, you can create queries and analyze data using standard SQL. For example, you can create an Athena table to parse CloudTrail events. For more information, see Using the CloudTrail console to create an Athena table for CloudTrail logs."
+                      }
+                   },
+                   {
+                    "id":"OPS2_3_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"OPS2_1 && OPS2_2",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                    "condition":"default",
+                    "risk":"MEDIUM_RISK"
+                 }
+                ]
+             }
+          ]
+       },
+       {
+          "id":"SEC",
+          "name":"Security best practices",
+          "questions":[
+             {
+                "id":"SEC1",
+                "title":"Have you considered the shared responsibility model?",
+                "description":"Security and compliance recommendations for protecting your information, systems, and other assets that are reliant on Amazon ECS.",
+                "choices":[
+                   {
+                      "id":"SEC1_1",
+                      "title":"Consider the AWS shared responsibility model when choosing the compute type",
+                      "helpfulResource":{
+                         "displayText":"With respect to infrastructure security, AWS assumes more responsibility for AWS Fargate resources than it does for other self-managed instances. With Fargate, AWS manages the security of the underlying instance in the cloud and the runtime that's used to run your tasks. Fargate also automatically scales your infrastructure on your behalf.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-shared.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information about the shared responsibility model, see Shared Responsibility Model"
+                      }
+                   },
+                   {
+                    "id":"SEC1_2_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"SEC1_1",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"SEC2",
+                "title":"Configure AWS Identity and Access Management",
+                "description":"You can use AWS Identity and Access Management (IAM) to manage and control access to your AWS services and resources through rule-based policies for authentication and authorization purposes.",
+                "choices":[
+                   {
+                      "id":"SEC2_1",
+                      "title":"Managing access to Amazon ECS",
+                      "helpfulResource":{
+                         "displayText":"You can control access to Amazon ECS by creating and applying IAM policies. These policies are composed of a set of actions that apply to a specific set of resources. The action of a policy defines the list of operations (such as Amazon ECS APIs) that are allowed or denied, whereas the resource controls what are the Amazon ECS objects that the action applies to. Conditions can be added to a policy to narrow its scope. For example, a policy can be written to only allow an action to be performed against tasks with a particular set of tags. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-iam.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information, see How Amazon ECS works with IAM in the Amazon Elastic Container Service Developer Guide."
+                      }
+                   },
+                   {
+                      "id":"SEC2_2",
+                      "title":"Follow the policy of least privileged access",
+                      "helpfulResource":{
+                         "displayText":"Create policies that are scoped to allow users to perform their prescribed jobs. For example, if a developer needs to periodically stop a task, create a policy that only permits that particular action. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-iam.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"The following example only allows a user to stop a task that belongs to a particular task_family on a cluster with a specific Amazon Resource Name (ARN). Referring to an ARN in a condition is also an example of using resource-level permissions. You can use resource-level permissions to specify the resource that you want an action to apply to."
+                      }
+                   },
+                   {
+                      "id":"SEC2_3",
+                      "title":"Let the cluster resource serve as the administrative boundary",
+                      "helpfulResource":{
+                         "displayText":"Policies that are too narrowly scoped can cause a proliferation of roles and increase administrative overhead. Rather than creating roles that are scoped to particular tasks or services only, create roles that are scoped to clusters and use the cluster as your primary administrative boundary.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-iam.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Policies that are too narrowly scoped can cause a proliferation of roles and increase administrative overhead. Rather than creating roles that are scoped to particular tasks or services only, create roles that are scoped to clusters and use the cluster as your primary administrative boundary."
+                      }
+                   },
+                   {
+                      "id":"SEC2_4",
+                      "title":"Isolate end-users from the Amazon ECS API by creating automated pipelines",
+                      "helpfulResource":{
+                         "displayText":"You can limit the actions that users can perform by creating pipelines that automatically package and deploy applications onto Amazon ECS clusters. This effectively delegates the job of creating, updating, and deleting tasks to the pipeline.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-iam.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information, see Tutorial: Amazon ECS standard deployment with CodePipeline in the AWS CodePipeline User Guide."
+                      }
+                   },
+                   {
+                      "id":"SEC2_5",
+                      "title":"Use policy conditions for an added layer of security",
+                      "helpfulResource":{
+                         "displayText":"When you need an added layer of security, add a condition to your policy. This can be useful if you're performing a privileged operation or when you need to restrict the set of actions that can be performed against particular resources. Tags applied to services are propagated to all the tasks that are part of that service. Because of this, you can create roles that are scoped to Amazon ECS resources with specific tags.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-iam.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"When you need an added layer of security, add a condition to your policy. This can be useful if you're performing a privileged operation or when you need to restrict the set of actions that can be performed against particular resources. Tags applied to services are propagated to all the tasks that are part of that service. Because of this, you can create roles that are scoped to Amazon ECS resources with specific tags."
+                      }
+                   },
+                   {
+                      "id":"SEC2_6",
+                      "title":"Periodically audit access to the Amazon ECS APIs",
+                      "helpfulResource":{
+                         "displayText":"A user might change roles. After they change roles, the permissions that were previously granted to them might no longer apply. Make sure that you audit who has access to the Amazon ECS APIs and whether that access is still warranted. Consider integrating IAM with a user lifecycle management solution that automatically revokes access when a user leaves the organization.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-iam.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information, see Amazon ECS security audit guidelines in the Amazon Web Services General Reference."
+                      }
+                   },
+                   {
+                    "id":"SEC2_7_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"SEC2_1 && SEC2_2 && SEC2_3 && SEC2_4 && SEC2_5 && SEC2_6",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"SEC3",
+                "title":"Using IAM roles with Amazon ECS tasks",
+                "description":"We recommend that you assign a task an IAM role. Its role can be distinguished from the role of the Amazon EC2 instance that it's running on. ",
+                "choices":[
+                   {
+                      "id":"SEC3_1",
+                      "title":"Use trust policies to assume an IAM role",
+                      "helpfulResource":{
+                         "displayText":"When assigning IAM roles for a task, you must use a trust policy so that each of your tasks can assume an IAM role that's different from the one that your EC2 instance uses. This way, your task doesn't inherit the role of your EC2 instance. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-iam-roles.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"When assigning IAM roles for a task, you must use a trust policy so that each of your tasks can assume an IAM role that's different from the one that your EC2 instance uses. This way, your task doesn't inherit the role of your EC2 instance."
+                      }
+                   },
+                   {
+                      "id":"SEC3_2",
+                      "title":"Block access to Amazon EC2 metadata",
+                      "helpfulResource":{
+                         "displayText":"When you run your tasks on Amazon EC2 instances, we strongly recommend that you block access to Amazon EC2 metadata to prevent your containers from inheriting the role assigned to those instances. If your applications have to call an AWS API action, use IAM roles for tasks instead. To prevent tasks running in bridge mode from accessing Amazon EC2 metadata, update the instance's user data. For tasks that use awsvpc network mode, set the environment variable ECS_AWSVPC_BLOCK_IMDS to true in the /etc/ecs/ecs.config file.You should set the ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST variable to false in the ecs-agent config file to prevent the containers that are running within the host network from accessing the Amazon EC2 metadata.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-iam-roles.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"When you run your tasks on Amazon EC2 instances, we strongly recommend that you block access to Amazon EC2 metadata to prevent your containers from inheriting the role assigned to those instances. If your applications have to call an AWS API action, use IAM roles for tasks instead."
+                      }
+                   },
+                   {
+                      "id":"SEC3_3",
+                      "title":"Use awsvpc network mode",
+                      "helpfulResource":{
+                         "displayText":"Use the network awsvpc network mode to restrict the flow of traffic between different tasks or between your tasks and other services that run within your Amazon VPC. This adds an additional layer of security. The awsvpc network mode provides task-level network isolation for tasks that run on Amazon EC2. It is the default mode on AWS Fargate. It's the only network mode that you can use to assign a security group to tasks. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-iam-roles.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Use the network awsvpc network mode to restrict the flow of traffic between different tasks or between your tasks and other services that run within your Amazon VPC. This adds an additional layer of security."
+                      }
+                   },
+                   {
+                      "id":"SEC3_4",
+                      "title":"Use IAM Access Advisor to refine roles",
+                      "helpfulResource":{
+                         "displayText":"We recommend that you remove any actions that were never used or haven't been used for some time. This prevents unwanted access from happening. To do this, review the results produced by IAM Access Advisor, and then remove actions that were never used or haven't been used recently.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-iam-roles.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information, see IAM Access Advisor."
+                      }
+                   },
+                   {
+                      "id":"SEC3_5",
+                      "title":"Monitor AWS CloudTrail for suspicious activity",
+                      "helpfulResource":{
+                         "displayText":"You can monitor AWS CloudTrail for any suspicious activity. Most AWS API calls are logged to AWS CloudTrail as events. They are analyzed by AWS CloudTrail Insights, and you're alerted of any suspicious behavior that's associated with write API calls. This might include a spike in call volume. These alerts include such information as the time the unusual activity occurred and the top identity ARN that contributed to the APIs. You can identify actions that are performed by tasks with an IAM role in AWS CloudTrail by looking at the event's userIdentity property.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-iam-roles.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You can identify actions that are performed by tasks with an IAM role in AWS CloudTrail by looking at the event's userIdentity property."
+                      }
+                   },
+                   {
+                    "id":"SEC3_6_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"SEC3_1 && SEC3_2 && SEC3_3 && SEC3_4 && SEC3_4 && SEC3_5",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"SEC4",
+                "title":"Network security",
+                "description":"Network security is a broad topic that encompasses several subtopics. These include encryption-in-transit, network segmentation and isolation, firewalling, traffic routing, and observability.",
+                "choices":[
+                   {
+                      "id":"SEC4_1",
+                      "title":"Use encryption in transit",
+                      "helpfulResource":{
+                         "displayText":"Decide whether to encrypt using a service mesh, using Nitro instances, Server Name Indication (SNI) with an Application Load Balancer or end-to-end encryption with TLS certificates with a Network Load Balancer",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-network.html#security-network-encryption"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Decide whether to encrypt using a service mesh, using Nitro instances, Server Name Indication (SNI) with an Application Load Balancer or end-to-end encryption with TLS certificates with a Network Load Balancer"
+                      }
+                   },
+                   {
+                      "id":"SEC4_2",
+                      "title":"Use security groups for tasks",
+                      "helpfulResource":{
+                         "displayText":"We recommend that you configure your tasks to use the awsvpc network mode. After you configure your task to use this mode, the Amazon ECS agent automatically provisions and attaches an Elastic Network Interface (ENI) to the task. When the ENI is provisioned, the task is enrolled in an AWS security group. The security group acts as a virtual firewall that you can use to control inbound and outbound traffic.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-network.html#security-network-task-networking"
+                      },
+                      "improvementPlan":{
+                         "displayText":"We recommend that you configure your tasks to use the awsvpc network mode. After you configure your task to use this mode, the Amazon ECS agent automatically provisions and attaches an Elastic Network Interface (ENI) to the task. When the ENI is provisioned, the task is enrolled in an AWS security group. The security group acts as a virtual firewall that you can use to control inbound and outbound traffic."
+                      }
+                   },
+                   {
+                      "id":"SEC4_3",
+                      "title":"Consider using a service mesh and Mutual Transport Layer Security (mTLS)",
+                      "helpfulResource":{
+                         "displayText":"You can use a service mesh such as AWS App Mesh to control network traffic. By default, a virtual node can only communicate with its configured service backends, such as the virtual services that the virtual node will communicate with. App Mesh also gives you the ability to use Mutual Transport Layer Security (mTLS) where both the client and the server are mutually authenticated using certificates. The subsequent communication between client and server are then encrypted using TLS. By requiring mTLS between services in a mesh, you can verify that the traffic is coming from a trusted source.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-network.html#security-network-service-mesh"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information, refer to the documentation around mTLS and App Mesh."
+                      }
+                   },
+                   {
+                      "id":"SEC4_4",
+                      "title":"Consider using AWS PrivateLink and endpoint policies",
+                      "helpfulResource":{
+                         "displayText":"AWS PrivateLink is a networking technology that allows you to create private endpoints for different AWS services, including Amazon ECS. The endpoints are required in sandboxed environments where there is no Internet Gateway (IGW) attached to the Amazon VPC and no alternative routes to the Internet. Using AWS PrivateLink ensures that calls to the Amazon ECS service stay within the Amazon VPC and do not traverse the internet. AWS Fargate tasks don't require a AWS PrivateLink endpoint for Amazon ECS. Amazon ECR and Amazon ECS both support endpoint policies. These policies allow you to refine access to a service's APIs. For example, you could create an endpoint policy for Amazon ECR that only allows images to be pushed to registries in particular AWS accounts. A policy like this could be used to prevent data from being exfiltrated through container images while still allowing users to push to authorized Amazon ECR registries. You can enhance this further by setting a condition that uses the new PrincipalOrgID property. This prevents pushing and pulling of images by an IAM principal that isn't part of your AWS Organization.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-network.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You can enhance this further by setting a condition that uses the new PrincipalOrgID property. This prevents pushing and pulling of images by an IAM principal that isn't part of your AWS Organizations. For more information, see aws:PrincipalOrgID."
+                      }
+                   },
+                   {
+                    "id":"SEC4_5_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"SEC4_1 && SEC4_2 && SEC4_3 && SEC4_4",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"((!SEC4_3 || !SEC4_4) && SEC4_1 && SEC4_2)",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                    "condition":"default",
+                    "risk":"HIGH_RISK"
+                   }
+  
+                ]
+             },
+             {
+                "id":"SEC5",
+                "title":"Secrets management",
+                "description":"Secrets, such as API keys and database credentials, are frequently used by applications to gain access other systems. They often consist of a username and password, a certificate, or API key.",
+                "choices":[
+                   {
+                      "id":"SEC5_1",
+                      "title":"Use the right tools to store secret materials",
+                      "helpfulResource":{
+                         "displayText":"You should securely store API keys, database credentials, and other secret materials in AWS Secrets Manager or as an encrypted parameter in Amazon EC2 Systems Manager Parameter Store. These services are similar because they're both managed key-value stores that use AWS KMS to encrypt sensitive data. AWS Secrets Manager, however, also includes the ability to automatically rotate secrets, generate random secrets, and share secrets across AWS accounts. If you deem these important features, use AWS Secrets Manager otherwise use encrypted parameters.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-secrets-management.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You should securely store API keys, database credentials, and other secret materials in AWS Secrets Manager or as an encrypted parameter in Amazon EC2 Systems Manager Parameter Store."
+                      }
+                   },
+                   {
+                      "id":"SEC5_2",
+                      "title":"Retrieving data from an encrypted Amazon S3 bucket",
+                      "helpfulResource":{
+                         "displayText":"Because the value of environment variables can inadvertently leak in logs and are revealed when running docker inspect, you should store secrets in an encrypted Amazon S3 bucket and use task roles to restrict access to those secrets. When you do this, your application must be written to read the secret from the Amazon S3 bucket",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-secrets-management.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For instructions, see Setting default server-side encryption behavior for Amazon S3 buckets."
+                      }
+                   },
+                   {
+                      "id":"SEC5_3",
+                      "title":"Mount the secret to a volume using a sidecar container",
+                      "helpfulResource":{
+                         "displayText":"Because there's an elevated risk of data leakage with environment variables, you should run a sidecar container that reads your secrets from AWS Secrets Manager and write them to a shared volume. This container can run and exit before the application container by using Amazon ECS container ordering. When you do this, the application container subsequently mounts the volume where the secret was written. Like the Amazon S3 bucket method, your application must be written to read the secret from the shared volume. Because the volume is scoped to the task, the volume is automatically deleted after the task stops. On Amazon EC2, the volume that the secret is written to can be encrypted with a AWS KMS customer managed key. On AWS Fargate, volume storage is automatically encrypted using a service managed key. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-secrets-management.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For an example of a sidecar container, see the aws-secret-sidecar-injector project."
+                      }
+                   },
+                   {
+                    "id":"SEC5_4_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"SEC5_1 && SEC5_2 && SEC5_3",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"((!SEC5_2 || !SEC5_3) && SEC5_1)",
+                      "risk":"MEDIUM_RISK"
+                   },
+                   {
+                    "condition":"default",
+                    "risk":"HIGH_RISK"
+                    }
+                ]
+             },
+             {
+                "id":"SEC6",
+                "title":"Using temporary security credentials with API operations",
+                "description":"If you're making direct HTTPS API requests to AWS, you can sign those requests with the temporary security credentials that you get from the AWS Security Token Service. ",
+                "choices":[
+                   {
+                      "id":"SEC6_1",
+                      "title":"Use temporary security credentials with API operations",
+                      "helpfulResource":{
+                         "displayText":"If you're making direct HTTPS API requests to AWS, you can sign those requests with the temporary security credentials that you get from the AWS Security Token Service.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/temp-credientials.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information, see Signing AWS API requests in the AWS General Reference."
+                      }
+                   },
+                   {
+                    "id":"SEC6_2_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"SEC6_1",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"HIGH_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"SEC7",
+                "title":"Compliance and security",
+                "description":"Your compliance responsibility when using Amazon ECS is determined by the sensitivity of your data, and the compliance objectives of your company, and applicable laws and regulations.",
+                "choices":[
+                   {
+                      "id":"SEC7_1",
+                      "title":"Identify compliance requirements",
+                      "helpfulResource":{
+                         "displayText":"Identify any compliance requirements your workload needs. AWS provides the following resources to help with compliance: Security and compliance quick start guides, Architecting for HIPAA Security and Compliance Whitepaper, and AWS Services in Scope by Compliance Program. These guides discuss architectural considerations, address HIPAA requirements and list AWS services in scope of specific compliance programs.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-compliance.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information, see the documentation around the required compliance framework."
+                      }
+                   },
+                   {
+                      "id":"SEC7_2",
+                      "title":"Understand adherance to Payment Card Industry Data Security Standards (PCI DSS)",
+                      "helpfulResource":{
+                         "displayText":"It's important that you understand the complete flow of cardholder data (CHD) within the environment when adhering to PCI DSS. The CHD flow determines the applicability of the PCI DSS, defines the boundaries and components of a cardholder data environment (CDE), and therefore the scope of a PCI DSS assessment. Accurate determination of the PCI DSS scope is key to defining the security posture and ultimately a successful assessment. Customers must have a procedure for scope determination that assures its completeness and detects changes or deviations from the scope.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-compliance.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For additional information on achieving PCI DSS compliance on Amazon ECS, refer to the following whitepapers. Architecting on Amazon ECS for PCI DSS compliance. Architecting for PCI DSS Scoping and Segmentation on AWS"
+                      }
+                   },
+                   {
+                      "id":"SEC7_3",
+                      "title":"Understand adherance to HIPAA (U.S. Health Insurance Portability and Accountability Act)",
+                      "helpfulResource":{
+                         "displayText":"Using Amazon ECS with workloads that process protected health information (PHI) requires no additional configuration. Amazon ECS acts as an orchestration service that coordinates the launch of containers on Amazon EC2. It doesn't operate with or upon data within the workload being orchestrated. Consistent with HIPAA regulations and the AWS Business Associate Addendum, PHI should be encrypted in transit and at-rest when accessed by containers launched with Amazon ECS.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-compliance.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Protected health information (PHI) should be encrypted in transit and at-rest when accessed by containers launched with Amazon ECS. To design your AWS environment using the best practices for infrastructure security, see Infrastructure Protection in Security Pillar AWS Well‐Architected Framework."
+                      }
+                   },
+                   {
+                      "id":"SEC7_4",
+                      "title":"Use AWS Security Hub to monitor your usage of Amazon ECS as it relates to security best practices. ",
+                      "helpfulResource":{
+                         "displayText":"Use AWS Security Hub to monitor your usage of Amazon ECS as it relates to security best practices. Security Hub uses controls to evaluate resource configurations and security standards to help you comply with various compliance frameworks.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-compliance.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information about using Security Hub to evaluate Amazon ECS resources, see Amazon ECS controls in the AWS Security Hub User Guide."
+                      }
+                   },
+                   {
+                    "id":"SEC7_5_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"SEC7_1 && SEC7_2 && SEC7_3 && SEC7_4",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                    "condition":"!SEC7_1 || !SEC7_2 || !SEC7_3",
+                    "risk":"HIGH_RISK"
+                   },                 
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"SEC8",
+                "title":"Logging and monitoring",
+                "description":"Logging and monitoring are an important aspect of maintaining the reliability, availability, and performance of Amazon ECS and your AWS solutions.",
+                "choices":[
+                   {
+                      "id":"SEC8_1",
+                      "title":"Configure logging for your containers",
+                      "helpfulResource":{
+                         "displayText":"You can configure the containers in your tasks to send log information to Amazon CloudWatch Logs. If you're using the AWS Fargate launch type for your tasks, you can view the logs from your containers. If you're using the Amazon EC2 launch type, you can view different logs from your containers in one convenient location. This also prevents your container logs from taking up disk space on your container instances. You can also choose to run Fluent Bit for container logging or custom log routing with FireLens for Amazon ECS",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-logging-and-monitoring.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For more information about Amazon CloudWatch Logs, see Monitor Logs from Amazon EC2 Instances in the Amazon CloudWatch User Guide. For instruction on sending container logs from your tasks to Amazon CloudWatch Logs, see Using the awslogs log driver. More details on other logging use cases in the documentation."
+                      }
+                   },
+                   {
+                    "id":"SEC8_2_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"SEC8_1",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"SEC9",
+                "title":"AWS Fargate security",
+                "description":"We recommend that you take into account the following best practices when you use AWS Fargate. ",
+                "choices":[
+                   {
+                      "id":"SEC9_1",
+                      "title":"Use AWS KMS to encrypt ephemeral storage",
+                      "helpfulResource":{
+                         "displayText":"You should have your ephemeral storage encrypted by AWS KMS. For Amazon ECS tasks that are hosted on AWS Fargate using platform version 1.4.0 or later, each task receives 20 GiB of ephemeral storage. You can increase the total amount of ephemeral storage, up to a maximum of 200 GiB, by specifying the ephemeralStorage parameter in your task definition. For such tasks that were launched on May 28, 2020 or later, the ephemeral storage is encrypted with an AES-256 encryption algorithm using an encryption key managed by AWS Fargate.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-fargate.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"You should have your ephemeral storage encrypted by AWS KMS. For Amazon ECS tasks that are hosted on AWS Fargate using platform version 1.4.0 or later, each task receives 20 GiB of ephemeral storage. You can increase the total amount of ephemeral storage, up to a maximum of 200 GiB, by specifying the ephemeralStorage parameter in your task definition. For such tasks that were launched on May 28, 2020 or later, the ephemeral storage is encrypted with an AES-256 encryption algorithm using an encryption key managed by AWS Fargate."
+                      }
+                   },
+                   {
+                      "id":"SEC9_2",
+                      "title":"SYS_PTRACE capability for kernel syscall tracing",
+                      "helpfulResource":{
+                         "displayText":"The default configuration of Linux capabilities that are added or removed from your container are provided by Docker. For more information about the available capabilities, see Runtime privilege and Linux capabilities in the Docker run documentation. Tasks that are launched on AWS Fargate only support adding the SYS_PTRACE kernel capability.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-fargate.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Refer to the tutorial video below that shows how to use this feature through the Sysdig Falco project."
+                      }
+                   },
+                   {
+                      "id":"SEC9_3",
+                      "title":"Be aware of AWS Fargate security considerations",
+                      "helpfulResource":{
+                         "displayText":"No privileged containers or access - Features such as privileged containers or access are currently unavailable on Fargate. This will affect uses cases such as running Docker in Docker. Limited access to Linux capabilities - The environment in which containers run on Fargate is restricted to prevent container breakouts. Fargate supports adding the CAP_SYS_PTRACE Linux capability, to allow observability tools like Sysdig Falco for workloads running on Fargate. No access to the underlying host - Neither customers nor AWS operators can connect to a host running customer workloads. You can use ECS exec to run commands in or get a shell to a container running on Fargate. Networking - You can use security groups and network ACLs to control inbound and outbound traffic. Fargate tasks receive an IP address from the configured subnet in your VPC. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-fargate.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Refer to the Best Practies Guide for AWS Fargate security for further details."
+                      }
+                   },
+                   {
+                    "id":"SEC9_4_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"SEC9_1 && SEC9_2 && SEC9_3",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"SEC10",
+                "title":"Task and container security",
+                "description":"You should consider the container image as your first line of defense against an attack.",
+                "choices":[
+                   {
+                      "id":"SEC10_1",
+                      "title":"Create minimal or use distroless images",
+                      "helpfulResource":{
+                         "displayText":"Start by removing all extraneous binaries from the container image. If you’re using an unfamiliar image from Amazon ECR Public Gallery, inspect the image to refer to the contents of each of the container's layers. You can use an application such as Dive to do this. Alternatively, you can use distroless images that only include your application and its runtime dependencies. They don't contain package managers or shells. Distroless images improve the signal to noise of scanners and reduces the burden of establishing provenance to just what you need.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Evaluate unfamiliar images and inspect layers. Move to distroless images or build from scratch where possible."
+                      }
+                   },
+                   {
+                      "id":"SEC10_2",
+                      "title":"Scan your images for vulnerabilities",
+                      "helpfulResource":{
+                         "displayText":"Similar to their virtual machine counterparts, container images can contain binaries and application libraries with vulnerabilities or develop vulnerabilities over time. The best way to safeguard against exploits is by regularly scanning your images with an image scanner. Images that are stored in Amazon ECR can be scanned on push or continuously. Docker Desktop Edge version 2.3.6.0 or later can scan local images. The scans are powered by Snyk, an application security service. When vulnerabilities are discovered, Snyk identifies the layers and dependencies with the vulnerability in the Dockerfile. It also recommends safe alternatives like using a slimmer base image with fewer vulnerabilities or upgrading a particular package to a newer version. By using Docker scan, developers can resolve potential security issues before pushing their images to the registry.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Regularly scan your images with an image scanner. Automating image compliance using Amazon ECR and AWS Security Hub explains how to surface vulnerability information from Amazon ECR in AWS Security Hub and automate remediation by blocking access to vulnerable images."
+                      }
+                   },
+                   {
+                      "id":"SEC10_3",
+                      "title":"Remove special permissions from your images",
+                      "helpfulResource":{
+                         "displayText":"The access rights flags setuid and setgid allow running an executable with the permissions of the owner or group of the executable. Remove all binaries with these access rights from your image as these binaries can be used to escalate privileges. Consider removing all shells and utilities like nc and curl that can be used for malicious purposes.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Consider removing all shells and utilities that can be used for malicious purposes."
+                      }
+                   },
+                   {
+                      "id":"SEC10_4",
+                      "title":"Create a set of curated images",
+                      "helpfulResource":{
+                         "displayText":"Rather than allowing developers to create their own images, create a set of vetted images for the different application stacks in your organization. By doing so, developers can forego learning how to compose Dockerfiles and concentrate on writing code. As changes are merged into your codebase, a CI/CD pipeline can automatically compile the asset and then store it in an artifact repository. And, last, copy the artifact into the appropriate image before pushing it to a Docker registry such as Amazon ECR. At the very least you should create a set of base images that developers can create their own Dockerfiles from. ",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Consider creating a set of vetted images for the different application stacks in your organization. By doing so, developers can forego learning how to compose Dockerfiles and concentrate on writing code."
+                      }
+                   },
+                   {
+                      "id":"SEC10_5",
+                      "title":"Scan application packages and libraries for vulnerabilities",
+                      "helpfulResource":{
+                         "displayText":"Use of open source libraries is now common. As with operating systems and OS packages, these libraries can have vulnerabilities . As part of the development lifecycle these libraries should be scanned and updated when critical vulnerabilities are found. Docker Desktop performs local scans using Snyk. It can also be used to find vulnerabilities and potential licensing issues in open source libraries. It can be integrated directly into developer workflows giving you the ability to mitigate risks posed by open source libraries.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Regularly scan open source libraries with Application Security Tools."
+                      }
+                   },
+                   {
+                      "id":"SEC10_6",
+                      "title":"Perform static code analysis",
+                      "helpfulResource":{
+                         "displayText":"You should perform static code analysis before building a container image. It's performed against your source code and is used to identify coding errors and code that could be exploited by a malicious actor, such as fault injections. SonarQube is a popular option for static application security testing (SAST), with support for a variety of different programming languages.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Regularly perform static application security testing (SAST) before building container images."
+                      }
+                   },
+                   {
+                      "id":"SEC10_7",
+                      "title":"Run containers as a non-root user",
+                      "helpfulResource":{
+                         "displayText":"You should run containers as a non-root user. By default, containers run as the root user unless the USER directive is included in your Dockerfile. The default Linux capabilities that are assigned by Docker restrict the actions that can be run as root, but only marginally. For example, a container running as root is still not allowed to access devices. As part of your CI/CD pipeline you should lint Dockerfiles to look for the USER directive and fail the build if it's missing.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"As part of your container build pipeline you should lint Dockerfiles to look for the USER directive and fail the build if it's missing."
+                      }
+                   },
+                   {
+                      "id":"SEC10_8",
+                      "title":"Use a read-only root file system",
+                      "helpfulResource":{
+                         "displayText":"You should use a read-only root file system. A container's root file system is writable by default. When you configure a container with a RO (read-only) root file system it forces you to explicitly define where data can be persisted. This reduces your attack surface because the container's file system can't be written to unless permissions are specifically granted.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Consider using read-only root file system as it forces you to explicitly define where data can be persisted reducing your attack surface. Thoroughly test beforehand."
+                      }
+                   },
+                   {
+                      "id":"SEC10_9",
+                      "title":"Configure tasks with CPU and memory limits (Amazon EC2)",
+                      "helpfulResource":{
+                         "displayText":"You should configure tasks with CPU and memory limits to minimize the following risk. A task's resource limits set an upper bound for the amount of CPU and memory that can be reserved by all the containers within a task. If no limits are set, tasks have access to the host's CPU and memory. This can cause issues where tasks deployed on a shared host can starve other tasks of system resources. Amazon ECS on AWS Fargate tasks require you to specify CPU and memory limits because it uses these values for billing purposes. One task hogging all of the system resources isn't an issue for Amazon ECS Fargate because each task is run on its own dedicated instance.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Configure tasks with CPU and memory limits, If no limits are set, tasks have access to the host's CPU and memory. This can cause issues where tasks deployed on a shared host can starve other tasks of system resources."
+                      }
+                   },
+                   {
+                      "id":"SEC10_10",
+                      "title":"Use immutable tags with Amazon ECR",
+                      "helpfulResource":{
+                         "displayText":"With Amazon ECR, you can and should use images with immutable tags. This prevents pushing an altered or updated version of an image to your image repository with an identical tag. This protects against an attacker pushing a compromised version of an image over your image with the same tag.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Configure a repository to turn on tag immutability to prevent image tags from being overwritten."
+                      }
+                   },
+                   {
+                      "id":"SEC10_11",
+                      "title":"Avoid running containers as privileged (Amazon EC2)",
+                      "helpfulResource":{
+                         "displayText":"You should avoid running containers as privileged. For background, containers run as privileged are run with extended privileges on the host. This means the container inherits all of the Linux capabilities assigned to root on the host. It's use should be severely restricted or forbidden. We advise setting the Amazon ECS container agent environment variable ECS_DISABLE_PRIVILEGED to true to prevent containers from running as privileged on particular hosts if privileged isn't needed. Alternatively you can use AWS Lambda to scan your task definitions for the use of the privileged parameter.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Avoid running containers as privileged. We advise setting the Amazon ECS container agent environment variable to prevent containers from running as privileged."
+                      }
+                   },
+                   {
+                      "id":"SEC10_12",
+                      "title":"Remove unnecessary Linux capabilities from the container",
+                      "helpfulResource":{
+                         "displayText":"If a container doesn't require all of the Docker kernel capabilities listed above, consider dropping them from the container.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Consider removing unnecessary Linux capabilities, review and test what happens when a particular capabilities are dropped by using utilities like capsh."
+                      }
+                   },
+                   {
+                      "id":"SEC10_13",
+                      "title":"Use a customer managed key (CMK) to encrypt images pushed to Amazon ECR",
+                      "helpfulResource":{
+                         "displayText":"You should use a customer managed key (CMK) to encrypt images that are pushed to Amazon ECR. Images that are pushed to Amazon ECR are automatically encrypted at rest with a AWS Key Management Service (AWS KMS) managed key. If you would rather use your own key, Amazon ECR now supports AWS KMS encryption with customer managed keys (CMK).",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-tasks-containers.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"Each Amazon ECR repository has an encryption configuration, which is set when the repository is created. You can use different encryption configurations on each repository. Amazon ECR now supports AWS KMS encryption with customer managed keys (CMK) giving you more choice over image server side encryption."
+                      }
+                   },
+                   {
+                    "id":"SEC10_14_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"SEC10_1 && SEC10_2 && SEC10_3 && SEC10_4 && SEC10_5 && SEC10_6 && SEC10_7 && SEC10_8 && SEC10_9 && SEC10_10 && SEC10_11 && SEC10_12 && SEC10_13",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                    "condition":"!SEC10_2 || !SEC10_5 || !SEC10_6 || !SEC10_7 || !SEC10_9 || !SEC10_11",
+                    "risk":"HIGH_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             },
+             {
+                "id":"SEC11",
+                "title":"Runtime security",
+                "description":"Runtime security provides active protection for your containers while they're running. The idea is to detect and prevent malicious activity from occurring on your containers. Runtime security configuration differs between Windows and Linux containers.",
+                "choices":[
+                   {
+                      "id":"SEC11_1",
+                      "title":"Use a third-party solution for runtime defense",
+                      "helpfulResource":{
+                         "displayText":"Use a third-party solution for runtime defense. If you're familiar with how Linux security works, create and manage AppArmor profiles. Both are open-source projects. AppArmor is only available for Ubuntu and Debian distributions of Linux. Otherwise, consider using a different third-party service instead. Most use machine learning to block or alert on suspicious activity. For a list of available third-party solutions, see AWS Marketplace for Containers.",
+                         "url":"https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-runtime.html"
+                      },
+                      "improvementPlan":{
+                         "displayText":"For a list of available third-party solutions, see AWS Marketplace for Containers. You can use Aqua Security to secure your cloud-native applications from development to production. The Aqua Cloud Native Security Platform integrates with your cloud-native resources and orchestration tools to provide transparent and automated security. Palo Alto Networks provides security and protection for your hosts, containers, and serverless infrastructure in the cloud and throughout the development and software lifecycle.Twistlock is supplied by Palo Alto Networks and can be integrated with Amazon ECS FireLens. With it, you have access to high fidelity security logs and incidents that are seamlessly aggregated into several AWS services. You can use Sysdig to run secure and compliant cloud-native workloads in production scenarios. The Sysdig Secure DevOps Platform has embedded security and compliance features to protect your cloud-native workloads, and also offers enterprise-grade scalability, performance, and customization."
+                      }
+                   },
+                   {
+                    "id":"SEC11_2_no",
+                    "title":"None of these"
+                   }
+                ],
+                "riskRules":[
+                   {
+                      "condition":"SEC11_1",
+                      "risk":"NO_RISK"
+                   },
+                   {
+                      "condition":"default",
+                      "risk":"MEDIUM_RISK"
+                   }
+                ]
+             }
+          ]
+       }
+    ]
+  }
+  
