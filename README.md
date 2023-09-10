@@ -34,7 +34,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [OpenSearch](/OpenSearch/)
 * [API Gateway and Lambda](/ApiGwLambda/)
 * [ElastiCache](/ElastiCache/)
-* [ECS](/Amazon_ECS_Lens/)
+* [ECS](/Amazon-ECS-Lens/)
 
 ### Custom Lens for AWS Solutions
 * [Streaming Media Lens](/Streaming-Media-Lens/)
