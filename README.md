@@ -34,12 +34,14 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [OpenSearch](/OpenSearch/)
 * [API Gateway and Lambda](/ApiGwLambda/)
 * [ElastiCache](/ElastiCache/)
+* [ECS](/Amazon_ECS_Lens/)
 
 ### Custom Lens for AWS Solutions
 * [Streaming Media Lens](/Streaming-Media-Lens/)
 * [SAP Lens](https://github.com/aws-samples/aws-sap-lens-well-architected/)
 * [Operational Readiness Review](/ORR-Lens/)
 * [FSI Governance Lens](/FSI-Governance-Lens/)
+* [Container Build Lens](/Container-Build-Lens/)
 
 ## :bookmark: Whitepaper
 Whitepaper to describe candidate new Custom Lenses, which you can reference as following:
