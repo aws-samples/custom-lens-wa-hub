@@ -1,6 +1,8 @@
 # AWS Custom Lens Hub
 Provide JSON file template that demonstrate how to create customize Well-Architected reviews using Custom lenses.
 
+[![HitCount](https://hits.dwyl.com/aws-samples/custom-lens-wa-hub.svg?style=flat)](http://hits.dwyl.com/aws-samples/custom-lens-wa-hub)
+
 Note:
 > This repository is maintained by internal volunteer, community members and domain service experts.
 
