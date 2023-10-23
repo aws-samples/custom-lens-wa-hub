@@ -7,7 +7,7 @@
 
 <div align="center">
 
-[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![Status](https://img.shields.io/badge/status-active-success.svg?style=flat-square)]()
 ![GitHub](https://img.shields.io/github/license/aws-samples/custom-lens-wa-hub?style=flat-square)
 
 </div>
