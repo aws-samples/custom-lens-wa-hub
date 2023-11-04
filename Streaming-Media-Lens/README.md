@@ -113,6 +113,7 @@ After you finish the Well-Architected with the customers, you can generate a WA 
 ## 🤝 Co-Contributors <a name = "co-contributor"></a>
 
 - [Bruce Ross](mailto:rosbruc@amazon.com) - Lead Solutions Architect, Well-Architected Lens
+- [Ally Yong](mailto:allyyong@amazon.com) - Sr. Media Edge Services Specialist SA
 
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
