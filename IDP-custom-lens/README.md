@@ -19,6 +19,7 @@ CTO, Technical Leader or technical owner for an Machine Learning - Intelligent D
 
 |Date	    |Version	|Details                                                     |
 |---        |----       |----                                                        |
+|2023.12.08.|       V1.1|       Fix choices with *_no keys & logic                       |
 |2023.11.02.|         V1|	Six Pillars, with security review.                       |
 |2023.08.16.|	    V0.9|	Security, Reliability and Performance Efficiency pillars.|
 
@@ -39,4 +40,3 @@ CTO, Technical Leader or technical owner for an Machine Learning - Intelligent D
 * Bruce Ross, Lens Lead SA, AWS Well-Architected, AWS
 * Martin Schade, Principal ML Product SA, Textract Service Team, AWS
 
-bobyeh@amazon.com
