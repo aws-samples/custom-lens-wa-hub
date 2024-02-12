@@ -1,0 +1,345 @@
+{
+    "name":"AWS Passport Custom Lens",
+    "schemaVersion":"2021-11-01",
+    "description":"ISVs that aspire to expand their business internationally face a unique set of challenges, including operational challenges, cultural adaptation, slow market entry, and failure to realize growth. AWS Passport provides guided access to AWS resources, programs, and partners to help address four key needs: 1/ Strategic: half day in person workshop to define a joint growth strategy, identify gaps, and achieve executive alignment, 2/ Technical: workshop to provide guidance on regulation and compliance, architectural best practices, 3/ Operational: referral to local resources for facilities, customer support, legal, HR, recruitment, sales, logistics, and other services, and 4/ Go-to-market: workshop to define a joint go-to-market strategy for pipeline development in the new target geography. This custom lens focuses on architectural best practices",
+    "pillars":[
+       {
+         "id":"overview",
+         "name":"Overview",
+         "questions":[
+            {
+               "id":"overview01",
+               "title":"Have you completed a Well Architected Framework Review for all workloads to be deployed to the new region?",
+               "description":"Carrying technical debt to new regions increases risk. It is best to to ensure all workloads are well-architected before deployment to new regions.",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"All workloads are well architected."
+                    },
+                     "improvementPlan":{
+                        "displayText":"A Well Architected Framework Review should be conducted for all workloads to be deployed in new regions."
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"A Well Architected Framework Review has not been completed for all workloads to be deployed to new regions.",
+                        "url":"https://aws.amazon.com/architecture/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Schedule some time with an AWS Solutions Architect to guide you through a Well Architected Framework Review.",
+                        "url":"https://aws.amazon.com/architecture/"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"!choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice1 || choice2",
+                     "risk":"MEDIUM_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"HIGH_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview02",
+               "title":"Have all risks identified in the Well Architected Framework Review been mitigated?",
+               "description":"Lorem ipsum...",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Lorem ipsum...",
+                        "url":"https://aws.amazon.com/architecture/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"Lorem ipsum..."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"!choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice1 || choice2",
+                     "risk":"MEDIUM_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"HIGH_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview03",
+               "title":"Is the world architecture modernized?",
+               "description":"Lorem ipsum...",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"The workload is modernized."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"The workload is Not modernized."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"!choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice1 || choice2",
+                     "risk":"MEDIUM_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"HIGH_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview04",
+               "title":"Are you using Infrastructure as Code to deploy workloads?",
+               "description":"Lorem ipsum...",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Lorem ipsum..."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"Lorem ipsum..."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"!choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice1 || choice2",
+                     "risk":"MEDIUM_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"HIGH_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview05",
+               "title":"Is feature parity and service capacity for target regions known?",
+               "description":"Lorem ipsum...",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Lorem ipsum...."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"Lorem ipsum..."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"!choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice1 || choice2",
+                     "risk":"MEDIUM_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"HIGH_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview06",
+               "title":"Is feature parity and service capacity for target regions acceptable?",
+               "description":"Lorem ipsum...",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Lorem ipsum..."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"Lorem ipsum..."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"!choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice1 || choice2",
+                     "risk":"MEDIUM_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"HIGH_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview07",
+               "title":"Is the cold start cost for target regions known?",
+               "description":"Lorem ipsum...",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Lorem ipsum...."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"Lorem ipsum..."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Lorem ipsum..."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"!choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice1 || choice2",
+                     "risk":"MEDIUM_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"HIGH_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview08",
+               "title":"Is the cold start cost for target regions acceptable?",
+               "description":"orem ipsum...",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"orem ipsum..."
+                     },
+                     "improvementPlan":{
+                        "displayText":"orem ipsum..."
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"orem ipsum..."
+                     },
+                     "improvementPlan":{
+                        "displayText":"orem ipsum..."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"!choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice1 || choice2",
+                     "risk":"MEDIUM_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"HIGH_RISK"
+                  }
+                ]
+             }
+          ]
+       }
+     ]
+  }
+ 
