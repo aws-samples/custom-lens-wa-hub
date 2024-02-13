@@ -23,4 +23,8 @@ CTO, Technical Leaders, Architects
 
 ## Contributing
 - [Ray Zaman](mailto:radzez@amazon.com), Principal Solutions Architect, AWS
+<<<<<<< HEAD
 - [Neela Kulkarni](mailto:kulneel@amazon.com), Solutions Architect, AWS
+=======
+- [Neela Kulkarni](mailto:kulneel@amazon.com), Solutions Architect, AWS
+>>>>>>> 36046f1 (readme revised)
