@@ -46,14 +46,15 @@
                   },
                   {
                      "condition":"default",
-                     "risk":"HIGH_RISK"
+                     "risk":"MEDIUM_RISK"
                   }
                ]
             },
             {
                "id":"overview02",
                "title":"Have all risks identified in the Well Architected Framework Review been mitigated?",
-               "description":"You can use the [AWS Well-Architected Tool](https://aws.amazon.com/well-architected-tool/) to identify and remediate risks in your workloads that map to the five pillars of the AWS Well-Architected Framework: operational excellence, security, reliability, performance efficiency, and cost optimization.",
+               "description":"You can use the AWS Well-Architected Tool to identify and remediate risks in your workloads that map to the five pillars of the AWS Well-Architected Framework: operational excellence, security, reliability, performance efficiency, and cost optimization.",
+               "url":"https://aws.amazon.com/well-architected-tool/",
                "choices":[
                   {
                      "id":"choice1",
@@ -88,7 +89,7 @@
                   },
                   {
                      "condition":"default",
-                     "risk":"HIGH_RISK"
+                     "risk":"MEDIUM_RISK"
                   }
                ]
             },
@@ -129,14 +130,14 @@
                   },
                   {
                      "condition":"default",
-                     "risk":"HIGH_RISK"
+                     "risk":"MEDIUM_RISK"
                   }
                ]
             },
             {
                "id":"overview04",
                "title":"Are you using Infrastructure as Code (IAC) to deploy workloads?",
-               "description":"Manual infrastructure management is time-consuming and prone to error—especially when you manage applications at scale. Infrastructure as code lets you define your infrastructure's desired state without including all the steps to get to that state. It automates infrastructure management so developers can focus on building and improving applications instead of managing environments. Organizations use infrastructure as code to control costs, reduce risks, and respond with speed to new business opportunities.",
+               "description":"Manual infrastructure management is time consuming and prone to errors, especially when you manage applications at scale. Infrastructure as code lets you define your infrastructure desired state without including all the steps to get to that state. It automates infrastructure management so developers can focus on building and improving applications instead of managing environments. Organizations use infrastructure as code to control costs, reduce risks, and respond with speed to new business opportunities.",
                "choices":[
                   {
                      "id":"choice1",
@@ -152,9 +153,9 @@
                      "id":"choice2",
                      "title":"No.",
                      "helpfulResource":{
-                        "displayText":"There are many [IAC tools](https://aws.amazon.com/what-is/iac/) available from AWS and AWS partners. Schedule some time with an AWS Solutions Architect to explore which tools are best for you."
-                     },
-                     "improvementPlan":{
+                        "displayText":"There are many IAC tools available from AWS and AWS partners. Schedule some time with an AWS Solutions Architect to explore which tools are best for you."},
+                     "url":"https://aws.amazon.com/what-is/iac/",
+                        "improvementPlan":{
                          "displayText":"-"
                      }
                   }
@@ -170,14 +171,15 @@
                   },
                   {
                      "condition":"default",
-                     "risk":"HIGH_RISK"
+                     "risk":"MEDIUM_RISK"
                   }
                ]
             },
             {
                "id":"overview05",
                "title":"Is service and feature parity for target regions known?",
-               "description":"AWS offers 33 regions to choose from. [There may be some variation in services and features from region to region](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/). It is important to understand any disparity before expansing to new regions.",
+               "description":"AWS offers 33 regions to choose from. There may be some variation in services and features from region to region. It is important to understand any disparity before expansing to new regions.",
+               "url":"https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/",
                "choices":[
                   {
                      "id":"choice1",
@@ -211,7 +213,7 @@
                   },
                   {
                      "condition":"default",
-                     "risk":"HIGH_RISK"
+                     "risk":"MEDIUM_RISK"
                   }
                ]
             },
@@ -252,14 +254,15 @@
                   },
                   {
                      "condition":"default",
-                     "risk":"HIGH_RISK"
+                     "risk":"MEDIUM_RISK"
                   }
                ]
             },
             {
                "id":"overview07",
                "title":"Is service capacity for target regions known?",
-               "description":"AWS offers 33 regions to choose from. [There may be some variation in capacity from region to region](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/). It is important to understand any large increases in capacity before expansing to new regions.",
+               "description":"AWS offers 33 regions to choose from. There may be some variation in capacity from region to region. It is important to understand any large increases in capacity before expansing to new regions.",
+               "url":"https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/",
                "choices":[
                   {
                      "id":"choice1",
@@ -293,7 +296,7 @@
                   },
                   {
                      "condition":"default",
-                     "risk":"HIGH_RISK"
+                     "risk":"MEDIUM_RISK"
                   }
                ]
             },
@@ -334,7 +337,7 @@
                   },
                   {
                      "condition":"default",
-                     "risk":"HIGH_RISK"
+                     "risk":"MEDIUM_RISK"
                   }
                ]
             },            {
@@ -374,7 +377,7 @@
                   },
                   {
                      "condition":"default",
-                     "risk":"HIGH_RISK"
+                     "risk":"MEDIUM_RISK"
                   }
                ]
             },
@@ -415,7 +418,7 @@
                   },
                   {
                      "condition":"default",
-                     "risk":"HIGH_RISK"
+                     "risk":"MEDIUM_RISK"
                   }
                 ]
              }
