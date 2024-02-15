@@ -96,7 +96,7 @@
             },
             {
                "id":"overview03",
-               "title":"Is the world architecture modernized?",
+               "title":"Is the architecture modernized?",
                "description":"Modernizing your applications helps you reduce costs, gain efficiencies, and make the most of your existing investments. It involves a multi-dimensional approach to adopt and use new technology, to deliver portfolio, application, and infrastructure value faster, and to position your organization to scale at an optimal price. After you optimize your applications, you must operate in that new, modernized model without disruption to simplify your business operations, architecture, and overall engineering practices.",
                "choices":[
                   {
@@ -140,7 +140,7 @@
             },
             {
                "id":"overview04",
-               "title":"Are you using Infrastructure as Code (IAC) to deploy workloads?",
+               "title":"Are you using Infrastructure as Code (IaC) to deploy workloads?",
                "description":"Manual infrastructure management is time consuming and prone to errors, especially when you manage applications at scale. Infrastructure as code lets you define your infrastructure desired state without including all the steps to get to that state. It automates infrastructure management so developers can focus on building and improving applications instead of managing environments. Organizations use infrastructure as code to control costs, reduce risks, and respond with speed to new business opportunities.",
                "choices":[
                   {
@@ -351,7 +351,7 @@
             },            {
                "id":"overview09",
                "title":"Is the cold start cost for target regions known?",
-               "description":"Pricng for AWS services can vary from region to region. It's important to understand cost differences and the cost to initially deploy system architecture.",
+               "description":"Pricing for AWS services can vary from region to region. It's important to understand cost differences and the cost to initially deploy system architecture.",
                "choices":[
                   {
                      "id":"choice1",
