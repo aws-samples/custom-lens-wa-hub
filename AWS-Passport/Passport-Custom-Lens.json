@@ -61,6 +61,9 @@
                      "helpfulResource":{
                         "displayText":"Risks have been identified and mitigated.",
                         "url":"https://aws.amazon.com/architecture/"
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   },
                   {
@@ -68,6 +71,9 @@
                      "title":"No.",
                      "helpfulResource":{
                         "displayText":"Schedule some time with an AWS Solutions Architect to review risks and explore mitigations."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   }
                ],
@@ -96,6 +102,9 @@
                      "title":"Yes.",
                      "helpfulResource":{
                         "displayText":"The workload is modernized."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   },
                   {
@@ -103,6 +112,9 @@
                      "title":"No.",
                      "helpfulResource":{
                         "displayText":"The workload is Not modernized. Consider employing a [strategy for modernizing applications in the AWS Cloud](https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-modernizing-applications/welcome.html)"
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   }
                ],
@@ -131,6 +143,9 @@
                      "title":"Yes.",
                      "helpfulResource":{
                         "displayText":"Infrastructure as code is used for all production deployments."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   },
                   {
@@ -138,6 +153,9 @@
                      "title":"No.",
                      "helpfulResource":{
                         "displayText":"There are many [IAC tools](https://aws.amazon.com/what-is/iac/) available from AWS and AWS partners. Schedule some time with an AWS Solutions Architect to explore which tools are best for you."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   }
                ],
@@ -166,6 +184,9 @@
                      "title":"Yes.",
                      "helpfulResource":{
                         "displayText":"Service and feature parity is known."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   },
                   {
@@ -173,6 +194,9 @@
                      "title":"No.",
                      "helpfulResource":{
                         "displayText":"Service and feature parity is not known. Schedule some time with an AWS Solutions Architect or AWS Technical Account Manager to explore service and feature availability in desired regions."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   }
                ],
@@ -201,6 +225,9 @@
                      "title":"Yes.",
                      "helpfulResource":{
                         "displayText":"Service and feature parity is known and has been accounted for in the target region architecture."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   },
                   {
@@ -208,6 +235,9 @@
                      "title":"No.",
                      "helpfulResource":{
                         "displayText":"There remains some ambiguity about how to identify or mitigate service or feature disparity. Schedule some time with an AWS Solutions Architect or AWS Technical Account Manager to explore service and feature availability in desired regions."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   }
                ],
@@ -236,6 +266,9 @@
                      "title":"Yes.",
                      "helpfulResource":{
                         "displayText":"Capacity is known."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   },
                   {
@@ -243,6 +276,9 @@
                      "title":"No.",
                      "helpfulResource":{
                         "displayText":"Capacity is NOT known. Schedule some time with an AWS Technical Account Manager to explore capacity in desired regions. AWS offers a variety of tools including [capcity reservation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/capacity-reservation-overview.html) to ensure needed capacity is available."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   }
                ],
@@ -271,6 +307,9 @@
                      "title":"Yes.",
                      "helpfulResource":{
                         "displayText":"Capacity is known and has been accounted for in the target region architecture."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   },
                   {
@@ -278,6 +317,9 @@
                      "title":"No.",
                      "helpfulResource":{
                         "displayText":"There remains some ambiguity about how to identify or mitigate capacity. Schedule some time with an AWS Technical Account Manager to explore capacity desired regions."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   }
                ],
@@ -305,6 +347,9 @@
                      "title":"Yes.",
                      "helpfulResource":{
                         "displayText":"Cold start costs are known."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   },
                   {
@@ -312,6 +357,9 @@
                      "title":"No.",
                      "helpfulResource":{
                         "displayText":"Cold start costs are NOT known. Schedule some time with an AWS Technical Account Manager to explore costs desired regions. AWS offers a variety of tools including the [AWS Pricing Calculator](https://calculator.aws/#/) to understand cold start cost."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   }
                ],
@@ -340,6 +388,9 @@
                      "title":"Yes.",
                      "helpfulResource":{
                         "displayText":"Cold start costs are known and has been accounted for in the target region."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   },
                   {
@@ -347,6 +398,9 @@
                      "title":"No.",
                      "helpfulResource":{
                         "displayText":"There remains some ambiguity around cols start costs. Schedule some time with an AWS Technical Account Manager to explore costs in desired regions."
+                     },
+                     "improvementPlan":{
+                         "displayText":"-"
                      }
                   }
                ],
