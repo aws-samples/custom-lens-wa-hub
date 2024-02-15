@@ -112,7 +112,8 @@
                      "id":"choice2",
                      "title":"No.",
                      "helpfulResource":{
-                        "displayText":"The workload is Not modernized. Consider employing a [strategy for modernizing applications in the AWS Cloud](https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-modernizing-applications/welcome.html)"
+                        "displayText":"The workload is Not modernized. Consider employing a strategy for modernizing applications in the AWS Cloud",
+                        "url":"https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-modernizing-applications/welcome.html"
                      },
                      "improvementPlan":{
                          "displayText":"-"
