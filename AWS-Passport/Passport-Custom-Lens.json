@@ -311,13 +311,13 @@
             {
                "id":"overview08",
                "title":"Is service capacity for target regions acceptable?",
-               "description":"There may be cases where capacity constraints will require changes in workload architecture. Make sure you understand and plan for any changes.",
+               "description":"There may be cases where capacity constraints will require changes in workload architecture or service quota incrases. Make sure you understand and plan for any changes.",
                "choices":[
                   {
                      "id":"choice1",
                      "title":"Yes.",
                      "helpfulResource":{
-                        "displayText":"Capacity is known and has been accounted for in the target region architecture."
+                        "displayText":"Capacity and service quotas are known and have been accounted for in the target region architecture."
                      },
                      "improvementPlan":{
                         "displayText":"Schedule some time with an AWS Technical Account Manager to explore capacity desired regions."
@@ -327,7 +327,7 @@
                      "id":"choice2",
                      "title":"No.",
                      "helpfulResource":{
-                        "displayText":"There remains some ambiguity about how to identify or mitigate capacity."
+                        "displayText":"There remains some ambiguity about how to identify or mitigate capacity or quota constraints."
                      },
                      "improvementPlan":{
                          "displayText":"Schedule some time with an AWS Technical Account Manager to explore capacity desired regions."
@@ -360,7 +360,7 @@
                         "displayText":"Cold start costs are known."
                      },
                      "improvementPlan":{
-                        "displayText":" Schedule some time with an AWS Technical Account Manager to explore costs desired regions. AWS offers a variety of tools including the AWS Pricing Calculator to understand cold start cost."
+                        "displayText":" Schedule some time with an AWS Technical Account Manager to explore costs in desired regions. AWS offers a variety of tools including the AWS Pricing Calculator to understand cold start cost."
                     }
                   },
                   {
@@ -400,7 +400,7 @@
                      "id":"choice1",
                      "title":"Yes.",
                      "helpfulResource":{
-                        "displayText":"Cold start costs are known and has been accounted for in the target region."
+                        "displayText":"Cold start costs are known and have been accounted for in the target region."
                      },
                      "improvementPlan":{
                         "displayText":"Schedule some time with an AWS Solutions Architect or AWS Technical Account Manager to explore cost optimization strategies.",
