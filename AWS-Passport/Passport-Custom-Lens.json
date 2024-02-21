@@ -1,0 +1,441 @@
+{
+    "name":"AWS Passport Custom Lens",
+    "schemaVersion":"2021-11-01",
+    "description":"ISVs that aspire to expand their business internationally face a unique set of challenges, including operational challenges, cultural adaptation, slow market entry, and failure to realize growth. AWS Passport provides guided access to AWS resources, programs, and partners to help address four key needs: 1/ Strategic: half day in person workshop to define a joint growth strategy, identify gaps, and achieve executive alignment, 2/ Technical: workshop to provide guidance on regulation and compliance, architectural best practices, 3/ Operational: referral to local resources for facilities, customer support, legal, HR, recruitment, sales, logistics, and other services, and 4/ Go-to-market: workshop to define a joint go-to-market strategy for pipeline development in the new target geography. This custom lens focuses on architectural best practices",
+    "pillars":[
+       {
+         "id":"overview",
+         "name":"Overview",
+         "questions":[
+            {
+               "id":"overview01",
+               "title":"Have you completed a Well Architected Framework Review for all workloads to be deployed to the new region?",
+               "description":"Carrying technical debt to new regions increases risk. It is recommended to ensure all workloads are well-architected before deployment to new regions.",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"All workloads are well architected."
+                    },
+                     "improvementPlan":{
+                        "displayText":"A Well Architected Framework Review should be conducted for all workloads to be deployed in new regions. Schedule some time with an AWS Solutions Architect to guide you through a Well Architected Framework Review.",
+                        "url":"https://aws.amazon.com/architecture/"
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"A Well Architected Framework Review has not been completed for all workloads to be deployed to new regions.",
+                        "url":"https://aws.amazon.com/architecture/"
+                     },
+                     "improvementPlan":{
+                        "displayText":"A Well Architected Framework Review should be conducted for all workloads to be deployed in new regions. Schedule some time with an AWS Solutions Architect to guide you through a Well Architected Framework Review.",
+                        "url":"https://aws.amazon.com/architecture/"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice2",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview02",
+               "title":"Have all risks identified in the Well Architected Framework Review been mitigated?",
+               "description":"You can use the AWS Well-Architected Tool to identify and remediate risks in your workloads that map to the five pillars of the AWS Well-Architected Framework: operational excellence, security, reliability, performance efficiency, and cost optimization.",
+               "url":"https://aws.amazon.com/well-architected-tool/",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Risks have been identified and mitigated."
+                     },
+                     "improvementPlan":{
+                         "displayText":"Schedule some time with an AWS Solutions Architect to review risks and explore mitigations."
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"Risks have not been identified or mitigated.",
+                        "url":"https://aws.amazon.com/architecture/"
+                     },
+                     "improvementPlan":{
+                         "displayText":"Schedule some time with an AWS Solutions Architect to review risks and explore mitigations."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice2",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview03",
+               "title":"Is the architecture modernized?",
+               "description":"Modernizing your applications helps you reduce costs, gain efficiencies, and make the most of your existing investments. It involves a multi-dimensional approach to adopt and use new technology, to deliver portfolio, application, and infrastructure value faster, and to position your organization to scale at an optimal price. After you optimize your applications, you must operate in that new, modernized model without disruption to simplify your business operations, architecture, and overall engineering practices.",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"The workload is modernized.",
+                        "url":"https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-modernizing-applications/welcome.html"
+                    },
+                     "improvementPlan":{
+                        "displayText":"Consider employing a strategy for modernizing applications in the AWS Cloud",
+                        "url":"https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-modernizing-applications/welcome.html"
+                    }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"The workload is not modernized."
+                     },
+                     "improvementPlan":{
+                         "displayText":"Consider employing a strategy for modernizing applications in the AWS Cloud",
+                         "url":"https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-modernizing-applications/welcome.html"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice2",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview04",
+               "title":"Are you using Infrastructure as Code (IaC) to deploy workloads?",
+               "description":"Manual infrastructure management is time consuming and prone to errors, especially when you manage applications at scale. Infrastructure as code lets you define your infrastructure desired state without including all the steps to get to that state. It automates infrastructure management so developers can focus on building and improving applications instead of managing environments. Organizations use infrastructure as code to control costs, reduce risks, and respond with speed to new business opportunities.",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Infrastructure as code is used for all production deployments."
+                     },
+                     "improvementPlan":{
+                         "displayText":"There are many IAC tools available from AWS and AWS partners. Schedule some time with an AWS Solutions Architect to explore which tools are best for you.",
+                         "url":"https://aws.amazon.com/what-is/iac/"
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"Manual methods are used for deployments.",
+                        "url":"https://aws.amazon.com/what-is/iac/"
+                    },
+                        "improvementPlan":{
+                         "displayText":"There are many IAC tools available from AWS and AWS partners. Schedule some time with an AWS Solutions Architect to explore which tools are best for you.",
+                         "url":"https://aws.amazon.com/what-is/iac/"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice2",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview05",
+               "title":"Is service and feature parity for target regions known?",
+               "description":"AWS offers 33 regions to choose from. There may be some variation in services and features from region to region. It is important to understand any disparity before expanding to new regions.",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Service and feature parity is known."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Schedule some time with an AWS Solutions Architect or AWS Technical Account Manager to explore service and feature availability in desired regions."
+                    }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"Service and feature parity is not known.",
+                        "url":"https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/"
+                     },
+                     "improvementPlan":{
+                         "displayText":"Schedule some time with an AWS Solutions Architect or AWS Technical Account Manager to explore service and feature availability in desired regions."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice2",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview06",
+               "title":"Is service and feature parity for target regions acceptable?",
+               "description":"There may be cases where variations in service and feature availability will require changes in workload architecture. Make sure you understand and plan for any changes.",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Service and feature parity is known and has been accounted for in the target region architecture."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Schedule some time with an AWS Solutions Architect or AWS Technical Account Manager to explore service and feature availability in desired regions."
+                    }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"There remains some ambiguity about how to identify or mitigate service or feature disparity."
+                     },
+                     "improvementPlan":{
+                         "displayText":"Schedule some time with an AWS Solutions Architect or AWS Technical Account Manager to explore service and feature availability in desired regions."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice2",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview07",
+               "title":"Is service capacity for target regions known?",
+               "description":"AWS offers 33 regions to choose from. There may be some variation in capacity from region to region. It is important to understand any large increases in capacity before expansing to new regions.",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Capacity is known."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Schedule some time with an AWS Technical Account Manager to explore capacity in desired regions. AWS offers a variety of tools including capcity reservation to ensure needed capacity is available.",
+                        "url":"https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/capacity-reservation-overview.html"
+                    }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"Capacity is NOT known."
+                     },
+                     "improvementPlan":{
+                         "displayText":"Schedule some time with an AWS Technical Account Manager to explore capacity in desired regions. AWS offers a variety of tools including capcity reservation to ensure needed capacity is available.",
+                         "url":"https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/capacity-reservation-overview.html"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice2",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview08",
+               "title":"Is service capacity for target regions acceptable?",
+               "description":"There may be cases where capacity constraints will require changes in workload architecture or service quota incrases. Make sure you understand and plan for any changes.",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Capacity and service quotas are known and have been accounted for in the target region architecture."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Schedule some time with an AWS Technical Account Manager to explore capacity desired regions."
+                    }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"There remains some ambiguity about how to identify or mitigate capacity or quota constraints."
+                     },
+                     "improvementPlan":{
+                         "displayText":"Schedule some time with an AWS Technical Account Manager to explore capacity desired regions."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice2",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },            {
+               "id":"overview09",
+               "title":"Is the cold start cost for target regions known?",
+               "description":"Pricing for AWS services can vary from region to region. It's important to understand cost differences and the cost to initially deploy system architecture.",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Cold start costs are known."
+                     },
+                     "improvementPlan":{
+                        "displayText":" Schedule some time with an AWS Technical Account Manager to explore costs in desired regions. AWS offers a variety of tools including the AWS Pricing Calculator to understand cold start cost."
+                    }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"Cold start costs are NOT known.",
+                        "url":"https://calculator.aws/#/"
+                     },
+                     "improvementPlan":{
+                         "displayText":" Schedule some time with an AWS Technical Account Manager to explore costs desired regions. AWS offers a variety of tools including the AWS Pricing Calculator to understand cold start cost.",
+                         "url":"https://calculator.aws/#/"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice2",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            },
+            {
+               "id":"overview10",
+               "title":"Is the cold start cost for target regions acceptable?",
+               "description":"There may be cases where cold start costs will require changes in workload architecture or service pricing. Make sure you understand and plan for any changes.",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Cold start costs are known and have been accounted for in the target region."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Schedule some time with an AWS Solutions Architect or AWS Technical Account Manager to explore cost optimization strategies.",
+                        "url":"https://aws.amazon.com/aws-cost-management/cost-optimization/"
+                    }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"There remains some ambiguity around cols start costs or costs are too high."
+                     },
+                     "improvementPlan":{
+                         "displayText":"Schedule some time with an AWS Solutions Architect or AWS Technical Account Manager to explore cost optimization strategies.",
+                         "url":"https://aws.amazon.com/aws-cost-management/cost-optimization/"
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice2",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+                ]
+             }
+          ]
+       }
+     ]
+  }
+ 
