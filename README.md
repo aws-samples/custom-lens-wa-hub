@@ -77,3 +77,6 @@ This library is licensed under the MIT-0 License. For more details, please take 
 
 ## :handshake: Contributing
 Please read our [contributing guidelines](CONTRIBUTING.md)
+
+## :star: Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=aws-samples/custom-lens-wa-hub&type=Date)](https://star-history.com/#aws-samples/custom-lens-wa-hub&Date)
