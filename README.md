@@ -1,5 +1,5 @@
 # AWS Custom Lens Hub
-![HitCount](https://hits.dwyl.com/aws-samples/custom-lens-wa-hub.svg?style=flat-square)
+<!--![HitCount](https://hits.dwyl.com/aws-samples/custom-lens-wa-hub.svg?style=flat-square)-->
 ![GitHub](https://img.shields.io/github/license/aws-samples/custom-lens-wa-hub?style=flat-square)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/aws-samples/custom-lens-wa-hub?style=flat-square)
 ![GitHub Repo stars](https://img.shields.io/github/stars/aws-samples/custom-lens-wa-hub?style=flat-square)
