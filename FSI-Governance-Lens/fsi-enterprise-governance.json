@@ -1,7 +1,7 @@
 {
-    "name":"FSI Enterprise Cloud Governance Lens for Regulated Organisations",
+    "name":"AWS Passport Custom Lens",
     "schemaVersion":"2021-11-01",
-    "description":"Improve your readiness to move your most critical and sensitive workloads to the Cloud, or assess existing workloads in the Cloud. This custom lens will guide you through a set of questions to evaluate you preparedness for an APRA, RBNZ, MAS, HKMA or PRA regulatory review. This lens provides general guidance and is not a replacement or commitment that all the required steps have been completed.",
+    "description":"ISVs that aspire to expand their business internationally face a unique set of challenges, including operational challenges, cultural adaptation, slow market entry, and failure to realize growth. AWS Passport provides guided access to AWS resources, programs, and partners to help address four key needs: 1/ Strategic: half day in person workshop to define a joint growth strategy, identify gaps, and achieve executive alignment, 2/ Technical: workshop to provide guidance on regulation and compliance, architectural best practices, 3/ Operational: referral to local resources for facilities, customer support, legal, HR, recruitment, sales, logistics, and other services, and 4/ Go-to-market: workshop to define a joint go-to-market strategy for pipeline development in the new target geography. This custom lens focuses on architectural best practices",
     "pillars":[
        {
          "id":"overview",

@@ -16,6 +16,7 @@ The custom lens surfaces risks associated with:
 * Region Feature Parity
 * Region Capacity
 * Cold Start Costs
+* Data residency, data sovereignty, and general compliance
 
 ## Intended Audience
 
@@ -24,3 +25,4 @@ CTO, Technical Leaders, Architects
 ## Contributing
 - [Ray Zaman](mailto:radzez@amazon.com), Principal Solutions Architect, AWS
 - [Neela Kulkarni](mailto:kulneel@amazon.com), Solutions Architect, AWS
+- [Viswanath Tej Nagabhatla](mailto:tejnagab@amazon.com), Senior Solutions Architect, AWS

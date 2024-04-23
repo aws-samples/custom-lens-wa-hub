@@ -411,7 +411,7 @@
                      "id":"choice2",
                      "title":"No.",
                      "helpfulResource":{
-                        "displayText":"There remains some ambiguity around cols start costs or costs are too high."
+                        "displayText":"There remains some ambiguity around cold start costs or costs are too high."
                      },
                      "improvementPlan":{
                          "displayText":"Schedule some time with an AWS Solutions Architect or AWS Technical Account Manager to explore cost optimization strategies.",
@@ -433,7 +433,48 @@
                      "risk":"MEDIUM_RISK"
                   }
                 ]
-             }
+             },
+             {
+               "id":"overview11",
+               "title":"Are the data residency, data sovereignty, and general compliance considerations known?",
+               "description":"There may be cases where the data residency, data sovereignty, and general compliance considerations may impact your workload's architecture in a new AWS region.",
+               "choices":[
+                  {
+                     "id":"choice1",
+                     "title":"Yes.",
+                     "helpfulResource":{
+                        "displayText":"Data residency, data sovereignty, and general compliance considerations are known and have been accounted for in the target region architecture."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Schedule time to work with your internal compliance and regulatory teams to define the high-level requirements in desired regions and reach out to the AWS account team for further assistance."
+                     }
+                  },
+                  {
+                     "id":"choice2",
+                     "title":"No.",
+                     "helpfulResource":{
+                        "displayText":"There remains some ambiguity around the data residency, data sovereignty, and general compliance considerations."
+                     },
+                     "improvementPlan":{
+                        "displayText":"Schedule time to work with your internal compliance and regulatory teams to define the high-level requirements in desired regions and reach out to the AWS account team for further assistance."
+                     }
+                  }
+               ],
+               "riskRules":[
+                  {
+                     "condition":"choice1",
+                     "risk":"NO_RISK"
+                  },
+                  {
+                     "condition":"choice2",
+                     "risk":"HIGH_RISK"
+                  },
+                  {
+                     "condition":"default",
+                     "risk":"MEDIUM_RISK"
+                  }
+               ]
+            }
           ]
        }
      ]
