@@ -52,6 +52,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [FSI Governance Lens](/FSI-Governance-Lens/)
 * [Container Build Lens](/Container-Build-Lens/)
 * [Intelligent Document Processing Lens](/IDP-custom-lens/)
+* [AWS Passport Lens](/AWS-Passport/)
 
 ## :bookmark: Whitepaper
 Whitepaper to describe candidate new Custom Lenses, which you can reference as following:
