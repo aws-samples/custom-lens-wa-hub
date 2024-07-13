@@ -66,10 +66,10 @@ After your Well-Architected custom lens is published, you can define a workload 
 Input your workload information, and select the Well-Architected custom lens you just published. 
 ![image 6](https://github.com/aws-samples/custom-lens-wa-hub/assets/17841922/aa84a735-15e9-4852-b600-e9d67cf5c9d9)
 
-Choose Continue reviewing for the just published DynamoDB Well-Architected custom lens.
+Choose Continue reviewing for the just published Glue Well-Architected custom lens.
 ![image 7](https://github.com/aws-samples/custom-lens-wa-hub/assets/17841922/69affe5c-9ec6-4f6b-8ab5-b97e43c2ae2c)
 
-Now you can review your DynamoDB workload with DynamoDB Well-Architected Custom Lens.
+Now you can review your Glue workload with Glue Well-Architected Custom Lens.
 ![image 8](https://github.com/aws-samples/custom-lens-wa-hub/assets/17841922/3ebf536b-e453-4688-b15a-fbcfb7bb97d7)
 
 ## Intended Audience
