@@ -47,10 +47,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 
 ### Custom Lens for AWS Solutions
 * [Streaming Media Lens](/Streaming-Media-Lens/)
-* [SAP Lens](https://github.com/aws-samples/aws-sap-lens-well-architected/)
 * [Operational Readiness Review](/ORR-Lens/)
-* [FSI Governance Lens](/FSI-Governance-Lens/)
-* [Container Build Lens](/Container-Build-Lens/)
 * [Intelligent Document Processing Lens](/IDP-custom-lens/)
 * [AWS Passport Lens](/AWS-Passport/)
 
