@@ -1922,6 +1922,87 @@
                             "risk": "MEDIUM_RISK"
                         }
                     ]
+                },
+                {
+                    "id": "DDBREL8",
+                    "title": "How do you integrate DynamoDB with other services?",
+                    "description": "How do you integrate DynamoDB with other services?",
+                    "choices": [
+                        {
+                            "id": "DDBREL8_1",
+                            "title": "Use DynamoDB zero-ETL integrations only.",
+                            "helpfulResource": {
+                                "displayText": "Amazon DynamoDB zero-ETL integration with services such as Amazon OpenSearch Service and Amazon Redshift provides a scalable, reliable, low-configuration option for moving data to other services.",
+                                "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/OtherServices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon DynamoDB zero-ETL integration with services such as Amazon OpenSearch Service and Amazon Redshift provides a scalable, reliable, low-configuration option for moving data to other services.",
+                                "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/OtherServices.html"
+                            }
+                        },
+                        {
+                            "id": "DDBREL8_2",
+                            "title": "Use DynamoDB zero-ETL integrations for all integrations that have a supported target service.",
+                            "helpfulResource": {
+                                "displayText": "Zero-ETL integrations are not available for every possible target service, but should be used when they are available.",
+                                "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/OtherServices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Zero-ETL integrations are not available for every possible target service, but should be used when they are available.",
+                                "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/OtherServices.html"
+                            }
+                        },
+                        {
+                            "id": "DDBREL8_3",
+                            "title": "Build and use custom integrations only when zero-ETL integrations are not available for a desired target.",
+                            "helpfulResource": {
+                                "displayText": "A custom integration can be the right choice if there isn't a managed integration available for a specific target service.",
+                                "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/streamsmain.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "A custom integration can be the right choice if there isn't a managed integration available for a specific target service.",
+                                "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/OtherServices.html"
+                            }
+                        },
+                        {
+                            "id": "DDBREL8_4",
+                            "title": "Use DynamoDB Streams, Kinesis Data Streams, or incremental export to S3 as the source for custom integrations.",
+                            "helpfulResource": {
+                                "displayText": "Streams and export to S3 are out-of-band and do not put load on a table. Using incremental exports reduces costs and avoids processing duplicate items.",
+                                "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/OtherServices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Streams and export to S3 are out-of-band and do not put load on a table. Using incremental exports reduces costs and avoids processing duplicate items.",
+                                "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/OtherServices.html"
+                            }
+                        },
+                        {
+                            "id": "DDBREL8_5",
+                            "title": "Do NOT use table scans or full exports to S3 when building custom integrations.",
+                            "helpfulResource": {
+                                "displayText": "Scans put read pressure on a table, increasing the chance for throttling. Full exports increase costs and introduce the need to process duplicate items.",
+                                "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/OtherServices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Scans put read pressure on a table, increasing the chance for throttling. Full exports increase costs and introduce the need to process duplicate items.",
+                                "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/OtherServices.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "DDBREL8_1 || (DDBREL8_2 && DDBREL8_3 && DDBREL8_4 && DDBREL8_5)",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "!DDBREL8_5",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
                 }
             ]
         },
