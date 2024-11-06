@@ -1,0 +1,2043 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "SaaS Journey Business Lens",
+    "description": "Guidance for companies building a new SaaS product, transitioning to a SaaS business model from traditional software and technology delivery models, or optimizing an existing SaaS solution.",
+    "_version": "1.0",
+    "_release_date": "2024-09-20",
+    "pillars": [
+        {
+            "id": "GEN",
+            "name": "General",
+            "questions": [
+                {
+                    "id": "gen1",
+                    "title": "GEN 1 Identify your company profile",
+                    "description": "Not all companies fit perfectly into one category and your company can be a blend of a few profiles. The following is a list of hypothetical profiles that represent the typical starting points for companies moving to SaaS.",
+                    "choices": [
+                        {
+                            "id": "prof1",
+                            "title": "Toe Dipper (T) - Transforming existing product with paced time-to-market",
+                            "helpfulResource": {
+                                "displayText": "Represents a large and conservative company running a legacy product that is hindered by an aging technology or process, but has a captive, lucrative market. This company represents mature businesses that often have a firm grasp on a market that generates significant revenue for business, but have not demanded SaaS aggressively for industry, regulation, geographic, or cultural reasons.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/company-profiles.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "These companies see the potential of SaaS and are looking for ways to adopt SaaS for some or all of their target market. However, they also need to consider how to dedicate focus to SaaS without disrupting their existing business. The tendency with these companies is to search for a path to SaaS that will reduce their risks and allow them to experiment a SaaS offering."
+                            }
+                        },
+                        {
+                            "id": "prof2",
+                            "title": "Survivor Tech (S) - Transforming existing product with urgent time-to-market",
+                            "helpfulResource": {
+                                "displayText": "Represents the companies that have an existing product but are seeing their market being eroded by competitors that have used price, agility, and/or cost efficiency to capture mindshare.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/company-profiles.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For these companies, is seen largely as a survival tactic that will enable them to more effectively compete and retain market share. The urgency and depth of their transformation tends to be much higher and more focused than others that are weighing their SaaS options."
+                            }
+                        },
+                        {
+                            "id": "prof3",
+                            "title": "Unicorn (U) - New product with urgent time-to-market",
+                            "helpfulResource": {
+                                "displayText": "Represents the greenfield SaaS companies – with a SaaS solution developed from scratch. Their journey is often more challenging because the data and outlook tends to be more speculative.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/company-profiles.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The journey can get more clouded as the funding pressures may lead to compromises in operational and business efficiency that can ultimately slow the path to rapid growth."
+                            }
+                        },
+                        {
+                            "id": "prof4",
+                            "title": "New Horizon (N) - New product with paced time-to-market",
+                            "helpfulResource": {
+                                "displayText": "This company is identifying and exploring some new market segment that is not addressed by their existing offering. The new SaaS offering that targets a set of features and experience that is not part of the current offering (or is offered in a model that is substantially different than any existing products).",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/company-profiles.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "This journey is about carefully defining the path to SaaS without impacting or blurring the lines with their existing customers. The focus for this profile is often more on defining a clear new segment to target and assessing the growth and monetization of the opportunity."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "gen2",
+                    "title": "GEN 2 How much experience do you have building and operating SaaS within your organization today?",
+                    "description": "Gauge your familiarity with SaaS concepts, development, and operations. This allows you to be prepared and providing necessary supports to maximize the chances of success.",
+                    "choices": [
+                        {
+                            "id": "lvl1",
+                            "title": "Expert level experience across the organization",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "lvl2",
+                            "title": "Advanced experience in both business and technical areas",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "lvl3",
+                            "title": "Mixed experience, some strengths and some gaps in both business and technology areas",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "lvl4",
+                            "title": "Mixed experience, strengths in business areas but gaps in technology areas",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "lvl5",
+                            "title": "Mixed experience, strengths in technology areas but gaps in business areas",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "lvl6",
+                            "title": "Low or no experience in both business and technology areas",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "gen3",
+                    "title": "GEN 3 Who are the key stakeholders and executive sponsor currently involved in your SaaS initiative?",
+                    "description": "Different key participants should involve in different phases. For example, in the planning phase, you may feel only the executives, product managers and financial leaders are the best candidates, but technical and operations teams will also have important insights that can guide how you look at tiering the offering for different customer segments. Each key area of your company should be included in this exercise.",
+                    "choices": [
+                        {
+                            "id": "ppl1",
+                            "title": "Executive Leadership ",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "ppl2",
+                            "title": "Marketing / Sales",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "ppl3",
+                            "title": "Finance",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "ppl4",
+                            "title": "Product Management",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "ppl5",
+                            "title": "Development / Engineering",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "ppl6",
+                            "title": "Operation",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "ppl7",
+                            "title": "Customer Success",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "ppl8",
+                            "title": "Customer Support",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        },
+                        {
+                            "id": "ppl9",
+                            "title": "Others",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PHASE1",
+            "name": "Phase 1 Business Planning",
+            "questions": [
+                {
+                    "id": "plan1",
+                    "title": "PLAN 1 Assess the SaaS Opportunity",
+                    "description": "Determine if the SaaS delivery model is well-aligned with customer needs and market dynamics. Assess whether this is a valid opportunity and define the vision for what you are targeting with your SaaS offering. Suggested participants: Executives, product managers and financial leaders. Also Technical and operational teams.",
+                    "choices": [
+                        {
+                            "id": "assess1",
+                            "title": "What are your compelling factors for adopting SaaS?",
+                            "helpfulResource": {
+                                "displayText": "Will these compelling factors offset the cost and effort of transforming to a SaaS delivery model?",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities.html#assess-the-opportunity"
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/N/U"
+                            }
+                        },
+                        {
+                            "id": "assess2",
+                            "title": "How many of your existing customers are expected to adopt your SaaS offering?",
+                            "helpfulResource": {
+                                "displayText": "SaaS can be leveraged to reach new buyer profiles within the existing customer base, as well as net new customers. What's your strategy about it?",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/U/S"
+                            }
+                        },
+                        {
+                            "id": "assess3",
+                            "title": "Are SaaS competitors encroaching on your market?",
+                            "helpfulResource": {
+                                "displayText": "Especially for SurvivorTech, you should determine how quickly you can go-to-market and deploy with a product that will enable the company to compete and generate appropriate level of revenue.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/factoring-in-your-company-profile.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "U/N/S"
+                            }
+                        },
+                        {
+                            "id": "assess4",
+                            "title": "Are there new segments of the market that are best targeted by a SaaS offering?",
+                            "helpfulResource": {
+                                "displayText": "Especially for New Horizon, using this opportunity to assess the trade-offs and determine the incremental costs and company shifts that might accompany the new SaaS offering.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/factoring-in-your-company-profile.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/N/U"
+                            }
+                        },
+                        {
+                            "id": "assess5",
+                            "title": "How long will it take your company to complete the transition to a SaaS model?",
+                            "helpfulResource": {
+                                "displayText": "Especially for SurvivorTech and Unicorn, they have urgent time to market than Toe Dipper and New Horizon which have relatively abundant fundings.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/factoring-in-your-company-profile.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S"
+                            }
+                        },
+                        {
+                            "id": "assess6",
+                            "title": "What is the risk of not pursuing the SaaS initiative?",
+                            "helpfulResource": {
+                                "displayText": "Assess the losses of not adopting the new delivery model.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/U/S"
+                            }
+                        },
+                        {
+                            "id": "assess7",
+                            "title": "Do you have a time-bound plan to launch the solution for General Availability?",
+                            "helpfulResource": {
+                                "displayText": "Check your urgent go-to-market. Different company profiles potentially have diffirent urgency.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/company-profiles.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/T/S/U"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "plan2",
+                    "title": "PLAN 2 Define Target Segments",
+                    "description": "Create a profile of the different types of customers about your potential buyers. Likely to come out a list of the target segments accompanied by a breakdown of the experience, cost, and value proposition for each segment.",
+                    "choices": [
+                        {
+                            "id": "seg1",
+                            "title": "What are the customer segments that you are targeting?",
+                            "helpfulResource": {
+                                "displayText": "Create a profile of the different types of customers that this SaaS product would target to learn as much about your buyer as possible.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities.html#define-target-segments"
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/N"
+                            }
+                        },
+                        {
+                            "id": "seg2",
+                            "title": "Are there any specific operational, performance, or compliance profiles of the different customers in this market?",
+                            "helpfulResource": {
+                                "displayText": "Evaluate the requirements with collected data for upcoming stages to unfold.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S"
+                            }
+                        },
+                        {
+                            "id": "seg3",
+                            "title": "Will this offering be available to all customers or limited to new customers?",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/U/S"
+                            }
+                        },
+                        {
+                            "id": "seg4",
+                            "title": "Tell us about your customers, who are the buyers and users?",
+                            "helpfulResource": {
+                                "displayText": "For examples: Clear customer segmentation (B2B, B2C) or global expansion or more customer acquisition channels.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/N/U/S"
+                            }
+                        },
+                        {
+                            "id": "seg5",
+                            "title": "How many customers do you intend to acquire in year-one of General Availability?",
+                            "helpfulResource": {
+                                "displayText": "Avoid creating multi-year plans that could cause the company to miss a window of opportunity.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/U"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "plan3",
+                    "title": "PLAN 3 Evaluate the Market and Customer Strategy",
+                    "description": "Define your approach to market and sell your SaaS offering to new customers and the incremental staffing or costs that might be associated with taking your new offering to market.",
+                    "choices": [
+                        {
+                            "id": "cus1",
+                            "title": "What channels will be used to access new customers?",
+                            "helpfulResource": {
+                                "displayText": "Customer acquisition channels for examples: advertising, digital marketing (SEO, PPC, social media), strategic alliances or integrations, community building...etc.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S/N"
+                            }
+                        },
+                        {
+                            "id": "cus2",
+                            "title": "How will you differentiate your offering from competitors?",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "U/S"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                  "id": "plan4",
+                  "title": "PLAN 4 Model Market / Segment Growth",
+                  "description": "Create projections over a 1-2-year window for your customer growth for each of the target customer segments.",
+                  "choices": [
+                      {
+                          "id": "mod1",
+                          "title": "What data do you have to validate market acceptance and readiness for this offering?",
+                          "helpfulResource": {
+                              "displayText": "Quantitative indicators can help you analyze the health and performance of the SaaS business over time. Eg. Daily Active User(DAU), Annual Recurring Revenue/Monthly Recurring Revenue(ARR/MRR), upsell ratio, churn rate, Average Revenue Per User(ARPU)...etc.",
+                              "url": "https://www.cloudzero.com/blog/saas-metrics/"
+                          },
+                          "improvementPlan": {
+                              "displayText": "T/N"
+                          }
+                      },
+                      {
+                          "id": "mod2",
+                          "title": "How many customers do you expect to add in the first year?",
+                          "helpfulResource": {
+                              "displayText": "A forecast of net customer sales projection over a 1-2-year window that provides a view of how the ramp of new customers will unfold. This will provide the backbone for modeling the anticipated financial growth of the company.",
+                              "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities.html#model-marketsegment-growth"
+                          },
+                          "improvementPlan": {
+                              "displayText": "T/N/U"
+                          }
+                      },
+                      {
+                          "id": "mod3",
+                          "title": "How many existing customers do you expect to move into the new model?",
+                          "helpfulResource": {
+                              "displayText": "For ToeDipper and SurvivorTech. Usually Unicorn and New Horizon develop new customer segments.",
+                              "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/company-profiles.html"
+                          },
+                          "improvementPlan": {
+                              "displayText": "T/S"
+                          }
+                      }
+                  ],
+                  "riskRules": [
+                      {
+                          "condition": "default",
+                          "risk": "NO_RISK"
+                      }
+                  ]
+              },
+                {
+                    "id": "plan5",
+                    "title": "PLAN 5 Finance",
+                    "description": "Develop a target monetization model for the customer segments, project the target revenue, growth, and retention for each of your segments.",
+                    "choices": [
+                        {
+                            "id": "fin1",
+                            "title": "What is the monetization model for the new offering?",
+                            "helpfulResource": {
+                                "displayText": "Help you yield the projected revenue over time. E.g. Subscription-Based Pricing, Usage-Based Pricing, Tiered Pricing, Value-Based Pricing, Competitive Pricing...etc.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S"
+                            }
+                        },
+                        {
+                            "id": "fin2",
+                            "title": "What is the target MRR for this offering (across segments)?",
+                            "helpfulResource": {
+                                "displayText": "Forecast your expected revenue by key SaaS revenue metrics.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S"
+                            }
+                        },
+                        {
+                            "id": "fin3",
+                            "title": "What would the price need to be (for each segment) to be competitive?",
+                            "helpfulResource": {
+                                "displayText": "Compare the pricing model and customer growth strategy with your competitors.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/N/U/S"
+                            }
+                        },
+                        {
+                            "id": "fin4",
+                            "title": "What is your projected cash flow (for the first year) after launching your SaaS offering?",
+                            "helpfulResource": {
+                                "displayText": "Does the mix of new customers and price points yield enough revenue to justify moving forward with the SaaS initiative?",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/U/S"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "plan6",
+                    "title": "PLAN 6 Sales and Marketing Transformation",
+                    "description": "Define new guidlines and compensation programs since the resources will be transitioned into SaaS roles. For sales, develop a profile for the transformation and determine the incremental costs potentially associated with these changes. For marketing, develop a strategy to build a brand for your SaaS offering and a profile for the marketing company.",
+                    "choices": [
+                        {
+                            "id": "trans1",
+                            "title": "What is different about selling SaaS?",
+                            "helpfulResource": {
+                                "displayText": "Understand the SaaS mindsets that are different from traditional software. For examples: focusing more on Customer Lifetime Value(CLV) and customer success.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/U/N"
+                            }
+                        },
+                        {
+                            "id": "trans2",
+                            "title": "How will your sales organization need to transform to support a SaaS model?",
+                            "helpfulResource": {
+                                "displayText": "E.g. Build a 7x24 support center, hire customer success managers or educational department to educate customers for the benefits and features...etc.",
+                                "url": "https://explore.skillbuilder.aws/learn/course/external/view/elearning/439/saas-business-fundamentals"
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S"
+                            }
+                        },
+                        {
+                            "id": "trans3",
+                            "title": "What costs will be associated with sales activities to these customers?",
+                            "helpfulResource": {
+                                "displayText": "For examples: buy new sales tools, budgets for customer relationship building, materials to support sales efforts, commission and incentives...etc.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S"
+                            }
+                        },
+                        {
+                            "id": "trans4",
+                            "title": "Do sales teams have the skills that align with a SaaS delivery model?",
+                            "helpfulResource": {
+                                "displayText": "A sales representative doesn't just pitch features, he/she will need consultative selling skills with business acumen, technical proficiency and a focus on ongoing customer success.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/T/U/S"
+                            }
+                        },
+                        {
+                            "id": "trans5",
+                            "title": "How will you build a brand for your SaaS offering?",
+                            "helpfulResource": {
+                                "displayText": "You can define a strong value proposition, utilize influencer partnerships, attend and sponsor industry events, account-based marketing, create consistent visual like logo, color scheme...etc.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/U"
+                            }
+                        },
+                        {
+                            "id": "trans6",
+                            "title": "What costs will be associated with marketing activities to these customers?",
+                            "helpfulResource": {
+                                "displayText": "List and define your marketing budget items to estimate the costs. E.g. Content creation and distribution, MarTech tools, Events, Public relations and influencer marketing...etc.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/U"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "plan7",
+                    "title": "PLAN 7 Define Operational / Staffing Resources",
+                    "description": "Identify any incremental costs associated with operations footprints for you SaaS business. Also assess the business and technical skills of your team and develop a training or hiring plan to fill in any skill or industry gaps.",
+                    "choices": [
+                        {
+                            "id": "res1",
+                            "title": "What incremental expenses would be required to support this model?",
+                            "helpfulResource": {
+                                "displayText": "For examples, cloud infra costs, customer support and success costs, compliance regulation costs...etc",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/N/S"
+                            }
+                        },
+                        {
+                            "id": "res2",
+                            "title": "What is the AWS cost model for operating the system (cost per tenant)?",
+                            "helpfulResource": {
+                                "displayText": "Measuring and attributing costs in a multi-tenant environment begins with having a solid strategy for attributing consumption to tenants.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/expenditure-awareness.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S/U"
+                            }
+                        },
+                        {
+                            "id": "res3",
+                            "title": "Will new staffing resources be required to build/manage your DevOps pipeline?",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S/U"
+                            }
+                        },
+                        {
+                            "id": "res4",
+                            "title": "Will new development resources for this effort?",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/N/S/U"
+                            }
+                        },
+                        {
+                            "id": "res5",
+                            "title": "What costs are associated with staffing and hosting this solution?",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/N/S"
+                            }
+                        },
+                        {
+                            "id": "res6",
+                            "title": "Do you have enough SaaS expertise to build the SaaS solution?",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S/U"
+                            }
+                        },
+                        {
+                            "id": "res7",
+                            "title": "Do you have the right development and operational tools to develop, test, and deploy SaaS?",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "S/N/U"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PHASE2",
+            "name": "Phase 2 Product Strategy and Roadmap",
+            "questions": [
+                {
+                    "id": "rmap1",
+                    "title": "ROADMAP 1 Developing user and buyer personas",
+                    "description": "You should come out a strategy that goes beyond the first deliverable (at all the elements eg. onboarding experience, security, agility...etc) without going as far as creating a multi-year plan. A key component of this effort is a clear picture of the target customers and market. Suggested participants: Product managers will be at the center of the effort. Technical and operational teams. Sales and marketing.",
+                    "choices": [
+                        {
+                            "id": "per1",
+                            "title": "What key attributes would distinguish the different types of customers that would use your product?",
+                            "helpfulResource": {
+                                "displayText": "Define your customer segments. For examples, an enterprise and a small business segment may need a different level of SLA and security control.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S/N/U"
+                            }
+                        },
+                        {
+                            "id": "per2",
+                            "title": "What is the range of market segments (e.g. entry level, mid-tier, enterprise) are you targeting with this offering?",
+                            "helpfulResource": {
+                                "displayText": "Usually a different market segment will require a separate strategic approach that balances product features, pricing, and customer needs.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S/N/U"
+                            }
+                        },
+                        {
+                            "id": "per3",
+                            "title": "How do the needs and expectations each of these customer profiles change based on their segment?",
+                            "helpfulResource": {
+                                "displayText": "Customers can be segmented based on the industry or sector they operate (e.g., healthcare, retail, finance, education, technology). Or by their geographic location, such as region, country, or city. Even with their behaviors or usage patterns, such as feature adoption, product engagement, purchase frequency. Define clear profiles for each can help you plan better of product visions and roadmaps.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S/U"
+                            }
+                        },
+                        {
+                            "id": "per4",
+                            "title": "Is the user persona different than the buyer persona?",
+                            "helpfulResource": {
+                                "displayText": "User persona usaully focuses on the technical features, maintenance, and integration of the product, whereas the buyer persona might be a CIO or department head looking for a strategic tool for business transformation.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S/N/U"
+                            }
+                        },
+                        {
+                            "id": "per5",
+                            "title": "Are there ways you need to differentiate the personas from the ones that are currently being targeted by your other offerings?",
+                            "helpfulResource": {
+                                "displayText": "Especially for New Horizon, the new offering tends to broaden the customer base by a new segemnt. You can conduct a user research i.e. interviews or surveys to analyze their requirements.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/N/S"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "rmap2",
+                    "title": "ROADMAP 2 Collecting Customer Data",
+                    "description": "Collect data from target customers to get better insights into their product and service requirements. The goal here is to not rely purely on instinct or legacy insights, and focus on directly engaging your customers to assess their view, interests and expectations for a SaaS offering in your domain.",
+                    "choices": [
+                        {
+                            "id": "data1",
+                            "title": "How can you identify and reach customers you may not engage today?",
+                            "helpfulResource": {
+                                "displayText": "You may expand into new geographic markets or explore new industry niches that have specific needs your product could address but aren't currently part of your target audience. Or reaching out the customers through partnership ecosystems.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/T/S"
+                            }
+                        },
+                        {
+                            "id": "data2",
+                            "title": "What are the key areas you want to target for collecting data, have you considered conducting a survey?",
+                            "helpfulResource": {
+                                "displayText": "For examples, their security, isolation, and multi-tenant readiness..etc. You can also analyze competitors or trends in your industry to anticipate where customer needs are heading.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S"
+                            }
+                        },
+                        {
+                            "id": "data3",
+                            "title": "What mechanism can you use to gather input from your potential customers?",
+                            "helpfulResource": {
+                                "displayText": "For examples, you can conduct survey, gather sales and marketing feedbacks, analyze marketing metrics (e.g., leads generated, conversion rates, customer acquisition costs) or conduct regular feature usage reports, A/B testings...etc.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S/U"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "rmap3",
+                    "title": "ROADMAP 3 Defining Onboarding Experience",
+                    "description": "A mapping of the onboarding experience that identifies the business, operational, system, and accounting constructs that must be configured and launched to introduce a new tenant into your system. Determine if this mechanism will be engaged directly by customers and/or some internally triggered process.",
+                    "choices": [
+                        {
+                            "id": "onb1",
+                            "title": "How will customers sign up for your service?",
+                            "helpfulResource": {
+                                "displayText": "For examples: in-app on-boarding after sign up, invite-only sign up, self-service sign-up, custom or sales-assist sign up...etc",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/T/S/U"
+                            }
+                        },
+                        {
+                            "id": "onb2",
+                            "title": "How frequently do you expect new customers to be onboarding to your system?",
+                            "helpfulResource": {
+                                "displayText": "Considering self-service if the frequency is high.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/U"
+                            }
+                        },
+                        {
+                            "id": "onb3",
+                            "title": "For an internal process, what internal mechanisms will need to be automated to reduce friction in your onboarding process?",
+                            "helpfulResource": {
+                                "displayText": "Do you have many non-integrated backend systems requires manual intervention for the onboarding process, does that impact your agility?",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S"
+                            }
+                        },
+                        {
+                            "id": "onb4",
+                            "title": "Will you support a demo mode for your product that enables customer to run a trial experience?",
+                            "helpfulResource": {
+                                "displayText": "An efficient way to educate customers and understand the value propositions your offering provides.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/T/S"
+                            }
+                        },
+                        {
+                            "id": "onb5",
+                            "title": "How will you capture metrics and data that will enable you to assess the efficiency of your onboarding flow?",
+                            "helpfulResource": {
+                                "displayText": "How will you collect the data to identify the friction points and manage the user experience. Some metrics for examples: the onboarding completion rate, customer's time-to-value and the activation rate from newly signed up users, drop-off point and funnel analysis can be ",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/T"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "rmap4",
+                    "title": "ROADMAP 4 Profiling Security, Compliance, Geographic and Data Protection Requirements",
+                    "description": "You not only need to know what these requirements are, but how they might vary from one type of customer to the other. Determine how these considerations might influence the way you build, eg. how you approach the multi-tenant aspects.",
+                    "choices": [
+                        {
+                            "id": "geo1",
+                            "title": "Do your customers have specific compliance, geographic, or regulatory requirements that will influence the SaaS application?",
+                            "helpfulResource": {
+                                "displayText": "For examples, EU has strict ESG and data privacy regulations, FSI industry usually requires PCI DSS compliance and follow the local laws/regulations supervisor commissions asked.  ",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/T/S/U"
+                            }
+                        },
+                        {
+                            "id": "geo2",
+                            "title": "Are the regulatory and compliance requirements constrained specific areas of your application, or is this a global requirement?",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S/U"
+                            }
+                        },
+                        {
+                            "id": "geo3",
+                            "title": "What is motivating your need for geographic reach (market segments, performance, compliance, availability, etc.)?",
+                            "helpfulResource": {
+                                "displayText": "The consideration especially for Toe Dipper. Avoid under-investing in a more complete product strategy and/or treating your plan as more of an experiment when you have more time and resources than others.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S"
+                            }
+                        },
+                        {
+                            "id": "geo4",
+                            "title": "How are your potential competitors addressing these requirements, how will you do?",
+                            "helpfulResource": {
+                                "displayText": "Especially for Survivor Tech to think, they need to build a strategy that goes beyond current offering in order to compete against emerging offerings in the market.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S"
+                            }
+                        },
+                        {
+                            "id": "geo5",
+                            "title": "How will addressing these requirements effect the cost and operational efficiency of your offering?",
+                            "helpfulResource": {
+                                "displayText": "A roadmap addresses all these requirements may lead to longer lead time but stronger competency. Clarifying the trade-offs helps you plan the roadmap.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S"
+                            }
+                        },
+                        {
+                            "id": "geo6",
+                            "title": "How will onboarding be supported if you plan a multi-geography model?",
+                            "helpfulResource": {
+                                "displayText": "Supporting cross-region onboarding needs to address various factors such as localization, regulatory compliance, time zone differences, cultural nuances, and infrastructure scalability. Build a effective onboarding strategy for it.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S"
+                            }
+                        },
+                        {
+                            "id": "geo7",
+                            "title": "Can you offer more dedicated standalone solutions to customers that are less willing to operate in a shared infra model?",
+                            "helpfulResource": {
+                                "displayText": "Is this a short-term or long-term goal? How are you going to mitigate the gaps if you can only shared infra model?",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S/U"
+                            }
+                        },
+                        {
+                            "id": "geo8",
+                            "title": "Do you need to factor these considerations into your initial release or can this come later in your product lifecycle?",
+                            "helpfulResource": {
+                                "displayText": "Especially for Unicorn, it should avoid short-circuiting the product strategy process, as it may undermine the company success when growth curve kicks in.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S/U/N"
+                            }
+                        },
+                        {
+                            "id": "geo9",
+                            "title": "Has your company outlined a specific GDPR policy that defines your general requirements and addressing the compliance of GDPR?",
+                            "helpfulResource": {
+                                "displayText": "GDPR imposes obligations onto organizations anywhere, so long as they target or collect data related to people in the EU.",
+                                "url": "https://gdpr.eu/what-is-gdpr/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S/U"
+                            }
+                        },
+                        {
+                            "id": "geo10",
+                            "title": "What is the profile of your data and are there specific types of data that will require a greater level of isolation?",
+                            "helpfulResource": {
+                                "displayText": "This will determine how you plan your infrastructure out, how you decide your tenant-isolation model...etc.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/T/S"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "rmap5",
+                    "title": "ROADMAP 5 Defining Agility Goals",
+                    "description": "A clear description of the tenets and metrics that your company will be targeting as it builds out the operational, company, and business footprint of your SaaS environment. Define specific metrics that will assess cycle time, up time, and a host of other well-defined metrics that are used to assess SaaS agility.",
+                    "choices": [
+                        {
+                            "id": "goal1",
+                            "title": "Are there specific agility goals you are targeting for your SaaS business?",
+                            "helpfulResource": {
+                                "displayText": "For examples, reduce time-to-market by 3 months, increase release frequency to weekly, optimize resource allocation for 20% better cost-efficiency.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S"
+                            }
+                        },
+                        {
+                            "id": "goal2",
+                            "title": "What metrics and tooling will you put in place to bring broad visibility and measurability to your agility goals?",
+                            "helpfulResource": {
+                                "displayText": "For examples, use Trello or Jira for project management to track time-to-market goal, or use PagerDuty to shorten incident response time.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/T/S"
+                            }
+                        },
+                        {
+                            "id": "goal3",
+                            "title": "Which structural and cultural changes will be needed in your company to promote and prioritize agility?",
+                            "helpfulResource": {
+                                "displayText": "Eg. Adopting Scrum, Kanban or any agile framework, create cross-functional teams to break up silos, focus on outcomes rather than hours worked. ",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "rmap6",
+                    "title": "ROADMAP 6 Developing a Packaging / Pricing Profile",
+                    "description": "Understanding common monetization mechanisms and design a well-defined pricing strategy that aligns with market expectations and customer value perception. This also helps you better achieve financial forecasting and resource allocation.",
+                    "choices": [
+                        {
+                            "id": "price1",
+                            "title": "What are the common mechanisms that are used to monetize solutions in your domain/market?",
+                            "helpfulResource": {
+                                "displayText": "Know your domain and their common pricing models.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S/U"
+                            }
+                        },
+                        {
+                            "id": "price2",
+                            "title": "Will your domain support a subscription-based billing model, if so, what unit(s) of consumption best for your target customers?",
+                            "helpfulResource": {
+                                "displayText": "Know your domain and their subscription-based billing models.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/T/S/U"
+                            }
+                        },
+                        {
+                            "id": "price3",
+                            "title": "Will you use features as a way to distinguish different tiers of your offering?",
+                            "helpfulResource": {
+                                "displayText": "If so, remember to develop a feature flag or feature toggle mechanism in your saas offering",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/T/S/U"
+                            }
+                        },
+                        {
+                            "id": "price4",
+                            "title": "What data can you use to identify the boundaries that will be most effective at distinguishing tenant tiers?",
+                            "helpfulResource": {
+                                "displayText": "Eg. you can design the tiering boundary by usage patterns (daily activ eusers, active users per account),transaction volumes (api calls, data size stored), customer characteristics (company size, industry vertical, geo location).",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S/U/T"
+                            }
+                        },
+                        {
+                            "id": "price5",
+                            "title": "Will you need to support a separate tier for high-value tenants that impose unique demands on your solution?",
+                            "helpfulResource": {
+                                "displayText": "You can design custom contract terms or private pricing for high-value tenants or provide advanced SLA or scability for examples.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "rmap7",
+                    "title": "ROADMAP 7 Portfolio Management",
+                    "description": "Optimize resource allocation across your product portfolio and align the product mix with your business strategy if you have multiple offerings in your portfolio.",
+                    "choices": [
+                        {
+                            "id": "porf1",
+                            "title": "How can you evaluate the performance and identify the risks and opportunities of each product?",
+                            "helpfulResource": {
+                                "displayText": "The goal is to help you prioritize the high-value products and make data-driven decisions.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S"
+                            }
+                        },
+                        {
+                            "id": "porf2",
+                            "title": "Which high-value products should be prioritized?",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S"
+                            }
+                        },
+                        {
+                            "id": "porf3",
+                            "title": "How resources should be allocated across the portfolio?",
+                            "helpfulResource": {
+                                "displayText": "Especially for New Horizon. It is better forming new teams that can operate separately from the rest of the company as if creating a new line of business.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "N/S"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PHASE3",
+            "name": "PHASE 3 Minimum Viable Service (MVS)",
+            "questions": [
+                {
+                    "id": "mvs1",
+                    "title": "MVS 1 Defining the Target Early Adopters for the MVS release",
+                    "description": "Define an MVS release with clear definition and expectations. Suggested participants: Product teams and PM. Leadership team also plays a key role to ensure the delivery reaching the promised state.",
+                    "choices": [
+                        {
+                            "id": "adop1",
+                            "title": "Which customer personas (from the broader list of personas) are you targeting with this solution?",
+                            "helpfulResource": {
+                                "displayText": "The Minimum Viable Service (MVS) is the first version of your offering(in each run), with just enough features to effectively deploy the product and attract early adopters to provision their footprint in your offering before selling it successfully to the mass market.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/phase-3-minimum-viable-service-mvs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "U/T/S/N"
+                            }
+                        },
+                        {
+                            "id": "adop2",
+                            "title": "Will you be supporting a product tiered model and which tiers will be included in this MVS experience?",
+                            "helpfulResource": {
+                                "displayText": "As phase 2 mentioned, if you have a tiered model, considering the priority of implementations in this release.",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/U/S/N"
+                            }
+                        },
+                        {
+                            "id": "adop3",
+                            "title": "Are there enough customers in this target set of personas to drive the adoption you will need to drive the platform forward?",
+                            "helpfulResource": {
+                                "displayText": "Can the MVS target a subset of the target users/tiers that will ultimately need to be supported by the system? Will narrowing to a smaller set of users/tiers undermine the success of your system?",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities-2.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "U/S/N"
+                            }
+                        },
+                        {
+                            "id": "adop4",
+                            "title": "Are there concerns about how this offering will be positioned against any other offerings that might be in your portfolio?",
+                            "helpfulResource": {
+                                "displayText": "Especially for New Horizon, are there overlapped customer segments or features in existing portfolio?",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S/N"
+                            }
+                        },
+                        {
+                            "id": "adop5",
+                            "title": "Are there clear boundaries between the offerings that can limit any confusion for the market?",
+                            "helpfulResource": {
+                                "displayText": "-",
+                                "url": ""
+                            },
+                            "improvementPlan": {
+                                "displayText": "T/S/N"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default",
+                            "risk": "NO_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "mvs2",
+                    "title": "MVS 2 Outlining the Minimum Product Functionality",
+                    "description": "Based on the tiers/personas you target, capture high-level notions of key product features you will need to include for this offering.",
+                    "choices": [
+                      {
+                        "id": "func1",
+                        "title": "What are the primary product features of this SaaS service offering?",
+                        "helpfulResource": {
+                          "displayText": "What key features can really atract the early adopters?",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/T/N/U"
+                        }
+                      },
+                      {
+                        "id": "func2",
+                        "title": "Which features (if any) will be used to draw clear boundaries between personas/tiers?",
+                        "helpfulResource": {
+                          "displayText": "This enables you to communicate a more compelling value proposition to each persona or tier, increasing the likelihood of conversion and customer satisfaction.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "U/T/N"
+                        }
+                      },
+                      {
+                        "id": "func3",
+                        "title": "Will customers impose any specific requirements around security and data protection?",
+                        "helpfulResource": {
+                          "displayText": "Note that all the moving parts of the customer, operational, and company experience need to be included in this offering.",
+                          "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/phase-3-minimum-viable-service-mvs.html"
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/U/T/N"
+                        }
+                      },
+                      {
+                        "id": "func4",
+                        "title": "What will be the registration process for introducing new tenants into the system?",
+                        "helpfulResource": {
+                          "displayText": "SaaS applications rely on a frictionless model for introducing new tenants into their environment. This often requires the orchestration of a number of components to successfully provision and configure all the elements needed to create a new tenant.",
+                          "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant-onboarding.html"
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/T/N"
+                        }
+                      },
+                      {
+                        "id": "func5",
+                        "title": "Will you offer a demo or free trial version of your product?",
+                        "helpfulResource": {
+                          "displayText": " Free trials give you a chance to engage with potential customers, showcase your product's value, and provide support. This interaction period allows you to build relationships, address concerns, and demonstrate your product's benefits, increasing the likelihood of conversion.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/U/T/N"
+                        }
+                      },
+                      {
+                        "id": "func6",
+                        "title": "Do both delivery and business teams understand and are aligned with what you are planning to deliver?",
+                        "helpfulResource": {
+                          "displayText": "Cross-functional collaboration is one of the most critical elements for a successful MVS.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/T/U/N"
+                        }
+                      }
+                    ],
+                    "riskRules": [
+                      {
+                        "condition": "default",
+                        "risk": "NO_RISK"
+                      }
+                    ]
+                },
+                {
+                    "id": "mvs3",
+                    "title": "MVS 3 Outlining the Minimum Operational Experience",
+                    "description": "Define a well-defined view of the operational experience that includes tooling, processes, and insights that will be needed to support this new environment. The emphasis here is on automating and streamlining the operational experience to lay the foundation for rapid innovation, agility, and market response.",
+                    "choices": [
+                      {
+                        "id": "ope1",
+                        "title": "What are the non-functional attributes of the service offering?",
+                        "helpfulResource": {
+                          "displayText": "In phase2, we defined security, compliance, geographic and data protection requirements. Asides from these, to achieve agility goal and frictionless onboarding you might also need to build the moving parts.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "T/S"
+                        }
+                      },
+                      {
+                        "id": "ope2",
+                        "title": "What are the metrics (if any) will you be collecting to gather insights into the consumption and activity of your customers?",
+                        "helpfulResource": {
+                          "displayText": "Remember to instrument your application to collect these business metrics.",
+                          "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant-insights.html"
+                        },
+                        "improvementPlan": {
+                          "displayText": "T/N/S"
+                        }
+                      },
+                      {
+                        "id": "ope3",
+                        "title": "Are you expecting to have a zero-downtime policy for this service?",
+                        "helpfulResource": {
+                          "displayText": "To achieve reliability, a system must have a well-planned foundation and monitoring in place, with mechanisms for handling changes in demand or requirements. The system should be designed to detect failure and automatically heal itself.",
+                          "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/resources-2.html"
+                        },
+                        "improvementPlan": {
+                          "displayText": "T/N/U"
+                        }
+                      },
+                      {
+                        "id": "ope4",
+                        "title": "What strategy or mechanisms will be in place to migrate changes to data representation without incurring downtime?",
+                        "helpfulResource": {
+                          "displayText": "For examples: blue/green deployments, or use a database that supports schema changes without downtime, or adopt CQRS pattern.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "T/N/S"
+                        }
+                      },
+                      {
+                        "id": "ope5",
+                        "title": "What tools and processes will be used by your operational team to proactively detect and manage tenant issues?",
+                        "helpfulResource": {
+                          "displayText": "Check the operational excellence pillar which includes the ability to run and monitor systems to deliver business value and to continually improve supporting procedures.",
+                          "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/resources.html"
+                        },
+                        "improvementPlan": {
+                          "displayText": "T/S"
+                        }
+                      },
+                      {
+                        "id": "ope6",
+                        "title": "How will customer report issues? Will this be an interactive experience?",
+                        "helpfulResource": {
+                          "displayText": "A clear, efficient issue reporting system directly impacts customer satisfaction. Also, an interactive system can help you gather more detailed information about problems, leading to faster and more effective improvements.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "T/S/N"
+                        }
+                      }
+                    ],
+                    "riskRules": [
+                      {
+                        "condition": "default",
+                        "risk": "NO_RISK"
+                      }
+                    ]
+                },
+                {
+                    "id": "mvs4",
+                    "title": "MVS 4 Target Feedback Experience",
+                    "description": "Determine how you will (if you plan to) incorporate potential customers into your MVS development lifecycle. Capture their feedbacks on your MVS.",
+                    "choices": [
+                      {
+                        "id": "feed1",
+                        "title": "What data will be used to assess the customer's perspective on this new service offering?",
+                        "helpfulResource": {
+                          "displayText": "This is not necessarily a feature you are building, it can also be e.g.interviews, forms, real-time, or offline. Determine the data you will collect and analyze from the early adopters.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/T/N"
+                        }
+                      },
+                      {
+                        "id": "feed2",
+                        "title": "Will targeted customers be enabled to provide feedback during the development process?",
+                        "helpfulResource": {
+                          "displayText": "-",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/T/U"
+                        }
+                      },
+                      {
+                        "id": "feed3",
+                        "title": "Will you be able to engage customers from segments you may not target today?",
+                        "helpfulResource": {
+                          "displayText": "By new advertising channels relevant to desired segments, or hosting events and webinars, or offer freemium to lower entry barriers.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/T/N/U"
+                        }
+                      }
+                    ],
+                    "riskRules": [
+                      {
+                        "condition": "default",
+                        "risk": "NO_RISK"
+                      }
+                    ]
+                },
+                {
+                    "id": "mvs5",
+                    "title": "MVS 5 Defining Core SaaS Tenets for the MVS",
+                    "description": "Define a list of the tenets that outline precisely which goals you are targeting for the business, operational, and agility attributes of this minimum viable service. The challenge here is to have your sights on general SaaS best practices while still acknowledging that you may not target the longer-term experience for this MVS. Being clear about this is essential to defining where the bar is.",
+                    "choices": [
+                      {
+                        "id": "tenet1",
+                        "title": "What near-term trade-offs will be made to get to market at a faster pace?",
+                        "helpfulResource": {
+                          "displayText": "MVS requires you to balance the long-term goals of the business with the near-term realities. Find the collection of capabilities that represent values to your customers without committing to a delivery schedule that may cause you to miss your window of opportunity.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/T/N/U"
+                        }
+                      },
+                      {
+                        "id": "tenet2",
+                        "title": "How will these trade-offs impact the customer experience and long-term viability of your solution?",
+                        "helpfulResource": {
+                          "displayText": "Unicorns and Survivor Tech are often driven to acquire customers and generate revenue that they too will short-circuit the product strategy process. If you have left tiering, compliance, and many of the other factors outlined here out of your vision, you may find yourself struggling when the growth curve kicks in.",
+                          "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/factoring-in-your-company-profiles-1.html"
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/T"
+                        }
+                      }
+                    ],
+                    "riskRules": [
+                      {
+                        "condition": "default",
+                        "risk": "NO_RISK"
+                      }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PHASE4",
+            "name": "PHASE 4 Launch/GTM Strategy",
+            "questions": [
+                {
+                    "id": "gtm1",
+                    "title": "GTM1 Update customer journey maps",
+                    "description": "Define a GTM strategy to measure whether customers are adopting the product and realizing its value. Suggested participants: Leaders from sales, marketing, customer success and finance.",
+                    "choices": [
+                      {
+                        "id": "jour1",
+                        "title": "What assumptions made during earlier phases (Phase2&3) about buyer and user behaviors have been validated or debunked?",
+                        "helpfulResource": {
+                          "displayText": "Prior to bringing a new offer to-market, you should apply lessons-learned in the MVS phase to revise buyer and user personas, update customer journey maps. Especially for New Horizon.",
+                          "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities-3.html"
+                        },
+                        "improvementPlan": {
+                          "displayText": "N/T"
+                        }
+                      },
+                      {
+                        "id": "jour2",
+                        "title": "How does Sales interact with Customer Success to ensure effective onboarding?",
+                        "helpfulResource": {
+                          "displayText": "At this stage, you also created a data-driven customer retention/expansion strategy, and a service model (e.g. customer success) that can scale in-parallel with customer acquisition.",
+                          "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/entry-point-3.html"
+                        },
+                        "improvementPlan": {
+                          "displayText": "U/S/T"
+                        }
+                      },
+                      {
+                        "id": "jour3",
+                        "title": "As above, what are the team-level responsibilities during each stage of the customer acquisition process?",
+                        "helpfulResource": {
+                          "displayText": "Ensure appropriate resources are in place to drive low-friction onboarding experiences, accelerate customer time-to-value (TTV) and execute expansion and renewal sales plays.",
+                          "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/entry-point-3.html"
+                        },
+                        "improvementPlan": {
+                          "displayText": "U/S/T"
+                        }
+                      },
+                      {
+                        "id": "jour4",
+                        "title": "What are the measurable indicators that tell you if a customer is using the product efficiently when onboarding?",
+                        "helpfulResource": {
+                          "displayText": "Common customer onboarding metrics like retention rate, engagement rate, completion rate, time-to-value, feature adoption rate, customer lifetime value...etc.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "N/U/T"
+                        }
+                      },
+                      {
+                        "id": "jour5",
+                        "title": "What attributes are common to your customers who struggled to realize value during the MVS phase?",
+                        "helpfulResource": {
+                          "displayText": "For examples: low technical acumen or overly complex feature set that can obscure the core value proposition and confuse users. The lessons can help us to create a better customer experience at GA launch.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "U/N"
+                        }
+                      },
+                      {
+                        "id": "jour6",
+                        "title": "What company skill gaps do you need to address (train, outsource, hire) prior to launch?",
+                        "helpfulResource": {
+                          "displayText": "For examples, does sales know their goals and compensation program? Is customer success able to support the onboarding process and technical troubleshooting?",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "U/S/T"
+                        }
+                      }
+                    ],
+                    "riskRules": [
+                      {
+                        "condition": "default",
+                        "risk": "NO_RISK"
+                      }
+                    ]
+                },
+                {
+                    "id": "gtm2",
+                    "title": "GTM2 Establish commercial and operational frameworks for new customer acquisition",
+                    "description": "Determine the skills, structure and processes required to efficiently acquire and stand new customers up, and align these requirements with a cost model.",
+                    "choices": [
+                      {
+                        "id": "acqui1",
+                        "title": "What is the customer acquisition (revenue) target for your first year in-market and What is your year-one margin expectations?",
+                        "helpfulResource": {
+                          "displayText": "Establish year-one forecasts. To successfully bring a SaaS solution to-market, it is necessary to align commercial forecasts and budgets.",
+                          "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities-3.html"
+                        },
+                        "improvementPlan": {
+                          "displayText": "N/S/T"
+                        }
+                      },
+                      {
+                        "id": "acqui2",
+                        "title": "How many new customers do you need to onboard (per tier) on an annual, quarterly, monthly basis, to meet your revenue target?",
+                        "helpfulResource": {
+                          "displayText": "Establish different levels of granularity for forecasts. Divide these targets among your portfolio of complete offers, which are the packaged (bundled and/or tiered) features and services that you will bring to market, and segmentation model.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "N/S/T"
+                        }
+                      },
+                      {
+                        "id": "acqui3",
+                        "title": "How much will it cost you to onboard these customers?",
+                        "helpfulResource": {
+                          "displayText": "Establish budgets for operating costs.",
+                          "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities-3.html#establish-commercial-and-operational-frameworks-for-new-customer-acquisition"
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/N"
+                        }
+                      },
+                      {
+                        "id": "acqui4",
+                        "title": "What is the budget for CAC(customer acquisition costs), inclusive of comprehensive sales and marketing costs?",
+                        "helpfulResource": {
+                          "displayText": "CAC = (Total Marketing and Sales Expenses) / (Number of New Customers Acquired). Establish budgets for sales and marketing-related customer acquisition costs (CAC).",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/N"
+                        }
+                      },
+                      {
+                        "id": "acqui5",
+                        "title": "How long will it take to recover CAC for a new customer?",
+                        "helpfulResource": {
+                          "displayText": "Assess the profitability and align it with investor expectations.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/N"
+                        }
+                      },
+                      {
+                        "id": "acqui6",
+                        "title": "How much flexibility do you have with your discount strategy?",
+                        "helpfulResource": {
+                          "displayText": "Establish boundaries related to discounting to ensure that deal-making variables align with your profitability requirements. Some common discount strategies like First-Month/First-Year Discounts, Volume-Based Discounts (Tiered Pricing), Early-Bird Discount...etc.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/N/T"
+                        }
+                      },
+                      {
+                        "id": "acqui7",
+                        "title": "How and when will you deprecate the legacy solution, how will you structure revenue quotas for the legacy model as its sunsets?",
+                        "helpfulResource": {
+                          "displayText": "For ToeDipper,it is common for investors taking profits from the legacy operation, as opposed to investing in real transformation. For SurvivorTech, they can leverage the legacy relationships to buy time, while moving quickly to deploy SaaS solutions.",
+                          "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/phase-4-launch-go-to-market.html#factoring-in-your-company-profiles-2"
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/T"
+                        }
+                      },
+                      {
+                        "id": "acqui8",
+                        "title": "Do your investors and executive leaders understand the economic ramifications of transforming to a SaaS model?",
+                        "helpfulResource": {
+                          "displayText": "For ToeDipper and SurvivorTech especially, investors and company founders should understand the necessary investment required upfront and how long it will take to reach profitability (the SaaS Fish model).",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "U/S"
+                        }
+                      }
+                    ],
+                    "riskRules": [
+                      {
+                        "condition": "default",
+                        "risk": "NO_RISK"
+                      }
+                    ]
+                },
+                {
+                    "id": "gtm3",
+                    "title": "GTM3 Set customer retention and expansion objectives",
+                    "description": "Forecast retained revenue (net of churn) and expansion revenue (up-sell, cross-sell). Set budgets for funding customer expansion costs (CEC) and customer retention costs (CRC).  Forecast customer lifetime value (CLTV) to include plans for customer retention and growth, over time.",
+                    "choices": [
+                      {
+                        "id": "reten1",
+                        "title": "What is an acceptable annual churn (or retained revenue) and expansion revenue (up-sell, cross-sell)?",
+                        "helpfulResource": {
+                          "displayText": "This exercise also enables you to align sales quotas with end-of-year annual recurring revenue (ARR) targets.",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "N"
+                        }
+                      },
+                      {
+                        "id": "reten2",
+                        "title": "What are your CEC(customer expansion costs) and CRC(customer retention costs) budgets?",
+                        "helpfulResource": {
+                          "displayText": "These budgets are frequently used to fund Customer Success or Renewals/Post-sales teams, in SaaS companies.",
+                          "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities-3.html#set-customer-retention-and-expansion-objectives"
+                        },
+                        "improvementPlan": {
+                          "displayText": "N/T/S"
+                        }
+                      },
+                      {
+                        "id": "reten3",
+                        "title": "Are you migrating customers to SaaS from an on-premises legacy solution, when and what are the economic impacts?",
+                        "helpfulResource": {
+                          "displayText": "For ToeDipper and SurvivorTech transformation scenarios. Do you provide digital-touch, human-touch, or a dynamic combination of human and digital support for their migration?",
+                          "url": ""
+                        },
+                        "improvementPlan": {
+                          "displayText": "S/U"
+                        }
+                      }
+                    ],
+                    "riskRules": [
+                      {
+                        "condition": "default",
+                        "risk": "NO_RISK"
+                      }
+                ]
+            },
+            {
+                "id": "gtm4",
+                "title": "GTM4 Determine appropriate Sales motions and compensation incentives",
+                "description": "Determine a relevant distribution model for new customer acquisition, typically some combination of pre-sales, inside sales, field sales, and partner/channel sales resources. Build sales motions (e.g. acquire, renew, expand) that qualify opportunities with rigor and align appropriate sales processes with offer complexity.",
+                "choices": [
+                  {
+                    "id": "sales1",
+                    "title": "How many sales representatives can you dedicate to the SaaS model given CAC budgets?",
+                    "helpfulResource": {
+                      "displayText": "CAC usually includes all expenses related to marketing and advertising efforts, as well as sales and promotional activities.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "N/T/S"
+                    }
+                  },
+                  {
+                    "id": "sales2",
+                    "title": "What information do you need to discover during the pre-sales process to qualify likely-to-succeed prospects?",
+                    "helpfulResource": {
+                      "displayText": "Qualify prospects is essential to focus resources on those most likely to succeed and convert into paying customers.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "U/S"
+                    }
+                  },
+                  {
+                    "id": "sales3",
+                    "title": "Who will own renewals and expansion revenue quotas?",
+                    "helpfulResource": {
+                      "displayText": "Customer success or renewal teams often take ownership of ensuring customers renew their contracts, helping to reduce churn and drive customer retention. Sales and account management team can also be involved.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "N/S"
+                    }
+                  },
+                  {
+                    "id": "sales4",
+                    "title": "How complex are your negotiations, do they require a high-touch consultative approach, can you simplify the process?",
+                    "helpfulResource": {
+                      "displayText": "Pair complex, high-ACV(annual contract value) SaaS offers with higher-touch, consultative processes, and pair less-complex, low-ACV solutions with a lower-touch, product-led, try-and-buy processes.",
+                      "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities-3.html#establish-commercial-and-operational-frameworks-for-new-customer-acquisition"
+                    },
+                    "improvementPlan": {
+                      "displayText": "N/S"
+                    }
+                  },
+                  {
+                    "id": "sales5",
+                    "title": "Are your sales teams able to articulate competitive value proposition which underpin your pricing and services?",
+                    "helpfulResource": {
+                      "displayText": "Do you have researchers for competitors battle cards or competitor analysis that helps clarify competitive value proposition.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "N/S"
+                    }
+                  },
+                  {
+                    "id": "sales6",
+                    "title": "What is your strategy to land a customer, and expand the relationship?",
+                    "helpfulResource": {
+                      "displayText": "Sales can leverage prescriptive, personalized sales tactics to align buyers with solutions, and are willing to walk away from deals that are unlikely to result in renewal. Margins are protected by sales playbooks, which include acceptable discount parameters.",
+                      "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities-3.html#determine-appropriate-sales-motions-and-compensation-incentives"
+                    },
+                    "improvementPlan": {
+                      "displayText": "N/S"
+                    }
+                  },
+                  {
+                    "id": "sales7",
+                    "title": "What role will channel partners play in your sales model?",
+                    "helpfulResource": {
+                      "displayText": "Channel partners can bring local market knowledge and cultural insights, allowing you to access new regions, industries, or customer segments. It's a significant role especially if you're looking to scale your business, enter new markets, or expand your reach.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "N/S"
+                    }
+                  },
+                  {
+                    "id": "sales8",
+                    "title": "What compensation incentives can you offer our Sales representatives to reward product adoption and retention?",
+                    "helpfulResource": {
+                      "displayText": "ToeDipper should assign Sales representatives who are passionate about innovation to the SaaS offer, shine light on their success internally, and compensate them for landing customers who reach product adoption milestones.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "N/S"
+                    }
+                  }
+                ],
+                "riskRules": [
+                  {
+                    "condition": "default",
+                    "risk": "NO_RISK"
+                  }
+                ]
+            },
+            {
+                "id": "gtm5",
+                "title": "GTM5 Establish Marketing operations",
+                "description": "Plan marketing operations to span the entire customer lifecycle, covering new customer acquisition and expansion opportunities. You should leverage an account-based marketing (ABM) framework and/or in-product marketing resources to trigger low-friction, point-in-time campaigns, targeted to specific industry firmographics, buyer personas, and user patterns.",
+                "choices": [
+                  {
+                    "id": "mkt1",
+                    "title": "What are the demand generation, lead generation, customer conversion funnel ratios you need to achieve for year-one?",
+                    "helpfulResource": {
+                      "displayText": "Demand generation drives awareness and interest, whereas lead generation focuses on converting traffic into leads. At customer conversion stage, leads are nurtured and ready for a final decision.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "S"
+                    }
+                  },
+                  {
+                    "id": "mkt2",
+                    "title": "What technology can you introduce to make lead qualification and lead scoring processes efficient?",
+                    "helpfulResource": {
+                      "displayText": "Efficient lead managements are key to Unicorns, to ensure that Sales representatives are focused on closing highly-qualified opportunities. Tools like CRM systems, Intent Data Platforms, Analytics and Reporting Tools...etc. can accelerate the process.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "S"
+                    }
+                  },
+                  {
+                    "id": "mkt3",
+                    "title": "Can you publish content (videos, user manuals, blogs, FAQs) to educate customers and reduce friction during the sales process?",
+                    "helpfulResource": {
+                      "displayText": "Providing value upfront through educational content helps build trust and establish authority. Customers can better understand their problems, your solution, and make informed decisions.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "N/S"
+                    }
+                  },
+                  {
+                    "id": "mkt4",
+                    "title": "What focus groups should you use to analyze the effectiveness and profitability of your marketing campaigns?",
+                    "helpfulResource": {
+                      "displayText": "Offer-level? Analyze how specific offers (e.g., discounts, promotions, bundles) perform in terms of conversions, revenue, and profitability. Vintage/time-based? Analyze the performance over specific time periods. Or Channel-based? Analyze different marketing channels (e.g., social media, email marketing, paid search, SEO, etc.).",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "N"
+                    }
+                  }
+                ],
+                "riskRules": [
+                  {
+                    "condition": "default",
+                    "risk": "NO_RISK"
+                  }
+                ]
+            },
+            {
+                "id": "gtm6",
+                "title": "GTM6 Define Customer Success (CS) charter and services",
+                "description": "Typically adoption or renewal, less-commonly, expansion, and a handshake process between sales and CS, preceding the onboarding of new customer. CS teams should create success plans aligned with desirable customer outcomes.",
+                "choices": [
+                  {
+                    "id": "cs1",
+                    "title": "What is the primary aim for the CS team?",
+                    "helpfulResource": {
+                      "displayText": "Is Expansion revenue? Product adoption? Or Renewal revenue? Reduce churn? Improve Time to Value (TTV)? Raise customer sentiment?",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "S/N"
+                    }
+                  },
+                  {
+                    "id": "cs2",
+                    "title": "Can you monetize the CS team by selling it as a premium service?",
+                    "helpfulResource": {
+                      "displayText": "Will CS carry a revenue quota for expansion or retention?",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "S"
+                    }
+                  },
+                  {
+                    "id": "cs3",
+                    "title": "Who owns the customer relationship with the deciding party, during renewal?",
+                    "helpfulResource": {
+                      "displayText": "Usaully an effective CS function serves to increase CLTV and reduce churn. CS teams earn customer trust and ensure effective product adoption by delivering results against the promises made by a SaaS brand.",
+                      "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities-3.html#define-customer-success-cs-charter-and-services"
+                    },
+                    "improvementPlan": {
+                      "displayText": "S"
+                    }
+                  },
+                  {
+                    "id": "cs4",
+                    "title": "Will you align CS representatives with customers based on tier, industry or vertical expertise?",
+                    "helpfulResource": {
+                      "displayText": "Define segmentation for CS team.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "S"
+                    }
+                  },
+                  {
+                    "id": "cs5",
+                    "title": "How many customers can each CS representative manage effectively on an annual basis?",
+                    "helpfulResource": {
+                      "displayText": "Considering the questions given your CEC/CRC budgets and the CS monetization model.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "S/N"
+                    }
+                  }
+                ],
+                "riskRules": [
+                  {
+                    "condition": "default",
+                    "risk": "NO_RISK"
+                  }
+                ]
+            },
+            {
+                "id": "gtm7",
+                "title": "GTM7 Launch and Product Communication Strategy",
+                "description": "Define the scope of your product updates and its impact on your customers, including metrics that will help you measure effectiveness and ongoing improvements of your communications plan.",
+                "choices": [
+                  {
+                    "id": "laun1",
+                    "title": "What is important for your target audience, what type of information do they need or expect from you?",
+                    "helpfulResource": {
+                      "displayText": "Define your target internal and external audiences, beyond technical users or admins, including business leaders and other stakeholders. Development of content types that would resonate with each target audience the most, and multiple communication channels to reach out them.",
+                      "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-journey-framework/key-activities-3.html#launch-and-product-communication-strategy"
+                    },
+                    "improvementPlan": {
+                      "displayText": "S/N"
+                    }
+                  },
+                  {
+                    "id": "laun2",
+                    "title": "Do some of your customers need additional support to communicate the product updates and train their employees?",
+                    "helpfulResource": {
+                      "displayText": "How are your customers impacted by the product release or transformation? Plan proper supports and communications in advance.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "U/S"
+                    }
+                  },
+                  {
+                    "id": "laun3",
+                    "title": "What should be the timing of this communication, how much time do your customers need to adopt new features/releases?",
+                    "helpfulResource": {
+                      "displayText": "-",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "U/S"
+                    }
+                  },
+                  {
+                    "id": "laun4",
+                    "title": "Do you have a mechanism for your customers to provide feedback about product communications and suggest new features?",
+                    "helpfulResource": {
+                      "displayText": " In-product communication and knowledge management tools are important levers for UnicornExpress.com, and will reduce the need for high-touch human support.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "U/N"
+                    }
+                  },
+                  {
+                    "id": "laun5",
+                    "title": "What are the most important metrics to measure reach, engagement, and adoption?",
+                    "helpfulResource": {
+                      "displayText": "Reach metrics like impressions, unique visitors. Engagement metrics like click-through rate (CTR), time on page, bounce rate. Adoption metrics like daily active users (DAU), user retention rate, feature adoption rate. These metrics can help you optimize your plan for next iteration.",
+                      "url": ""
+                    },
+                    "improvementPlan": {
+                      "displayText": "U/N"
+                    }
+                  }
+                ],
+                "riskRules": [
+                  {
+                    "condition": "default",
+                    "risk": "NO_RISK"
+                  }
+                ]
+            }]
+        }
+    ]
+}
