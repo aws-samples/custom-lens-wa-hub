@@ -50,6 +50,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [Operational Readiness Review](/ORR-Lens/)
 * [Intelligent Document Processing Lens](/IDP-custom-lens/)
 * [AWS Passport Lens](/AWS-Passport/)
+* [SaaS Business Lens](/SaaS-Business-Lens)
 
 ## :bookmark: Whitepaper
 Whitepaper to describe candidate new Custom Lenses, which you can reference as following:
