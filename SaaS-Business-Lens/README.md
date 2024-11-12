@@ -1,5 +1,16 @@
 # SaaS Business Journey Custom Lens
 
+Many companies are motivated to transform into SaaS (Software as a Service) businesses, but they often struggle to navigate this journey with confidence. The mindset required for operating a SaaS enterprise differs from that of managing a traditional software company, particularly in terms of finance, organizational structure, culture, and sales approaches. A transformation of this nature often requires a fundamental shift in strategic and operational mindset.
+
+This tool is designed to help you profile your company and examine all moving parts of your business along your SaaS journey. After careful consideration, it enables you to make informed decisions among various trade-offs. The aim is to ensure that you can think comprehensively not only about the technical aspects but also about the business facets of this transformation.
+
+By using this tool, you'll be better equipped to consider all angles thoroughly, allowing for a more holistic approach to your company's SaaS transition. This custom lens can help you: 
+
+* Generating concrete strategies and forecasting for near-term plan.  
+* Making informed decisions after thorough consideration.
+* Rethinking the trade-offs and the type of one-way or two-way door for decisions.
+* Deepening cross-functions communication and enhancing mutual understanding.
+
 
 ## Getting started
 
