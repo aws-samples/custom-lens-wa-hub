@@ -1,0 +1,1606 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "Microsoft Workloads on AWS Well-Architected Lens",
+    "description": "The Microsoft Workloads on AWS Well-Architected Lens Framework is a collection of customer-proven design principles and best practices for ensuring Microsoft workloads on AWS are well-architected. Use this custom lens as a supplement to the AWS Well-Architected Framework.",
+    "pillars": [
+        {
+            "id": "ASSESS",
+            "name": "Assessment",
+            "questions": [
+                {
+                    "id": "ASSESS_q1",
+                    "title": "Have you assessed your Microsoft workload environment?",
+                    "description": "It is important to have the bigger picture of your workload. This will be the first step to make sure your applications are using right-sized resources. And this may also help gather licensing information.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Run the AWS Optimization and Licensing Assessment (OLA)",
+                            "helpfulResource": {
+                                "displayText": "AWS OLA is a complimentary program for new and existing customers to assess and optimize current on-premises and cloud environments, based on actual resource utilization, third-party licensing, and application dependencies.",
+                                "url": "https://aws.amazon.com/windows/optimization-and-licensing-assessment/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS OLA can identify ways to reduce the number of instances required, the size of instances, and optimize license-type use, in order to maximize the value of your licenses.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/aws-ola.html"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Centralize in the AWS Migration Hub",
+                            "helpfulResource": {
+                                "displayText": "AWS Migration Hub (Migration Hub) provides a single place to discover your existing servers, plan migrations, and track the status of each application migration. Before migrating, you can discover information about your on-premises server and application resources to help you build a business case for migrating or to build a migration plan. You can also leverage the Migration Hub Strategy Recommendations to help you plan migration and modernization initiatives by getting strategy recommendations for viable transformation paths for your applications.",
+                                "url": "https://docs.aws.amazon.com/migrationhub/latest/ug/whatishub.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Discovering your servers first is a starting point for migrations, gathering detailed server information, and then grouping the discovered servers into applications to be migrated and tracked. Migration Hub also gives you the choice to start migrating right away and to group servers during migration.",
+                                "url": "https://docs.aws.amazon.com/migrationhub/latest/ug/gs-new-user-discovery.html"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Use the Application Discovery Service",
+                            "helpfulResource": {
+                                "displayText": "AWS Application Discovery Service helps you plan cloud migration projects by gathering information about your on-premises data centers. It discovers the connections between applications and servers to uncover unknown servers, better understand dependencies, and establish move groups.",
+                                "url": "https://aws.amazon.com/application-discovery/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Work with either the Application Discovery Service Agentless Collector or the AWS Application Discovery Agent to capture system configuration, system performance, database metadata, and server utilization metrics.",
+                                "url": "https://docs.aws.amazon.com/migrationhub/latest/ug/gs-new-user-discovery.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "Use the Migration Evaluator",
+                            "helpfulResource": {
+                                "displayText": "Migration Evaluator is a migration assessment service that helps you create a directional business case for AWS cloud planning and migration. The information that the Migration Evaluator collects includes server profile information (for example, OS, number of CPUs, amount of RAM), SQL Server metadata (for example, version and edition), utilization metrics, and network connections.",
+                                "url": "https://aws.amazon.com/migration-evaluator/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use the Migration Evaluator Collector to gather environment details as server profile information, and utilization metrics.",
+                                "url": "https://docs.aws.amazon.com/migrationhub/latest/ug/gs-new-user-discovery.html"
+                            }
+                        },
+                        {
+                            "id": "choice5",
+                            "title": "Use the Resource Discovery for Azure",
+                            "helpfulResource": {
+                                "displayText": "This is a PowerShell script provided by AWS that generates an inventory report including detailed metrics of an Azure environment to which you have read access for the previous 30 days. Especially useful for non-virtual machine resources.",
+                                "url": "https://github.com/awslabs/resource-discovery-for-azure"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Work with your AWS Account Team or AWS APN Partner to help build a business case around migrating Azure resources to AWS.",
+                                "url": "https://aws.amazon.com/cloud-migration/how-to-migrate/"
+                            }
+                        },
+                        {
+                            "id": "choice6",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && (choice2 || choice3 || choice4 || choice5)",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "OPS",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "OPS_q1",
+                    "title": "How do you implement monitoring / observability for your Microsoft workload?",
+                    "description": "Monitor your Microsoft workload so that you have visibility over its state. You should consider mechanisms across all components to provide real-time monitoring and logging to allow predictability and remediation.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Implement infrastructure monitoring for your Microsoft workload",
+                            "helpfulResource": {
+                                "displayText": "Consider leveraging Microsoft Performance Counters to cover the basic infrastructure monitoring for your Microsoft workload servers. Besides operating system and performance metrics, the counters will be expanded according to the Microsoft product deployed, such as SQL Server, Internet Information Services (IIS), Active Directory Federation Services, and others. The Performance Counters can also be integrated with monitoring solutions, like Amazon CloudWatch, Amazon Managed Service for Prometheus, and Amazon Managed Grafana.",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/application-insights-recommended-metrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement infrastructure monitoring considering Microsoft Performance Counters either using native Microsoft tools (PerfMon, TypePerf, LogMan), Amazon managed services, or third-party tools."
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Implement and collect logging for your Microsoft workload",
+                            "helpfulResource": {
+                                "displayText": "Set up logs for your Microsoft workload infrastructure and applications. Windows Event Logs are natively generated by the Windows operating system and usually by the applications deployed. Products such as SQL Server and Internet Information Services (IIS) also provide text logs that can bring insights to observability. Both Windows Event Logs and custom logs can be collected by Amazon CloudWatch Agent and have them centralized in the CloudWatch console.",
+                                "url": "https://repost.aws/knowledge-center/cloudwatch-upload-windows-logs"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement logging based on the products and applications requirements that composes your Microsoft workload."
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Implement Application Performance Monitoring (APM) for your Microsoft workload",
+                            "helpfulResource": {
+                                "displayText": "Microsoft workloads developed with .NET and SQL technologies should also have Application Performance Monitoring (APM) implemented. Amazon CloudWatch Application Insights for .NET and SQL Server can be used for that purpose. AWS X-Ray can be used as well to improve traceability over the workload.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/develop-deploy-dotnet-apps-on-aws/monitoring.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement Application Performance Monitoring (APM) either using AWS solutions or third-party tools to have observability and traceability over your Microsoft workload. That improves your ability to remediate and also predict issues."
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "Leverage managed services for your Microsoft workload",
+                            "helpfulResource": {
+                                "displayText": "To reduce operational burden, implement the use of AWS managed services to address your Microsoft workload requirements. Consider AWS Managed Microsoft Active Directory, Amazon Relational Database Service for SQL Server, Amazon FSx for Windows File Server, Amazon FSx for NetApp ONTAP, AWS Elastic Beanstalk, and others."
+                            },
+                            "improvementPlan": {
+                                "displayText": "To reduce operational burden, implement the use of AWS managed services to address your Microsoft workload requirements when possible."
+                            }
+                        },
+                        {
+                            "id": "choice5",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2 && choice3 && choice4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && (choice2 || choice3 || choice4)",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "OPS_q2",
+                    "title": "How do you implement automation for your Microsoft workload?",
+                    "description": "Safely automate your Microsoft workload from the infrastructure to the application layer, where possible, to limit human error and apply consistent engineering patterns.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Implement Management and Governance solutions",
+                            "helpfulResource": {
+                                "displayText": "Set up Management and Governance solutions to make sure your Microsoft workload is patched and in compliance with your security requirements. AWS Systems Manager works as an operations hub for your workload, addressing fleet management, compliance, inventory, admin session management, state management, patch management, and running remote commands / scripts.",
+                                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set up Management and Governance solutions to make sure your Microsoft workload is patched and in compliance with your security requirements."
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Implement infrastructure deployment and update automation for your Microsoft workload",
+                            "helpfulResource": {
+                                "displayText": "Set up Infrastructure as Code (IaC) to apply patterns to the infrastructure of your Microsoft workload. You can use AWS CloudFormation to help model and deploy the required AWS resources based on templates. Third-party solutions, such as Terraform, are also useful for the case.",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-windows-stacks.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement infrastructure deployment and update automation for your Microsoft workload. Besides AWS CloudFormation, Terraform modules can be an alternative to apply the required patterns to the environment.",
+                                "url": "https://github.com/aws-samples/terraform-aws-windows-workloads-on-aws"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Implement operating system image control",
+                            "helpfulResource": {
+                                "displayText": "Set up Windows Server Amazon Machine Images (AMI) in Amazon EC2 to have standard deployments when launching instances in an automated way. AWS has developed a set of AMIs for some of the more popular Microsoft solutions with License Included software. You can create custom AMIs of your own, though, to apply the standards required by your environment, such as regional settings, agents, base patches, and general tools. EC2 Image Builder is a fully managed AWS service that helps you to automate the creation, management, and deployment of customized, secure, and up-to-date server images.",
+                                "url": "https://docs.aws.amazon.com/imagebuilder/latest/userguide/how-image-builder-works.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement operating system image control to have standard deployments when launching instances.",
+                                "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2 && choice3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && (choice2 || choice3)",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                }
+            ]    
+        },        
+        {
+            "id": "SEC",
+            "name": "Security",
+            "questions": [
+                {
+                    "id": "SEC_q1",
+                    "title": "How do you set and apply security standards and controls that align with your Microsoft workload's criticality?",
+                    "description": "Security standards are documented guidelines that outline policies and procedures for safeguarding systems according to best practices. These standards can be specific to a product, organization, industry, or jurisdiction, providing a framework for evaluating your Microsoft workload. Some standards are mandatory for regulatory compliance, while others are voluntary, but beneficial for defining roles and responsibilities. These standards serve as a benchmark for implementing appropriate security measures, ensuring that your Microsoft environment adheres to recognized security practices and meets necessary compliance requirements. By following these standards, organizations can establish a robust security posture that aligns with industry norms and regulatory expectations, while also tailoring their approach to the specific needs of their Microsoft workloads.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Assign security roles and responsibilities.",
+                            "helpfulResource": {
+                                "displayText": "Identifying security requirements for your Microsoft workload helps pinpoint potential risks and ensures proper allocation of security-related roles and responsibilities. This process allows for a comprehensive understanding of the security landscape specific to your Microsoft environment, enabling you to address vulnerabilities proactively and establish clear accountability for various security functions. By clearly defining these requirements and responsibilities, you create a structured approach to security management, enhancing your overall defense strategy and ensuring that all aspects of your Microsoft workload's security are adequately covered and maintained.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/sec-def.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define roles and responsibilities to ensure you are applying the required privileges to the right principals."
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Categorize Microsoft workload data sensitivity.",
+                            "helpfulResource": {
+                                "displayText": "The sensitivity of data influences the necessary security controls for risk mitigation. For Microsoft workloads, it's advisable to utilize industry-standard or organizational frameworks to classify both the workload and its associated data. This approach ensures that you apply appropriate security measures based on the criticality and sensitivity of the information within your Microsoft environment. By aligning with established classification frameworks, you can more effectively prioritize security efforts and allocate resources where they are most needed, enhancing overall data protection in your Microsoft workload.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/sec-dataprot.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the data protection best practices from the AWS Well-Architected Framework Security pillar to apply the applicable best practices to your Microsoft workload.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/sec-dataprot.html"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Develop a Microsoft security control strategy.",
+                            "helpfulResource": {
+                                "displayText": "After assessing business requirements based on data classification, develop a balanced security strategy for your Microsoft environment. This strategy should harmonize your organization's existing security controls with available Microsoft application guides and industry open standards. When formulating this approach, carefully weigh the implementation effort required against the potential risks. This balanced consideration ensures that your security measures are comprehensive yet practical, aligning with both organizational needs and Microsoft-specific best practices while acknowledging the realities of implementation challenges and residual risks.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/operating-your-workload-securely.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the operating your workloads securely best practice from the AWS Well-Architected Framework Security pillar to apply the applicable best practices to your Microsoft workload.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/operating-your-workload-securely.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2 && choice3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && choice2",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "SEC_q2",
+                    "title": "How do you secure your Microsoft workload, including its database, operating system, and underlying infrastructure?",
+                    "description": "It's important to harden Microsoft applications and their underlying components, including operating systems, databases, cloud services, and infrastructure. This hardening should be applied to all Microsoft environments, both production and non-production, at levels appropriate to your organization's needs. Use the AWS Shared Responsibility Model as a guide for securing your Microsoft environment. Remember, some security aspects, like EC2 firmware updates, are AWS's responsibility ('security of the cloud'), while others, such as operating system and application management, are your responsibility ('security in the cloud'). This clear division of responsibilities helps ensure comprehensive security coverage for your Microsoft workloads in the AWS environment.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Protect the operating system.",
+                            "helpfulResource": {
+                                "displayText": "Securing the operating system that hosts your Microsoft application is crucial in preventing unauthorized access, ensuring software availability, and maintaining the stability of your critical systems. By following Microsoft and AWS recommendations for Windows Server environments, you can significantly reduce the risk of malicious attacks. This is particularly important when using unmanaged or non-serverless services.  Implementing these best practices creates a robust foundation for your Microsoft workload, enhancing overall security and resilience. Remember that a well-protected operating system forms a critical layer in your defense strategy, safeguarding your application and data from potential threats.",
+                                "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-windows-security-best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the AWS user guide that covers security best practices for Windows instances.",
+                                "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-windows-security-best-practices.html"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Secure the Microsoft application and database.",
+                            "helpfulResource": {
+                                "displayText": "Maintaining strong security at both the database and application layers is crucial, as even read-only access by malicious actors could compromise critical business data. To protect your Microsoft environment, implement security best practices including the least access principle, least privilege model, encryption at rest, and encryption in transit. These measures help safeguard your Microsoft application and database against unauthorized access and potential data breaches, ensuring the confidentiality and integrity of your business-critical information.",
+                                "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-windows-security-best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the AWS user guide that covers security best practices for Microsoft SQL Server on AWS.",
+                                "url": "https://docs.aws.amazon.com/sql-server-ec2/latest/userguide/security-sql-server-on-ec2.html"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Develop a comprehensive software update strategy.",
+                            "helpfulResource": {
+                                "displayText": "Microsoft regularly releases scheduled security updates and emergency patches to address vulnerabilities. Stay informed about the latest security advisories from all relevant vendors. It's crucial to keep your Microsoft application and its underlying components up-to-date with the latest security fixes on a regular schedule to prevent security gaps. Develop a plan for quickly applying critical emergency patches when released. Consider using AWS Systems Manager to streamline and automate this update process, ensuring your Microsoft environment remains secure and current with minimal manual intervention.",
+                                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider building a patch management plan and leverage AWS Systems Manager Patch Manager to streamline the process.",
+                                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2 && choice3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && choice2",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "SEC_q3",
+                    "title": "How do you manage and regulate user access to your Microsoft workload environment?",
+                    "description": "To control access to your Microsoft workload, utilize the authentication and authorization tools provided by AWS, Microsoft, and trusted third-party vendors. Implement a least-privilege approach, ensuring users and systems have only the permissions necessary for their roles. Set up comprehensive auditing and reporting to monitor access patterns. Start by identifying distinct user categories, then systematically develop your identity management strategy and access controls. This structured approach helps secure your Microsoft environment, minimizing risks while maintaining efficient operations.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Identify the required workload personas / profiles.",
+                            "helpfulResource": {
+                                "displayText": "The security controls for your Microsoft application should be tailored based on the various types of users accessing it. By analyzing each use case, you can develop a comprehensive strategy that addresses identity management, authentication methods, and appropriate tools and mechanisms. This approach ensures that your security measures are aligned with specific user needs and access patterns, creating a more robust and efficient protection system for your Microsoft environment. By customizing your security strategy to match user profiles, you can better safeguard your application while maintaining usability for legitimate users.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/identity-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the identity management section from the AWS Well-Architected Framework Security pillar.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/identity-management.html"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Adopt the least privilege approach.",
+                            "helpfulResource": {
+                                "displayText": "Implement the principle of least privilege throughout your Microsoft environment. This approach involves granting users only the minimum access rights necessary for their specific roles and responsibilities. While maintaining this restrictive access policy, balance it with considerations for usability and operational efficiency. By limiting permissions to what's strictly needed, you reduce the potential impact of security breaches and insider threats. Regularly review and adjust access rights to ensure they remain appropriate as roles and responsibilities evolve within your organization. This strategy helps create a more secure Microsoft workload without unnecessarily hindering productivity."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider adopting the principle of least privilege to avoid unnecessary authorization to the application users."
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Align your Microsoft workload access with organizational identity strategy.",
+                            "helpfulResource": {
+                                "displayText": "Microsoft workloads, including .NET applications and SQL Server environments, typically integrate with Active Directory (AD) or similar identity management systems. A centralized approach to user management, regardless of the specific solution, can significantly reduce security risks and operational complexity. When designing your identity strategy for Microsoft environments in AWS, consider leveraging AWS services and compatible third-party tools to implement centralized user management, single sign-on (SSO) capabilities, and multi-factor authentication (MFA). This comprehensive approach enhances security, streamlines user access, and provides a consistent identity management experience across your Microsoft workloads in the cloud.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/active-directory-domain-services/security-considerations.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review security considerations for Active Directory Domain Services on AWS or the applicable identity solution for your environment."
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "Implement logging to track access and authorization changes.",
+                            "helpfulResource": {
+                                "displayText": "Regularly log, analyze, and audit user access and authorization events in your Microsoft systems. Consolidate security events from Microsoft applications and databases with other architectural components to enable comprehensive tracing during security incidents. Implement a centralized Security Information and Event Management (SIEM) system to automate event analysis, allowing your operations team to quickly identify unusual or suspicious activities. This integrated approach to security monitoring enhances your ability to detect and respond to potential threats across your entire Microsoft environment, strengthening your overall security posture and enabling more effective incident management.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/sec-detection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Besides regular Windows Server and Active Directory events, review the application logging section from the 'Security Best Practices for Modernizing .NET Framework Applications on AWS' Prescriptive Guidance.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/modernization-net-applications-security/logging.html"
+                            }
+                        },
+                        {
+                            "id": "choice5",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2 && choice3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && choice2",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "SEC_q4",
+                    "title": "How do you protect your Microsoft workload data?",
+                    "description": "Microsoft applications often handle and store sensitive enterprise data. Whether using Microsoft SQL Server or other solutions, it's best practice to encrypt data both at rest and in transit, employing at least one encryption mechanism to meet internal and external security requirements. In addition to the controls outlined in the AWS Shared Responsibility Model, AWS offers various encryption solutions. Many AWS services include easy-to-enable encryption features with minimal performance impact. Consider implementing encryption options at both the database and Microsoft application layers. This multi-layered approach to data protection helps safeguard your sensitive information from unauthorized access or breaches, ensuring compliance with security standards and enhancing overall data confidentiality in your Microsoft environment on AWS.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Encrypt data at rest.",
+                            "helpfulResource": {
+                                "displayText": "Data at rest encompasses all digitally stored information. Encryption is crucial to ensure this data remains visible only to authorized users and stays protected, even if storage or database access is compromised independently of the application. For Microsoft SQL Server environments, consider implementing the Transparent Data Encryption (TDE) feature. This technology provides robust encryption at rest solution specifically designed for Microsoft databases, offering strong protection for sensitive data without significant changes to your application architecture. By employing these encryption methods, you enhance the security of your stored data, mitigating risks associated with unauthorized access and potential data breaches in your Microsoft SQL Server deployments.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/best-practices-for-deploying-microsoft-sql-server/security-optimization.html#encryption-at-rest"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the encryption at rest section from the 'Best Practices for Deploying Microsoft SQL Server on Amazon EC2' whitepaper.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/best-practices-for-deploying-microsoft-sql-server/security-optimization.html#encryption-at-rest"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Encrypt data in transit.",
+                            "helpfulResource": {
+                                "displayText": "Using encryption of data in transit makes it harder for your data to be intercepted, accessed, or tampered with while it's moving from one point to another. Ensure that there are secure protocols and network-level encryption in place to minimize potential threats and provide the level of protection aligned with your requirements.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/best-practices-for-deploying-microsoft-sql-server/security-optimization.html#encryption-in-transit"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the encryption in transit section from the 'Best Practices for Deploying Microsoft SQL Server on Amazon EC2' whitepaper.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/best-practices-for-deploying-microsoft-sql-server/security-optimization.html#encryption-in-transit"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Encryption in use.",
+                            "helpfulResource": {
+                                "displayText": "Microsoft SQL Server's Always Encrypted feature provides robust data protection using client-side encryption with certificates. This technology creates a clear separation between data owners who can view the information and data managers who shouldn't have access. It effectively safeguards sensitive data by ensuring it remains encrypted in the database, during transit, and even while being processed. This powerful security feature is available not only in on-premises SQL Server deployments but also in cloud environments, including Amazon RDS for SQL Server and SQL Server instances running on Amazon EC2. By implementing Always Encrypted, organizations can significantly enhance their data security posture, particularly when handling sensitive information in Microsoft SQL Server environments on AWS.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/best-practices-for-deploying-microsoft-sql-server/security-optimization.html#encryption-in-use"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the encryption in use section from the 'Best Practices for Deploying Microsoft SQL Server on Amazon EC2' whitepaper.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/best-practices-for-deploying-microsoft-sql-server/security-optimization.html#encryption-in-use"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "(choice1 && choice2 && choice3) || (choice1 && choice2)",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 || choice2",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "REL",
+            "name": "Reliability",
+            "questions": [
+                {
+                    "id": "REL_q1",
+                    "title": "How do you design your Microsoft workload to withstand failure?",
+                    "description": "To design a resilient Microsoft infrastructure on AWS, begin by clearly defining your business requirements and availability goals for each critical workload aspect. Then, assess potential failure scenarios for each component, determining appropriate resiliency requirements, acceptable data loss thresholds, and time for recovery. Next, select an appropriate architecture pattern and evaluate it against criteria you define, including perceived risk and impact for each failure scenario, as well as cost and performance considerations. Implement your chosen architecture and validate its effectiveness through initial and periodic testing. This approach ensures that your Microsoft workload on AWS is robust, cost-effective, and tailored to your specific business needs, while also allowing for continuous improvement as requirements develop and new AWS capabilities become available.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Have your Microsoft workload availability goals defined within your business requirements.",
+                            "helpfulResource": {
+                                "displayText": "Identifying your organization's specific availability objectives is crucial as it guides your focus towards critical factors. This clarity enables you to establish relevant criteria for assessing and selecting the most appropriate architectural patterns for your workload.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/understanding-availability-needs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the AWS Well-Architected Framework Reliability Pillar whitepaper to ensure your Microsoft workload is covered by the AWS design principles and best practices regarding availability."
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Choose an architectural design that aligns with your specific availability needs and capacity demands.",
+                            "helpfulResource": {
+                                "displayText": "There are architecture recommendations regarding Microsoft workloads, whether addressing Windows infrastructure, Active Directory, SQL Server databases, .NET applications, or other technologies. Review the vendor recommendations along with AWS documentation to ensure your application is running with best practices to improve availability and resiliency.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/design-your-workload-service-architecture.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the AWS Well-Architected Framework Reliability Pillar whitepaper to ensure your Microsoft workload is covered by the AWS design principles and best practices regarding availability."
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Develop a strategy to safeguard the continuous accessibility of essential data from your Microsoft workload.",
+                            "helpfulResource": {
+                                "displayText": "Microsoft workloads data is often stored within Microsoft SQL Server databases. Although it might also include configuration files, scripts, and required templates. Ensure your strategy also covers these side items to have full coverage when recovering the workload.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/migration-sql-server/welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the AWS documentation on how to migration / host Microsoft SQL Server databases on the AWS cloud."
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2 && choice3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && choice3",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "REL_q2",
+                    "title": "What methods and systems do you have in place to identify and respond to disruptions affecting your Microsoft workload?",
+                    "description": "Design your Microsoft workload for optimal health and resilience by developing targeted software solutions and operating procedures. Implement comprehensive monitoring systems to detect both potential and actual failures, with a focus on preventative measures where possible. Carefully assess your infrastructure components, identifying distributed elements and single points of failure, then craft resilience solutions that minimize impact on your overall workload. Regularly test your systems to maintain an up-to-date understanding of your risk profile, and actively explore how automation can be leveraged to enhance your workload's resilience, creating a robust and adaptable infrastructure capable of withstanding various challenges.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Implement comprehensive monitoring for potential failures across the application, AWS infrastructure, and network connectivity.",
+                            "helpfulResource": {
+                                "displayText": "Monitoring your Microsoft application, AWS resources, and network connectivity enables prompt responses to both actual and potential failures, enhancing overall system reliability.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/monitor-workload-resources.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the AWS Well-Architected Framework Reliability Pillar whitepaper to ensure your Microsoft workload is covered by the AWS design principles and best practices regarding monitoring."
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Develop a strategic plan for quickly reinstating service availability during outages.",
+                            "helpfulResource": {
+                                "displayText": "When planning for service restoration, acknowledge that certain failure scenarios will inevitably lead to some downtime. Your recovery strategy should focus on minimizing this downtime by assessing the required recovery time and defining specific actions needed to meet your established availability targets, preferably using automation to minimize other issues.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/design-interactions-in-a-distributed-system-to-mitigate-or-withstand-failures.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the AWS Well-Architected Framework Reliability Pillar whitepaper to ensure your Microsoft workload is covered by the AWS design principles and best practices regarding reinstating service availability."
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Regularly perform resilience tests to ensure system robustness.",
+                            "helpfulResource": {
+                                "displayText": "Regularly test your Microsoft workloads' resilience against critical failure scenarios to validate the effectiveness of your software and procedures. Reassess your testing strategy whenever there are significant changes to architecture, software, or support personnel, ensuring that your resilience measures remain up-to-date and reliable.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/test-reliability.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the AWS Well-Architected Framework Reliability Pillar whitepaper to ensure your Microsoft workload is covered by the AWS design principles and best practices regarding test reliability."
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2 && choice3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && choice2",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PERF",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "PERF_q1",
+                    "title": "How do you select the appropriate cloud resources for your Microsoft workload architecture?",
+                    "description": "It is not unusual to have multiple cloud solutions to address your Microsoft workload architecture needs. Evaluate the cloud resources that better fit your workload following the AWS Well-Architected recommendations.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Consider AWS Elastic Beanstalk for running traditional Windows servers hosting your Microsoft application.",
+                            "helpfulResource": {
+                                "displayText": "In scenarios where the traditional virtual machine approach is a requirement, evaluate the EC2 instance families that better address your Microsoft workload needs. You can also opt for Elastic Beanstalk to reduce the operational burden on managing the EC2 instances and surrouding infrastructure resources, such as Elastic Load Balancing, and Auto Scaling Groups.",
+                                "url": "https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.net"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Evaluate the EC2 instance families that may provide the best price performance balance to your Microsoft workload. The use of Elastice Beanstalk for applications will likely improve your performance efficiency to manage application deployment and improvements.",
+                                "url": "https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.net"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Consider Amazon managed container orchestrator services to run containers on AWS.",
+                            "helpfulResource": {
+                                "displayText": "Amazon Elastic Kubernetes Service (EKS), Amazon Elastic Container Service (ECS), and AWS Fargate support both Linux and Windows containers. Either running cross-plaform .NET on Linux or .NET Framework on Windows, you can run your Microsoft container-compatible workload taking advantage of the benefits of the manage service, improving performance efficiency.",
+                                "url": "https://aws.amazon.com/blogs/containers/tag/windows/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Evaluate the options and the nuances to run Microsoft applications on containers on AWS. EKS, ECS, and Fargate can help reduce the operational tasks for achieving better scalability and performance efficiency.",
+                                "url": "https://aws.amazon.com/blogs/containers/tag/windows/"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Run serverless Microsoft applications on AWS Lambda.",
+                            "helpfulResource": {
+                                "displayText": "Use cases such as event-driven, like message processing and API routes, application-based function, like packaging and entire cross-platform ASP.NET runtime, file processing, mobile backend, cloud automation, and similar are usually suitable for running on AWS Lambda.",
+                                "url": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-csharp.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "When working with serverless-compatible applications, consider hosting on AWS Lambda. This approach can help reduce the operational tasks for achieving better scalability and performance efficiency.",
+                                "url": "https://aws.amazon.com/blogs/compute/category/devops/aws-net-development/"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice2 && choice3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice2 && (choice1 || choice3)",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "PERF_q2",
+                    "title": "How do you select the appropriate compute resources and features for your Microsoft workloads running on Windows servers?",
+                    "description": "Amazon EC2 provides scalability, flexibility, and cost efficiency resources that can apply to Windows EC2 instances. Appropriate instance families and EC2 features can be used by your Windows machines to bring the performance efficiency needed by your workload.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Choose the Amazon EC2 instance families that best fit the Microsoft workload.",
+                            "helpfulResource": {
+                                "displayText": "Amazon EC2 provides different instance family types, addressing different purposes. For example, General purpose instances, such as m7i and m7a can be used for most production applications running on Windows Server. For non-production or less critical environments, t3 burstable instances may also be a fit. Memory optimized instances, such as r7i, r7a, and x2iedn provide greater ratio of memory to vCPU and are ideal for memory-intensive workloads, such as Microsoft SQL Server.",
+                                "url": "https://aws.amazon.com/ec2/instance-types/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Evaluate the EC2 instance families that may provide the best price performance balance to your Microsoft workload. The different EC2 families can be a good fit to your Microsoft workload based on the application requirements.",
+                                "url": "https://aws.amazon.com/ec2/instance-types/"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Consider the use for EC2 Fast Launch to accelerate launching your Microsoft workload instances.",
+                            "helpfulResource": {
+                                "displayText": "EC2 Fast Launch will speed up the Windows EC2 instance launch process. When you configure a Windows Server AMI for EC2 Fast Launch, Amazon EC2 creates a set of pre-provisioned snapshots to use for faster launching. It completes steps such as Sysprep specialize, Windows Out of Box Experience (OOBE), and rebooting as required. Especially useful when you need to scale fast.",
+                                "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/win-ami-config-fast-launch.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the use of EC2 Fast Launch to scale fast your Microsoft applications. Evaluate the cost benefit of the additional snapshots and temporary EC2 instances that work on the process to have the feature enabled.",
+                                "url": "https://aws.amazon.com/blogs/modernizing-with-aws/launch-windows-faster-on-ec2/"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "PERF_q3",
+                    "title": "How do you select the appropriate storage solutions for your Microsoft workloads running on Windows servers?",
+                    "description": "AWS offers different storage options that can address different needs for your Microsoft workloads. Appropriate storage options can be used by your Windows machines to bring the performance efficiency needed by your workload.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Consider Amazon EBS gp3 volumes for general workloads.",
+                            "helpfulResource": {
+                                "displayText": "Amazon EBS's newest and most cost-effective SSD option, General Purpose SSD (gp3) volumes, strikes an optimal balance between price and performance for a wide range of applications. A key advantage of gp3 volumes is the ability to adjust performance independently of storage capacity, allowing users to meet specific performance requirements without unnecessarily increasing block storage. Moreover, gp3 volumes offer significant cost savings, with prices 20% lower per GiB compared to their predecessor, General Purpose SSD (gp2) volumes.",
+                                "url": "https://docs.aws.amazon.com/ebs/latest/userguide/general-purpose.html#gp3-ebs-volume-type"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider gp3 for system volumes and application / data volumes of general workloads. It provides the right balance of price and performance for most applications, even Microsoft SQL Server environments that don't require critical I/O performance. If you have workloads running on gp2, consider migrating to gp3.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/ebs-migrate-gp2-gp3.html"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Consider Amazon EBS io2 Block Express volumes for high-intense I/O workloads.",
+                            "helpfulResource": {
+                                "displayText": "Amazon EBS io2 Block Express volumes are based on an updated storage server architecture. They are designed to handle high I/O requirements for applications running on Nitro System-based instances. These volumes offer improved durability and lower latency. As a result, they are suitable for resource-intensive applications that require consistent performance, such as certain database systems (e.g., Oracle, SAP HANA, Microsoft SQL Server) and SAS Analytics. The performance characteristics of io2 Block Express make them appropriate for workloads where reliability and speed are critical factors.",
+                                "url": "https://docs.aws.amazon.com/ebs/latest/userguide/provisioned-iops.html#io2-block-express"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider io2 Block Express for high-intense I/O workloads. In case io2 is not yet available in the region you are working on, consider the io1 option.",
+                                "url": "https://docs.aws.amazon.com/ebs/latest/userguide/provisioned-iops.html#io2-bx-considerations"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Consider Amazon FSx for Windows File Server.",
+                            "helpfulResource": {
+                                "displayText": "Amazon FSx for Windows File Server is a managed service that provides file storage using Microsoft Windows file system technology. It supports Windows file system features and uses the Server Message Block (SMB) protocol for network file access, making it compatible with various Windows-based enterprise workloads and applications. The service offers integration with other AWS services and performance optimized for enterprise applications, aiming to provide low-latency file storage. FSx for Windows File Server is designed for Windows workloads that require shared file storage, such as File Servers, Application Server configuration stores, and even Microsoft SQL Server databases. It can be used as an alternative for shared storage and it offers both Multi-AZ and Single-AZ deployment.",
+                                "url": "https://docs.aws.amazon.com/fsx/latest/WindowsGuide/what-is.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider Amazon FSx for Windows File Server, to leverage the managed service perspective and increasing the performance efficiency of your Microsoft workloads on AWS.",
+                                "url": "https://docs.aws.amazon.com/fsx/latest/WindowsGuide/performance.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "Consider Amazon FSx for NetApp ONTAP.",
+                            "helpfulResource": {
+                                "displayText": "Amazon FSx for NetApp ONTAP is a fully managed AWS service that provides scalable, high-performance file storage based on the widely-used NetApp ONTAP file system. It combines the familiar features and capabilities of NetApp systems with the benefits of a cloud-managed service. This service offers fast, flexible shared file storage accessible from Linux, Windows, and macOS instances, both in AWS and on-premises. FSx for ONTAP provides high-performance SSD storage with very low latencies and also HDD storage. Amazon FSx for NetApp ONTAP offers robust file storage capabilities, including support for petabyte-scale datasets in a single namespace and high throughput of up to tens of GBps per file system. It provides multi-protocol access (NFS, SMB, iSCSI, and NVMe) and offers both Multi-AZ and Single-AZ deployment options for high availability. The service includes cost-saving features such as automatic data-tiering based on access patterns and data reduction techniques like compression, deduplication, and compaction.",
+                                "url": "https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider Amazon FSx for NetApp ONTAP, to leverage the managed service perspective and increasing the performance efficiency of your Microsoft workloads on AWS.",
+                                "url": "https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/performance.html"
+                            }
+                        },
+                        {
+                            "id": "choice5",
+                            "title": "Leverage instance store temporary block storage for EC2 instances.",
+                            "helpfulResource": {
+                                "displayText": "An instance store is a form of temporary block-level storage for EC2 instances, provided by disks physically attached to the host computer. It's well-suited for storing frequently changing data such as buffers, caches, and scratch data, as well as temporary data replicated across multiple instances like in a load-balanced web server pool, and Microsoft SQL Server TempDB data. The capacity and number of instance store volumes available vary depending on the instance type and size, with some instance types not offering instance stores at all. These volumes are exposed as block devices, offering a local, high-performance storage option for specific use cases where data persistence is not required beyond the lifecycle of the EC2 instance.",
+                                "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider instance store temporaray block storage for EC2 instances, to leverage the high-performance option available in select instance families and enhance the performance efficiency of your Microsoft workloads on AWS.",
+                                "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-store-volumes.html"
+                            }
+                        },
+                        {
+                            "id": "choice6",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "(choice1 && (choice2 || choice3 || choice4 || choice5)) || (choice2 && (choice1 || choice3 || choice4 || choice5))",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "PERF_q4",
+                    "title": "How do you measure performance requirements changes and anomalies?",
+                    "description": "Determine your Microsoft workload's typical operational metrics by analyzing past performance data. Configure notification systems to alert IT personnel when significant variations from these norms occur. Create and document protocols for technical staff to rectify such anomalies, utilizing both human-driven and automated correction methods. This strategy facilitates preemptive oversight of the workload efficiency and contributes to overall system stability.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Use historical data to evaluate performance.",
+                            "helpfulResource": {
+                                "displayText": "Effective assessment of Microsoft workload performance requires comprehensive data collection across key system components: compute, memory, storage, and networking. This approach aligns with the Well-Architected Framework's Performance Excellence guidelines, specifically the best practice PERF02-BP03, which focuses on gathering compute-related metrics. By monitoring these critical areas, organizations can identify suboptimal performance and implement timely corrective measures. This holistic monitoring strategy enables proactive management of Microsoft workloads, ensuring they meet performance expectations and allowing for swift intervention when performance falls below desired thresholds.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/performance-efficiency-pillar/perf_compute_hardwaREL_collect_compute_related_metrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider implementing performance metrics collection to have data to baseline your Microsoft workload performance.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/performance-efficiency-pillar/perf_compute_hardwaREL_collect_compute_related_metrics.html#implementation-steps"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Define baseline performance requirements.",
+                            "helpfulResource":{
+                                "displayText": "Microsoft workloads vary in their performance needs, making historical data analysis crucial for establishing baseline performance metrics. This approach allows organizations to detect and quantify performance fluctuations effectively. By implementing targeted alerts, IT teams can quickly identify anomalies, such as unexpected CPU usage spikes, changes in storage throughput, increased memory consumption, or more intricate performance issues. The collected monitoring data serves a dual purpose: it not only helps in detecting problems, but also provides valuable insights for ongoing performance optimization. This data-driven strategy enables continuous refinement of workload performance, ensuring that Microsoft applications operate at their optimal levels."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Besides having a monitoring mechanism implemented, having the baseline to cross-reference the metrics is also important to ensure your Microsoft workload is operating as expected."
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "COP",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "COP_q1",
+                    "title": "How do you save on Windows EC2 costs?",
+                    "description": "Amazon EC2 provides scalability, flexibility, and cost efficiency resources that can apply to Windows EC2 instances.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Right size Windows workloads",
+                            "helpfulResource": {
+                                "displayText": "Right sizing your Amazon EC2 instances will potentially save costs on your Windows workload. Besides the AWS Optimization and License Assessment (OLA), and AWS Cost Explorer, AWS offers other mechanisms to help you continuously check for right sizing opportunities. Setting up AWS Compute Optimizer in your account will enable the analyzes of your AWS resources' configurations and utilization metrics to provide you with the rightsizing recommendations.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/rightsize.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement AWS Compute Optimizer to continuously check for rightsizing opportunities.",
+                                "url": "https://docs.aws.amazon.com/compute-optimizer/latest/ug/what-is-compute-optimizer.html"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Automate stop and start schedules",
+                            "helpfulResource": {
+                                "displayText": "Leverage the Instance Scheduler on AWS to reduce the use of Amazon EC2 and Amazon Relational Database Service instances that do not need to run continuously. The Instance Scheduler helps reduce operational costs by stopping and starting resources as needed.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/windows-ec2-schedules.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement Instance Scheduler on AWS to save costs by automating the stop and start of Amazon EC2 and Amazon RDS instances, whenever possible.",
+                                "url": "https://aws.amazon.com/solutions/implementations/instance-scheduler-on-aws/"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Bring Your Own Licenses (BYOL)",
+                            "helpfulResource": {
+                                "displayText": "If you have already invested in licenses for your Microsoft workload, such as having enterprise licensing agreements, you can choose to bring your own licenses to AWS and save costs on EC2. Depending on when the license were acquired and the version, Windows Server licenses can be brought to Amazon EC2 Dedicated Hosts. Other products covered by Software Assurance and License Mobility in the agreement, like SQL Server, can be brought to default (shared) tenancy. Check the Microsoft FAQ on the AWS public page to see the options and contact your account team to help you engage with a Microsoft expert on AWS to guide you through the options.",
+                                "url": "https://aws.amazon.com/windows/faq/#licensing"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Check the options to bring your own Microsoft licenses to AWS and save costs on Amazon EC2.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/byol-ded-hosts.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }        
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && (choice2 || choice3)",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && !choice2 && !choice3",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "COP_q2",
+                    "title": "How do you save on SQL Server costs?",
+                    "description": "AWS offers different options to run Microsoft SQL Server and leverage existing licenses.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Understand Microsoft SQL Server licensing",
+                            "helpfulResource": {
+                                "displayText": "AWS offers a range of flexible cost optimization choices for licensing. These licensing options are designed to help you reduce costs, maintain compliance, and meet your business needs. AWS offers the license include option, which you can launch Windows EC2 instances with SQL Server installed and licensed on-demand, paying only for what you use. With the right requirements, you can also bring your own licenses to AWS, either to Amazon EC2 Dedicated Hosts or default (shared) tenancy. Check the link for more information.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/sql-server-licensing.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Check the options to bring your own Microsoft licenses to AWS and save costs on SQL Server running on Windows EC2",
+                                "url": "https://aws.amazon.com/windows/faq/#licensing"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Consolidate Microsoft SQL Server instances",
+                            "helpfulResource": {
+                                "displayText": "A SQL instance is part of the SQL Server Database Engine, that provides the SQL service to clients / applications. It is usual to have SQL instances installed per server when it comes to large production environments, to avoid resources issues and to follow resource governance. Although, for smaller or non-critical workloads organizations can leverage shared resources and have multiple SQL instances installed on the same server or set of servers. This approach will help your workload save costs on SQL licensing (less cores running SQL) and often in compute resources as well.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/consolidate-instances.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Assess your current workload and others to check if there is opportunities to consolidate SQL instances in shared hardware resources and save costs on SQL licensing.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/consolidate-instances.html"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Check if your workload is running with the right SQL Server edition",
+                            "helpfulResource": {
+                                "displayText": "Microsoft offers types of SQL Server editions, with a different set of features and license cost. The Enterprise edition provides data center capabilities with high performance, unlimited virtualization, and several business intelligence tools. The Standard edition provides basic data management and business intelligence for smaller organizations and departments. The Web edition is suitable for companies that are web hosters or web value added providers (VAPs) and it should only be used to support public and internet accessible webpages, websites, and web services; its license does not allow the use for line-of-business applications. The Developer edition includes all functionality of the Enterprise edition, but it is intended for development purposes only. And the Express edition is a free database that can be used for learning or for building desktop applications. Over the release of SQL versions, Microsoft has added more features to the Standard edition, and it is not so unusual to see customers evaluating the downgrade from the Enterprise edition to the Standard one. The following AWS Prescriptive Guidance can be used to help you evaluate that to your workload.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/evaluate-downgrading-sql-server-edition/welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Compare the Microsoft SQL Server editions and evaluate if your workload and use case would support downgrading to a lower edition.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/sql-server-editions.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "Evaluate SQL Server Developer edition",
+                            "helpfulResource": {
+                                "displayText": "SQL Server Developer edition includes all functionality of the Enterprise edition. It is a free edition that can be used in non-production environments. A production environment is defined as an environment that's accessed by the end users of an application (such as an internet website) and is used for more than gathering feedback or acceptance testing of that application. The Developer edition can be leveraged for development and testing your workload.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/sql-server-dev.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Analyze the opportunity to downgrade the SQL Server engine of your workload to Developer Edition on AWS and save on licensing costs.",
+                                "url": "https://aws.amazon.com/blogs/modernizing-with-aws/how-to-manually-downgrade-sql-server-enterprise-edition-to-developer-edition-on-aws-and-save-on-licensing-costs/"
+                            }
+                        },
+                        {
+                            "id": "choice5",
+                            "title": "Evaluate SQL Server on Linux",
+                            "helpfulResource": {
+                                "displayText": "Beginning on SQL Server 2017, Microsoft offers the option to run SQL Server on Linux operating systems. SQL Server on Linux is enterprise ready and offers flexibility, high performance, security features, reduced TCO, HA/DR features, and a great user experience. You can switch from SQL Server on Windows Server to SQL Server on Linux to save on Windows Server licensing costs.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/sql-server-linux.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Analyze the opportunity to move your SQL Server workload from Windows Server to Linux. Check the supported features to see if your workload is compatible to the SQL Server on Linux version.",
+                                "url": "https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-editions-and-components-2022?view=sql-server-ver16"
+                            }
+                        },
+                        {
+                            "id": "choice6",
+                            "title": "Evaluate Optimize CPU feature",
+                            "helpfulResource": {
+                                "displayText": "Optimize CPUs for Amazon EC2 Instances provides customers greater control of your EC2 instances on two fronts. First, you can specify a custom number of vCPUs when launching new instances to save on vCPU-based licensing costs (such as SQL Server). Second, you can disable Intel Hyper-Threading Technology (Intel HT Technology) for workloads that perform well with single-threaded CPUs, like certain high-performance computing (HPC) applications. Reducing the number of vCPUs or disabling Hyper-Threading offers fewer cores to your SQL Server workload on EC2 without affecting the other compute resources available to the machine (such as RAM and storage), and most of the time without compromising the workload performance. This feature is available only for bring your own license (BYOL) deployments.",
+                                "url": "https://aws.amazon.com/blogs/modernizing-with-aws/optimize-cpu-best-practices-for-sql-server-workloads/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Evaluate the opportunity to reduce the number of SQL licensed cores when doing BYOL and without affecting your workload performance.",
+                                "url": "https://aws.amazon.com/blogs/modernizing-with-aws/optimize-cpu-best-practices-for-sql-server-workloads/"
+                            }
+                        },
+                        {
+                            "id": "choice7",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && (choice2 || choice3 || choice4 || choice5 || choice6)",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && !choice2 && !choice3 && !choice4 && !choice5 && !choice6",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "COP_q3",
+                    "title": "How do you save on Windows Server footprint moving to Windows Containers?",
+                    "description": "Containers can help optimize the infrastructure and also promote agility for your workloads. If compatible, applications that require components from the Windows OS may leverage the infrastructure modernization of running on Windows containers.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Use AWS App2Container",
+                            "helpfulResource": {
+                                "displayText": "AWS App2Container is a command-line tool that can assist on assessing and providing the artifacts to test your workloads considering the containerization of Windows-based applications, such as ASP.NET Framework web applications, WCF services, console applications, or Windows services.",
+                                "url": "https://docs.aws.amazon.com/app2container/latest/UserGuide/what-is-a2c.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS App2Container to assist on the containerization of Windows-based applications, such as ASP.NET Framework web applications, WCF services, console applications, or Windows services.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/app2container-main.html"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Optimize AWS Fargate tasks with AWS Compute Optimizer",
+                            "helpfulResource": {
+                                "displayText": "AWS Compute Optimizer can be used to help right size and optimize your workloads running on AWS Fargate. If not reviewed, long running tasks can be overprovisioned and increase compute costs.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/optimizer-ecs-fargate.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable AWS Compute Optimizer at either organization level or single account level, review its results, and implement the recommendations accordantly.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/optimizer-ecs-fargate.html#optimizer-ecs-fargate-rec"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Improve Amazon Elastic Kubernetes Service (EKS) cost tracking with Kubecost",
+                            "helpfulResource": {
+                                "displayText": "Kubecost improves the cost tracking for your Windows containers. Kubecost helps right sizing cluster nodes, container requests, and manages underutilized infrastructure.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/kubecost-main.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy Kubecost in your EKS environment to improve the cost tracking for your Windows containers. Kubecost helps right sizing cluster nodes, container requests, and manages underutilized infrastructure.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/kubecost-main.html#kubecost-rec"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "Change your scale strategy for Windows Containers on Kubernetes using Karpenter",
+                            "helpfulResource": {
+                                "displayText": "When Karpenter is installed in your cluster, it automatically launches EC2 instances to meet applications compute needs, upgrades them to improve security, and optimizes the instances launched to lower costs.",
+                                "url": "https://aws.amazon.com/about-aws/whats-new/2023/07/karpenter-windows-containers/"
+                            },
+                            "improvementPlan": {
+                                "displayText": " Using Karpenter, customers can now quickly scale their Amazon EKS clusters running Windows with right-sized Amazon EC2 instances in response to changing application load. Karpenter helps customers optimize their operational overhead and costs during this process without manually adjusting the compute capacity of their clusters.",
+                                "url": "https://karpenter.sh/docs/getting-started/getting-started-with-karpenter/#4-install-karpenter"
+                            }
+                        },
+                        {
+                            "id": "choice5",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "(choice1 && choice2) || (choice1 && choice3) || choice2 || choice3 || choice4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && !choice2 && !choice3 && !choice4",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "COP_q4",
+                    "title": "How do you save on storage for your Microsoft workload?",
+                    "description": "The storage layer is a critical architecture component for most applications, including Microsoft workloads. Exploring the compatible Amazon storage offers can help you provide the required performance to your workloads and save costs. Constantly managing storage resources avoids unused resources, over-provisioning, and keeps the workloads performant.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Migrate Amazon EBS volumes from gp2 to gp3",
+                            "helpfulResource": {
+                                "displayText": "General Purpose SSD (gp3) volumes are the latest generation of General Purpose SSD volumes, and the lowest cost SSD volume offered by Amazon EBS. This volume type helps to provide the right balance of price and performance for most applications. It also helps you to scale volume performance independently of volume size. This means that you can provision the required performance with no need to provision additional block storage capacity. Additionally, gp3 volumes offer a 20 percent lower price per GiB than General Purpose SSD (gp2) volumes.",
+                                "url": "https://docs.aws.amazon.com/ebs/latest/userguide/general-purpose.html#gp3-ebs-volume-type"
+                            },
+                            "improvementPlan": {
+                                "displayText": "gp3 volumes offer a 20 percent lower price per GiB than gp2 volumes. Consider changing current gp2 volumes to gp3 to save on costs and increase performance granularity to your Microsoft workloads.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/ebs-migrate-gp2-gp3.html"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Control Amazon EBS volumes / snapshots lifecycle",
+                            "helpfulResource": {
+                                "displayText": "EBS volumes point-in-time snapshots are saved on Amazon Simple Storage Service (S3). Snapshots are incremental backups, saving only the blocks that changed after your most recent snapshot, which saves the cost of storage and reduces the time to create the snapshot. Snapshots can be an alternative to keep backup from unattached / unused EBS volumes that could be deleted and also save on storage costs. The storage tier is an important variable when managing the lifecycle of snapshots. The Standard tier costs more to store, but there is no cost to retrieve data. On the other hand, the Archive tier costs less to store, but there is cost to retrieve data. Having a plan and mechanism to delete unattached / unused EBS volumes and the lifecycle of snapshots can reduce costs for your Microsoft workloads on AWS.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/ebs-migrate-ebs-snapshots.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Design a plan and implement mechanisms to monitor and control unattached / unused EBS volumes and the lifecycle of snapshots.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/ebs-migrate-ebs-snapshots.html"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Use Amazon FSx for Windows File Server",
+                            "helpfulResource": {
+                                "displayText": "Amazon FSx for Windows File Server is a fully managed file storage service that's optimized for Microsoft workloads. It provides an SMB file system that can be accessed by applications, including Windows web servers and Microsoft SQL Server. FSx for Windows File Server is a scalable solution that offers Single AZ or Multi AZ availability, automatic data deduplication, different pricing options, and two capacity settings (HDD and SSD), being flexible to fit your Microsoft workloads. Fairly small EC2 instances can leverage the FSx solution to achieve high performance storage levels.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/storage-fsx.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider implementing Amazon FSx for Windows File Server to reduce the operational burden and providing a scalable solution to your Microsoft workloads.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/storage-fsx.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "Use Amazon FSx for NetApp ONTAP",
+                            "helpfulResource": {
+                                "displayText": "Amazon FSx for NetApp ONTAP offers a file system that supports SMB and iSCSI protocols. Useful for critical Microsoft SQL Server environments, as ONTAP volumes can be mapped to Windows Server instances as block storage devices using the iSCSI model, also providing shared storage for cluster-aware applications. FSx for NetApp ONTAP has two capacity settings (HDD and SSD), data deduplication, and cache layers. Fairly small EC2 instances can leverage the FSx solution to achieve high performance storage levels.",
+                                "url": "https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider implementing Amazon FSx for NetApp ONTAP to reduce the operational burden and providing a scalable solution to your Microsoft workloads.",
+                                "url": "https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/mount-iscsi-windows.html"
+                            }
+                        },
+                        {
+                            "id": "choice5",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2 && (choice3 || choice4)",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && choice2",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "COP_q5",
+                    "title": "How do you save on Active Directory for your Microsoft workload?",
+                    "description": "Microsoft Active Directory has been a widely used identity management solution in Windows networks for decades. It delivers authentication and access protocols, such as LDAP and Kerberos. When deploying Active Directory on AWS, consider the options to make sure you are saving on direct or operational costs for your Microsoft workload.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Use AWS Managed Microsoft Active Directory",
+                            "helpfulResource": {
+                                "displayText": "AWS Managed Microsoft AD is powered by Windows Server 2019. When you select and launch this directory type, it is created as a highly available pair of domain controllers connected to your virtual private cloud (Amazon VPC). The domain controllers run in different Availability Zones in a Region of your choice. Host monitoring and recovery, data replication, snapshots, and software updates are automatically configured and managed for you. You can safely. With AWS Managed Microsoft AD, you can run directory-aware workloads in the AWS Cloud, including Microsoft SharePoint and custom .NET and SQL Server-based applications. You can also configure a trust relationship between AWS Managed Microsoft AD in the AWS Cloud and your existing on-premises Microsoft Active Directory, providing users and groups with access to resources in either domain, using AWS IAM Identity Center. It provides two editions based on sizing: Standard and Enterprise.",
+                                "url": "https://docs.aws.amazon.com/directoryservice/latest/admin-guide/directory_microsoft_ad.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider implementing AWS Managed Microsoft AD to reduce your operational burden of having to manage Active Directory in the AWS Cloud.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/active-directory-aws-managed.html"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Use AD Connector",
+                            "helpfulResource": {
+                                "displayText": "AD Connector is a directory gateway with which you can redirect directory requests to your on-premises Microsoft Active Directory without caching any information in the cloud. AD Connector comes in two sizes, small and large. A small AD Connector is designed for smaller organizations and is intended to handle a low number of operations per second. A large AD Connector is designed for larger organizations and is intended to handle a moderate to high number of operations per second. You can spread application loads across multiple AD Connectors to scale to your performance needs. There are no enforced user or connection limits.",
+                                "url": "https://docs.aws.amazon.com/directoryservice/latest/admin-guide/directory_ad_connector.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider implementing AD Connector to extend your self-manage Active Directory to the AWS Cloud in a simple way.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/active-directory-connector.html"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Use self-managed Active Directory on Amazon EC2",
+                            "helpfulResource": {
+                                "displayText": "Depending on the requirements, your Microsoft workload may require the use of a self-managed Active Directory deployment (either a new forest or extending an existing one). Deploying Active Directory domains controllers to Amazon EC2 is fairly simple. Domain controllers are usually good candidates to run on Amazon EC2 burstable instance family, saving on compute costs. Make sure to evaluate the capacity planning recommendations provided by Microsoft to address your workload requirements.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/active-directory-self-managed.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider deployment Active Directory domain controllers on Amazon EC2, leveraging the best instance family and size that match your workload requirements.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/active-directory-self-managed.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "(choice1 && choice3) || choice1 || choice3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(choice1 || choice3) && choice2",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "COP_q6",
+                    "title": "How do you save on .NET for your Microsoft workload?",
+                    "description": "The introduction of .NET core enables you to design modern .NET applications that take advantage of all the cloud benefits. Modern applications can use the traditional set of compute choices and also target various types of serverless environments, including AWS Fargate or AWS Lambda. .NET 6+ now offers performant hosting of workloads on ARM64 EC2 instances such as the Graviton EC2 families.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Port from .NET Legacy to .NET Modern and run your applications on Graviton EC2 Instances",
+                            "helpfulResource": {
+                                "displayText": "AWS Graviton instances are powered by ARM processors designed by AWS to deliver the best price performance for your cloud workloads running in Amazon Elastic Compute Cloud (Amazon EC2), including containers running in AWS.",
+                                "url": "https://aws.amazon.com/blogs/dotnet/powering-net-8-with-aws-graviton3-benchmarks/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Running a .NET application on AWS Graviton | AWS Events at YouTube Channel",
+                                "url": "https://www.youtube.com/watch?v=tBwhN1QckyQ"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "TBD",
+                            "helpfulResource": {
+                                "displayText": "TBD",
+                                "url": "https://tbd"
+                            },
+                            "improvementPlan": {
+                                "displayText": "TBD",
+                                "url": "https://tbd"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "TBD",
+                            "helpfulResource": {
+                                "displayText": "TBD",
+                                "url": "https://tbd"
+                            },
+                            "improvementPlan": {
+                                "displayText": "TBD",
+                                "url": "https://tbd"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && (choice2 || choice3)",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && !choice2 && !choice3",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SUS",
+            "name": "Sustainability",
+            "questions": [
+                {
+                    "id": "SUS_q1",
+                    "title": "How do you design your Microsoft workload to minimize its environmental impact?",
+                    "description": "Microsoft-based cloud architectures generally become more environmentally sustainable as they reduce infrastructure footprints and energy consumption, which often aligns with cost optimization in cloud environments like AWS. This approach is illustrated by practices such as running fewer, highly-utilized instances, as described in AWS's Well-Architected Framework Sustainability Pillar. However, business stakeholders and Microsoft architecture teams should recognize that prioritizing sustainability may necessitate adjustments to performance goals. Furthermore, organizations should promote continuous optimization practices that focus on energy efficiency, fostering long-term improvements in both sustainability and operational effectiveness. By carefully balancing these considerations, companies can develop cloud architectures that are not only cost-effective but also environmentally responsible, aligning their technological strategies with broader sustainability objectives while maintaining optimal performance.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Align business requirements with sustainable Microsoft architecture designs.",
+                            "helpfulResource": {
+                                "displayText": "When designing Microsoft environments in the cloud, business leaders and architecture teams must actively prioritize sustainability. This requires a clear understanding of the trade-offs involved and the ability to articulate them effectively. In production workloads, with reliability and performance traditionally taking precedence over costs, sustainable designs may not always result in overall cost savings. In fact, implementing more sustainable practices for Microsoft workloads on AWS could potentially increase expenses in areas such as software licensing, staffing, or other business operations. To successfully meet sustainability goals, these trade-offs must be carefully balanced against other business priorities. It's crucial that all stakeholders agree on clearly defined, measurable sustainability objectives that align with broader business needs and performance requirements. This approach ensures that sustainability efforts are integrated thoughtfully into the overall business strategy, rather than being treated as an isolated initiative.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/sus-design-principles.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the design principles from the AWS Well-Architected Framework Sustainability pillar to apply the corresponding best practices to your Microsoft workload."
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Optimize Microsoft ecosystem for sustainability.",
+                            "helpfulResource": {
+                                "displayText": "Once sustainability goals are established, the Microsoft architecture team should implement them. In most cases, the sustainability best practices for standard Microsoft architectures align closely with the recommendations in the Microsoft Lens Cost Optimization pillar. For detailed guidance on implementation, refer to the cost optimization pillar rather than duplicating that information here.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/introduction.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the Cost Optimization pillar from the Microsoft Lens and / or the Optimize costs for Microsoft on AWS Prescriptive Guidance."
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Monitor Microsoft sustainability performance.",
+                            "helpfulResource": {
+                                "displayText": "Monitoring and reporting on Microsoft workload sustainability in AWS provides essential feedback on the effectiveness of implemented changes. This data supports sustainability reporting for shareholders, regulators, and eco-conscious customers. Using metrics from the Operational Excellence pillar, these reports can showcase improvements in your Microsoft landscape's operational sustainability, demonstrating alignment with corporate sustainability goals. This process creates a continuous feedback loop, allowing for ongoing optimization and validation of sustainability efforts in your Microsoft environment.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/cost-dp.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the Cost Optimization pillar from the Microsoft Lens and the AWS Well-Architected Framework."
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice1 && choice2 && choice3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 && choice2",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "MOD",
+            "name": "Modernization",
+            "questions": [
+                {
+                    "id": "MOD_q1",
+                    "title": "How do you modernize your Microsoft .NET workloads?",
+                    "description": "While legacy .NET Framework applications often utilize AWS virtual machines or containers, cross-platform .NET's introduction enables modern applications to fully exploit cloud benefits, including serverless environments. .NET 6+ further expands possibilities by offering performant hosting on ARM64 EC2 instances, like Graviton2 families. This advancement allows access to specialized compute options on Amazon EC2, optimizing performance for diverse workloads such as video encoding, web serving, and high-performance computing. Thus, .NET applications can now harness the latest processor technologies, adapting to specific task requirements and maximizing efficiency in the cloud environment.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Refactor to cross-platform .NET and move to Linux.",
+                            "helpfulResource": {
+                                "displayText": "Modernizing legacy .NET Framework applications is a strategic move to enhance security, boost performance, and increase scalability. One of the most effective approaches to achieve this modernization is by migrating these applications to a cross-platform .NET version, specifically .NET 6 or later. This transition allows organizations to have their applications running on Linux (including Graviton), leverage the latest features, optimizations, and security improvements offered by modern .NET platforms. By upgrading to newer versions, developers can take advantage of enhanced cross-platform capabilities, improved runtime performance, and access to a wider array of cloud-native technologies. This migration not only future-proofs applications but also positions them to better utilize cloud resources and modern development practices, ultimately leading to more robust, efficient, and maintainable software systems.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-refactor-linux.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS offers tools to help speed up the process of modernizing legacy .NET Framework applications and moving to Linux. AWS Toolkit for .NET Refactoring can be used as an assistant to facilitate the code refactoring.",
+                                "url": "https://docs.aws.amazon.com/tk-dotnet-refactoring/latest/userguide/what-is-tk-dotnet-refactoring.html"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Containerize Microsoft .NET applications",
+                            "helpfulResource": {
+                                "displayText": "The adoption of containerization technology, supporting both Windows and Linux environments, may help in the application modernization journey. By leveraging containers, organizations can encapsulate their applications and dependencies, ensuring consistency across different environments and facilitating easier deployment and scaling. The ability to run both Windows and Linux applications on a standardized infrastructure offers significant advantages. It streamlines environment management, reducing complexity and operational overhead when it comes to large environments. Furthermore, this approach accelerates the deployment process, enabling faster time-to-market and more agile development cycles. Containerization thus serves as a tool in modernizing legacy applications, enhancing portability, and improving overall operational efficiency in diverse IT ecosystems.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-containerize.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS offers tools to help speed up the process of containerizing .NET applications. AWS App2Container can be used as an assistant to facilitate the process.",
+                                "url": "https://docs.aws.amazon.com/app2container/latest/UserGuide/what-is-a2c.html"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": " Consider serverless architecture for your Microsoft .NET applications",
+                            "helpfulResource": {
+                                "displayText": "Serverless computing has revolutionized application development, offering unparalleled scalability and agility. AWS Lambda, a serverless platform, is particularly appealing to .NET developers for its cost-effectiveness and scalability. By eliminating the need for server provisioning, Lambda allows developers to create on-demand functions, paying only for resources used. Modern, cross-platform .NET versions (Core and newer) are ideally suited for serverless environments, enabling faster development and improved performance. Supporting languages like C# and F#, these frameworks facilitate the creation of efficient, cost-effective cloud applications.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-serverless.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS offers tools to help speed up the process of containerizing .NET applications. AWS Microservice Extractor for .NET can be used as an assistant to help reduce the time and effort to break down monolithic applications.",
+                                "url": "https://docs.aws.amazon.com/microservice-extractor/latest/userguide/what-is-microservice-extractor.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "(choice1 && choice2) || choice3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 || choice2",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                },
+                {
+                    "id": "MOD_q2",
+                    "title": "How do you modernize your Microsoft SQL Server workloads?",
+                    "description": "When embarking on a journey to modernize legacy databases for improved scalability, performance, and cost optimization, organizations often face challenges with commercial databases like SQL Server, which can be expensive, create vendor lock-in, and impose restrictive licensing terms. Migrating to open-source databases offers a viable solution, with options like Amazon Aurora PostgreSQL providing an attractive alternative. This transition allows companies to save on Windows and SQL Server licensing costs while benefiting from the flexibility and cost-effectiveness of open-source solutions. Cloud-native modern databases like Aurora combine these advantages with enterprise-grade features typically associated with commercial databases, offering a compelling compromise. By refactoring SQL Server databases to such platforms, organizations can achieve significant cost savings and enhanced performance without sacrificing robustness or reliability.",
+                    "choices": [
+                        {
+                            "id": "choice1",
+                            "title": "Use caching to enhance SQL Server workloads.",
+                            "helpfulResource": {
+                                "displayText": "Caching is a powerful strategy to reduce costs and enhance performance in .NET applications, particularly those with frequent data access to backend databases like SQL Server. By implementing an effective caching mechanism, you can significantly reduce the load on backend services, minimizing sizing and scaling requirements. This approach not only cuts costs but also improves application performance. While caching is especially beneficial for read-heavy workloads, it's crucial to select the appropriate technique for your specific use case. Local caching, for example, lacks scalability and requires maintenance for each application instance. When implementing a caching strategy, carefully consider the performance benefits against potential costs, ensuring that the savings from reduced backend resource usage outweigh any additional expenses related to the caching mechanism itself.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-caching.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the use of a cache layer to reduce the SQL Server demand from your Microsoft applications. It's a initial steps to improve performance and start modernizing small components of a legacy application.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-caching.html"
+                            }
+                        },
+                        {
+                            "id": "choice2",
+                            "title": "Consider Babelfish for Amazon Aurora PostgreSQL.",
+                            "helpfulResource": {
+                                "displayText": "Babelfish is a feature that extends Aurora PostgreSQL clusters to accept connections from SQL Server clients. This functionality allows applications originally designed for SQL Server to seamlessly integrate with Aurora PostgreSQL, requiring minimal code changes compared to traditional migration methods. Babelfish achieves this by providing an additional endpoint that comprehends the SQL Server wire-level protocol and commonly used SQL Server statements. Client applications utilizing the Tabular Data Stream (TDS) wire protocol can connect directly to the TDS listener port on Aurora PostgreSQL. This approach significantly simplifies the migration process, enabling organizations to transition from SQL Server to PostgreSQL while maintaining compatibility with existing applications and reducing the need for extensive code modifications or changes to database drivers.",
+                                "url": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/babelfish.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider leveraging Babelfish as an option to reduce the effort to migrate legacy applications that rely on SQL Server, with minimal code changes.",
+                                "url": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/babelfish-migration.html"
+                            }
+                        },
+                        {
+                            "id": "choice3",
+                            "title": "Consider purpose-built databases.",
+                            "helpfulResource": {
+                                "displayText": "Purpose-built databases are gaining traction among businesses adopting modern architectures like microservices, as they can precisely accommodate specific data access patterns and use cases. It's important to note that being purpose-built doesn't necessarily mean abandoning the relational model in favor of NoSQL; a relational database can be considered purpose-built when chosen to meet a workload's particular requirements. By leveraging purpose-built databases, .NET application teams can potentially reduce database costs while simultaneously reaping standard cloud benefits such as enhanced scalability, improved resilience, and a significant reduction in undifferentiated heavy lifting.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-purpose.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider purpose-built databases and refactoring your legacy Microsoft workload to fully leverage the benefits of modern architectures.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-purpose.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "choice3 || (choice1 && choice2)",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "choice1 || choice2",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                    }
+                    ]
+                }
+            ]
+        }
+    ]
+}
