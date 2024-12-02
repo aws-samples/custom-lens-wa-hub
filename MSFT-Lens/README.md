@@ -18,9 +18,9 @@ The goal is to give you a consistent way to design and evaluate Microsoft worklo
 
 ## Contributing
 
-* [Bruno Lopes](https://phonetool.amazon.com/users/lopbruno), Sr Specialist SA, Containers
-* [Carlos Felicio](https://phonetool.amazon.com/users/felicioa), Sr TAM (Partner)
-* [Luciano Bernardes](https://phonetool.amazon.com/users/lucianob), Sr Specialist SA, MSFT
+* [Bruno Lopes](https://www.linkedin.com/in/blopesinfo/), Sr Specialist SA, Containers
+* [Carlos Felicio](https://www.linkedin.com/in/cafeliciobrz/), Sr TAM (Partner)
+* [Luciano Bernardes](https://www.linkedin.com/in/lucianobernardes/), Sr Specialist SA, MSFT
 
 
 ## Resources
