@@ -146,10 +146,10 @@
                             "id": "choice4",
                             "title": "Leverage managed services for your Microsoft workload",
                             "helpfulResource": {
-                                "displayText": "To reduce operational burden, implement the use of AWS managed services to address your Microsoft workload requirements. Consider AWS Managed Microsoft Active Directory, Amazon Relational Database Service for SQL Server, Amazon FSx for Windows File Server, Amazon FSx for NetApp ONTAP, AWS Elastic Beanstalk, and others."
+                                "displayText": "To reduce operational overhead, implement the use of AWS managed services to address your Microsoft workload requirements. Consider AWS Managed Microsoft Active Directory, Amazon Relational Database Service for SQL Server, Amazon FSx for Windows File Server, Amazon FSx for NetApp ONTAP, AWS Elastic Beanstalk, and others."
                             },
                             "improvementPlan": {
-                                "displayText": "To reduce operational burden, implement the use of AWS managed services to address your Microsoft workload requirements when possible."
+                                "displayText": "To reduce operational overhead, implement the use of AWS managed services to address your Microsoft workload requirements when possible."
                             }
                         },
                         {
@@ -675,7 +675,7 @@
                             "id": "choice1",
                             "title": "Consider AWS Elastic Beanstalk for running traditional Windows servers hosting your Microsoft application.",
                             "helpfulResource": {
-                                "displayText": "In scenarios where the traditional virtual machine approach is a requirement, evaluate the EC2 instance families that better address your Microsoft workload needs. You can also opt for Elastic Beanstalk to reduce the operational burden on managing the EC2 instances and surrouding infrastructure resources, such as Elastic Load Balancing, and Auto Scaling Groups.",
+                                "displayText": "In scenarios where the traditional virtual machine approach is a requirement, evaluate the EC2 instance families that better address your Microsoft workload needs. You can also opt for Elastic Beanstalk to reduce the operational overhead on managing the EC2 instances and surrouding infrastructure resources, such as Elastic Load Balancing, and Auto Scaling Groups.",
                                 "url": "https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.net"
                             },
                             "improvementPlan": {
@@ -1224,7 +1224,7 @@
                                 "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/storage-fsx.html"
                             },
                             "improvementPlan": {
-                                "displayText": "Consider implementing Amazon FSx for Windows File Server to reduce the operational burden and providing a scalable solution to your Microsoft workloads.",
+                                "displayText": "Consider implementing Amazon FSx for Windows File Server to reduce the operational overhead and providing a scalable solution to your Microsoft workloads.",
                                 "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/storage-fsx.html"
                             }
                         },
@@ -1236,7 +1236,7 @@
                                 "url": "https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html"
                             },
                             "improvementPlan": {
-                                "displayText": "Consider implementing Amazon FSx for NetApp ONTAP to reduce the operational burden and providing a scalable solution to your Microsoft workloads.",
+                                "displayText": "Consider implementing Amazon FSx for NetApp ONTAP to reduce the operational overhead and providing a scalable solution to your Microsoft workloads.",
                                 "url": "https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/mount-iscsi-windows.html"
                             }
                         },
@@ -1279,7 +1279,7 @@
                                 "url": "https://docs.aws.amazon.com/directoryservice/latest/admin-guide/directory_microsoft_ad.html"
                             },
                             "improvementPlan": {
-                                "displayText": "Consider implementing AWS Managed Microsoft AD to reduce your operational burden of having to manage Active Directory in the AWS Cloud.",
+                                "displayText": "Consider implementing AWS Managed Microsoft AD to reduce your operational overhead of having to manage Active Directory in the AWS Cloud.",
                                 "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/active-directory-aws-managed.html"
                             }
                         },
@@ -1336,11 +1336,11 @@
                 {
                     "id": "COP_q6",
                     "title": "How do you save on .NET for your Microsoft workload?",
-                    "description": "The introduction of .NET core enables you to design modern .NET applications that take advantage of all the cloud benefits. Modern applications can use the traditional set of compute choices and also target various types of serverless environments, including AWS Fargate or AWS Lambda. .NET 6+ now offers performant hosting of workloads on ARM64 EC2 instances such as the Graviton EC2 families.",
+                    "description": "The introduction of cross-platform .NET enables you to design cross-platform .NET applications that take advantage of all the cloud benefits. Modern applications can use the traditional set of compute choices and also target various types of serverless environments, including AWS Fargate or AWS Lambda. Cross-platform .NET 6+ offers performant hosting of workloads on ARM64-based Amazon EC2 instances such as the Graviton-based instance families.",
                     "choices": [
                         {
                             "id": "choice1",
-                            "title": "Port from .NET Legacy to .NET Modern and run your applications on Graviton EC2 Instances",
+                            "title": "Port from .NET Framework to cross-platform .NET and run your applications on AWS Graviton-based Amazon EC2 instances.",
                             "helpfulResource": {
                                 "displayText": "AWS Graviton instances are powered by ARM processors designed by AWS to deliver the best price performance for your cloud workloads running in Amazon Elastic Compute Cloud (Amazon EC2), including containers running in AWS.",
                                 "url": "https://aws.amazon.com/blogs/dotnet/powering-net-8-with-aws-graviton3-benchmarks/"
@@ -1352,26 +1352,36 @@
                         },
                         {
                             "id": "choice2",
-                            "title": "TBD",
+                            "title": "Containerize .NET applications",
                             "helpfulResource": {
-                                "displayText": "TBD",
-                                "url": "https://tbd"
+                                "displayText": "AWS provides comprehensive solutions for running both Windows and Linux containers in the cloud. Whether your application is built on the traditional .NET Framework or modern cross-platform .NET, migrating to containerized architecture offers significant cost savings. This is primarily achieved through more efficient resource utilization and reduced server footprint, as containers allow you to maximize hardware usage while minimizing infrastructure overhead.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-containerize.html"
                             },
                             "improvementPlan": {
-                                "displayText": "TBD",
-                                "url": "https://tbd"
+                                "displayText": "Consider replatforming your .NET applications to containers, to leverage a more efficient resource utilization and save on costs.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-containerize.html"
                             }
                         },
                         {
                             "id": "choice3",
-                            "title": "TBD",
+                            "title": "Consider serverless for you .NET applications",
                             "helpfulResource": {
-                                "displayText": "TBD",
-                                "url": "https://tbd"
+                                "displayText": "Serverless architecture offers significant benefits for .NET applications, allowing developers to focus on code rather than infrastructure management. AWS Lambda supports cross-platform .NET, enabling you to run your C# code without provisioning or managing servers. This approach can lead to reduced operational overhead, as AWS handles scaling, availability, and server maintenance. Serverless applications often have lower costs since you only pay for the compute time you actually use. While serverless isn't suitable for every use case, it's worth considering for applications with variable workloads, microservices, or event-driven processes.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-serverless.html"
                             },
                             "improvementPlan": {
-                                "displayText": "TBD",
-                                "url": "https://tbd"
+                                "displayText": "Consider serverless architecture to your .NET applications, to reduced operational overhead and have better scaling.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-serverless.html"
+                            }
+                        },
+                        {
+                            "id": "choice4",
+                            "title": "None of these.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider the recommendations that best fit your workload and review the forms."
                             }
                         }
                     ],
@@ -1469,18 +1479,18 @@
                 {
                     "id": "MOD_q1",
                     "title": "How do you modernize your Microsoft .NET workloads?",
-                    "description": "While legacy .NET Framework applications often utilize AWS virtual machines or containers, cross-platform .NET's introduction enables modern applications to fully exploit cloud benefits, including serverless environments. .NET 6+ further expands possibilities by offering performant hosting on ARM64 EC2 instances, like Graviton2 families. This advancement allows access to specialized compute options on Amazon EC2, optimizing performance for diverse workloads such as video encoding, web serving, and high-performance computing. Thus, .NET applications can now harness the latest processor technologies, adapting to specific task requirements and maximizing efficiency in the cloud environment.",
+                    "description": "While .NET Framework applications often utilize AWS virtual machines or containers, cross-platform .NET's introduction enables modern applications to fully exploit cloud benefits, including serverless environments. .NET 6+ further expands possibilities by offering performant hosting on ARM64 EC2 instances, like Graviton2 families. This advancement allows access to specialized compute options on Amazon EC2, optimizing performance for diverse workloads such as video encoding, web serving, and high-performance computing. Thus, .NET applications can now harness the latest processor technologies, adapting to specific task requirements and maximizing efficiency in the cloud environment.",
                     "choices": [
                         {
                             "id": "choice1",
                             "title": "Refactor to cross-platform .NET and move to Linux.",
                             "helpfulResource": {
-                                "displayText": "Modernizing legacy .NET Framework applications is a strategic move to enhance security, boost performance, and increase scalability. One of the most effective approaches to achieve this modernization is by migrating these applications to a cross-platform .NET version, specifically .NET 6 or later. This transition allows organizations to have their applications running on Linux (including Graviton), leverage the latest features, optimizations, and security improvements offered by modern .NET platforms. By upgrading to newer versions, developers can take advantage of enhanced cross-platform capabilities, improved runtime performance, and access to a wider array of cloud-native technologies. This migration not only future-proofs applications but also positions them to better utilize cloud resources and modern development practices, ultimately leading to more robust, efficient, and maintainable software systems.",
+                                "displayText": "Modernizing .NET Framework applications is a strategic move to enhance security, boost performance, and increase scalability. One of the most effective approaches to achieve this modernization is by migrating these applications to a cross-platform .NET version, specifically .NET 6 or later. This transition allows organizations to have their applications running on Linux (including Graviton), leverage the latest features, optimizations, and security improvements offered by cross-platform .NET platforms. By upgrading to newer versions, developers can take advantage of enhanced cross-platform capabilities, improved runtime performance, and access to a wider array of cloud-native technologies. This migration not only future-proofs applications but also positions them to better utilize cloud resources and modern development practices, ultimately leading to more robust, efficient, and maintainable software systems.",
                                 "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/optimize-costs-microsoft-workloads/net-refactor-linux.html"
                             },
                             "improvementPlan": {
-                                "displayText": "AWS offers tools to help speed up the process of modernizing legacy .NET Framework applications and moving to Linux. AWS Toolkit for .NET Refactoring can be used as an assistant to facilitate the code refactoring.",
-                                "url": "https://docs.aws.amazon.com/tk-dotnet-refactoring/latest/userguide/what-is-tk-dotnet-refactoring.html"
+                                "displayText": "AWS offers tools to help speed up the process of modernizing .NET Framework applications and moving to Linux. Amazon Q Developer can port your Windows-based .NET applications to Linux-compatible cross-platform .NET applications through a generative AI-powered refactoring workflow.",
+                                "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/transform-dotnet-IDE.html"
                             }
                         },
                         {
