@@ -1,0 +1,619 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "Federated Learning (Flower) on SageMaker AI Best Practice Lens",
+    "description": "Best practices for configuring Federated Learning (Flower) on SageMaker AI",
+    "pillars": [
+        {
+            "id": "PERF",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "PERF1",
+                    "title": "Are you aware of how data quality affects model performance in federated learning?",
+                    "description": "Ensure balanced data distribution across nodes to prevent skewed training and improve model accuracy.",
+                    "choices": [
+                        {
+                            "id": "PERF1_1",
+                            "title": "Anomaly detection in AWS Glue Data Quality",
+                            "helpfulResource": {
+                                "displayText": "Anomaly detection employs machine learning to automatically identify unusual patterns in data",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/data-quality-anomaly-detection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS Glue Data Quality helping to detect issues that traditional methods might miss.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/data-quality-anomaly-detection.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_2",
+                            "title": "Automates the creation of data quality rules",
+                            "helpfulResource": {
+                                "displayText": "Improving data quality by analyzing data and suggesting useful rules without manual code writing ",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/data-quality-getting-started.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS Glue Data Quality allows users to generate data quality rules automatically. ",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/data-quality-getting-started.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_3",
+                            "title": "Evaluate and enhance data quality in workflow",
+                            "helpfulResource": {
+                                "displayText": "Simplifying the process of identifying and addressing data issues in workflow.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/data-quality-gs-studio.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS Glue Studio enables users to evaluate and monitor data quality by adding data quality nodes to visual jobs.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/data-quality-gs-studio.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_4",
+                            "title": "Integration of data quality assessments directly into ETL job",
+                            "helpfulResource": {
+                                "displayText": "AWS Glue Studio notebooks support the integration of data quality assessments directly into ETL job scripts.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/data-quality-gs-studio-notebooks.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Using AWS Glue 3.0 and configure your notebooks to leverage the EvaluateDataQuality class for real-time data validation.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/data-quality-gs-studio-notebooks.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_5",
+                            "title": "Implementing Custom Data Quality Rules with DQDL in AWS Glue",
+                            "helpfulResource": {
+                                "displayText": "AWS Glue DQDL supports various rule types like completeness, uniqueness, and custom SQL.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/dqdl.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The Data Quality Definition Language (DQDL) in AWS Glue enables users to define custom data quality rules.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/dqdl.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_6",
+                            "title": "Setting up alerts, deployments, and scheduling",
+                            "helpfulResource": {
+                                "displayText": "Setting up alerts and notifications in Amazon EventBridge integration",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/data-quality-alerts.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS Glue Data Quality supports the publishing of EventBridge events",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/data-quality-alerts.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF1_1 && PERF1_2 && PERF1_3 && PERF1_4 && PERF1_5 && PERF1_6",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF1_1) || (!PERF1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF2",
+                    "title": "Do you optimize resource allocation for efficient training and inference?",
+                    "description": "Chose the right compute resource for model training and inference",
+                    "choices": [
+                        {
+                            "id": "PERF2_1",
+                            "title": "Choose instances based on model complexity and dataset size for training",
+                            "helpfulResource": {
+                                "displayText": "Regularly evaluate performance to ensure cost-effectiveness.",
+                                "url": "https://pages.awscloud.com/rs/112-TZM-766/images/AL-ML%20for%20Startups%20-%20Select%20the%20Right%20ML%20Instance.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Opt for GPU instances for deep learning, and high-memory instances for large datasets.",
+                                "url": "https://pages.awscloud.com/rs/112-TZM-766/images/AL-ML%20for%20Startups%20-%20Select%20the%20Right%20ML%20Instance.pdf"
+                            }
+                        },
+                        {
+                            "id": "PERF2_2",
+                            "title": "Select instances that meet cost and performance needs for inference",
+                            "helpfulResource": {
+                                "displayText": "For machine learning inference tasks, differentiate based on complexity and urgency.",
+                                "url": "https://aws.amazon.com/cn/blogs/awsmarketplace/rightsizing-amazon-sagemaker-endpoints/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy specialized hardware like AWS Inferentia for scenarios demanding low-latency",
+                                "url": "https://aws.amazon.com/cn/blogs/awsmarketplace/rightsizing-amazon-sagemaker-endpoints/"
+                            }
+                        },
+                        {
+                            "id": "PERF2_3",
+                            "title": "Consider Auto scaling in your model inference",
+                            "helpfulResource": {
+                                "displayText": "Auto scaling dynamically adjusts the number of instances provisioned for a model in response to changes in your workload",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/endpoint-auto-scaling.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon SageMaker AI supports automatic scaling (auto scaling) for your hosted models.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/endpoint-auto-scaling.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF2_1 && PERF2_2 && PERF2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF2_1) || (!PERF2_2) || (!PERF2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF3",
+                    "title": "What aggregation methods ensure consistent learning across nodes?",
+                    "description": "Use methods like FedAvg for convergence and variance reduction.",
+                    "choices": [
+                        {
+                            "id": "PERF3_1",
+                            "title": "Use FedAvg to compute a weighted average of client model updates before",
+                            "helpfulResource": {
+                                "displayText": "A common approach when clients have similar data distributions and computational power, making it suitable for general federated learning applications.",
+                                "url": "https://flower.ai/docs/framework/tutorial-series-use-a-federated-learning-strategy-pytorch.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "FedAvg is natively supported in Flower and can be implemented by setting strategy = FedAvg() when starting the server.",
+                                "url": "https://github.com/adap/flower/tree/main/src/py/flwr/server/strategy"
+                            }
+                        },
+                        {
+                            "id": "PERF3_2",
+                            "title": "Use FedBN to reduce variance in local model updates, leading to more stable training.",
+                            "helpfulResource": {
+                                "displayText": "Works well when data across clients is highly non-IID and datasets have varying sizes, requiring variance reduction to improve convergence.",
+                                "url": "https://flower.ai/docs/framework/how-to-implement-fedbn.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Flower does not provide FedBN natively, but you can modify the client logic slightly and use a network that performs batch normalisation. In general, it is easy to implement any aggregation algorithm at the server by implementing a custom strategy class.",
+                                "url": "https://flower.ai/docs/framework/tutorial-series-build-a-strategy-from-scratch-pytorch.html"
+                            }
+                        },
+                        {
+                            "id": "PERF3_3",
+                            "title": "Use FedProx to add a proximal term that regularizes local training, preventing drastic deviations.",
+                            "helpfulResource": {
+                                "displayText": "Useful when client devices have varying computational power or when data heterogeneity causes unstable training.",
+                                "url": "https://github.com/adap/flower/blob/main/src/py/flwr/server/strategy/fedprox.py"
+                            },
+                            "improvementPlan": {
+                                "displayText": "FedProx is available out-of-the-box in the Flower Framework, which also has multiple other aggregation algorithms",
+                                "url": "https://github.com/adap/flower/blob/main/src/py/flwr/server/strategy/fedprox.py"
+                            }
+                        },
+                        {
+                            "id": "PERF3_4",
+                            "title": "Use adaptive optimization techniques such as Adam or SGD with momentum at the server to improve global model stability.",
+                            "helpfulResource": {
+                                "displayText": "Designed for large-scale federated learning where clients have unstable convergence patterns, requiring server-side optimization.",
+                                "url": "https://github.com/adap/flower/blob/main/src/py/flwr/server/strategy/fedopt.py"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Flower supports FedOpt via FedOpt(), which allows configuring server-side optimizers.",
+                                "url": "https://github.com/adap/flower/blob/main/src/py/flwr/server/strategy/fedopt.py"
+                            }
+                        },
+                        {
+                            "id": "PERF3_5",
+                            "title": "Use secure aggregation to protect local model updates before transmission to the server.",
+                            "helpfulResource": {
+                                "displayText": "Critical for privacy-sensitive federated learning applications, such as fraud detection and financial risk modeling, where client updates must remain confidential.",
+                                "url": "https://flower.ai/docs/framework/contributor-ref-secure-aggregation-protocols.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Secure Aggregation is available out-of-the-box in Flower",
+                                "url": "https://flower.ai/docs/framework/contributor-ref-secure-aggregation-protocols.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF3_1 && PERF3_2 && PERF3_3 && PERF3_4 && PERF3_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF3_1) || (!PERF3_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF4",
+                    "title": "How to communicate efficiently during the federated training process?",
+                    "description": "Use model compression techniques along with other optimisations to reduce the communication overhead in federated learning",
+                    "choices": [
+                        {
+                            "id": "PERF4_1",
+                            "title": "Use model compression techniques along with adaptive client sampling and asynchronous updates",
+                            "helpfulResource": {
+                                "displayText": "It is recommended to optimise the communications between the server and the clients when sharing updates after each round of training. ",
+                                "url": "https://flower.ai/docs/baselines/tamuna.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use techniques such as TAMUNA (available as a baseline in the Flower framework) to improve communication efficiency during the federated training process",
+                                "url": "https://flower.ai/docs/baselines/tamuna.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_2",
+                            "title": "If finetuning large language models, use methods like parameter efficient finetuning (PEFT) to keep update size in limit",
+                            "helpfulResource": {
+                                "displayText": "Improves efficiency when the models to the trained/finetuned are very large",
+                                "url": "https://flower.ai/blog/2024-03-14-llm-flowertune-federated-llm-finetuning-with-flower/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Finetune LLMs with efficiency improving techniques such as PEFT and LoRA",
+                                "url": "https://flower.ai/docs/examples/flowertune-llm.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF4_1 && PERF4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "OPS",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "OPS1",
+                    "title": "How do you collect and monitoring metric and log for your model training and inference?",
+                    "description": "You can monitor your model training and inference with SageMaker AI and Cloud Watch native integration",
+                    "choices": [
+                        {
+                            "id": "OPS1_1",
+                            "title": "Metrics for monitoring Amazon SageMaker AI with Amazon CloudWatch",
+                            "helpfulResource": {
+                                "displayText": "You can access historical information and gain a better perspective on how your web application or service is performing.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/monitoring-cloudwatch.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can monitor Amazon SageMaker AI using Amazon CloudWatch, which collects raw data and processes it into readable, near real-time metrics.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/monitoring-cloudwatch.html"
+                            }
+                        },
+                        {
+                            "id": "OPS1_2",
+                            "title": "Log groups and streams that Amazon SageMaker AI sends to Amazon CloudWatch Logs",
+                            "helpfulResource": {
+                                "displayText": "You can debug your training job and model inference with CloudWatch Log",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/logging-cloudwatch.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "By default, log data is stored in CloudWatch Logs indefinitely. You can configure how long to store log data in a log group.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/logging-cloudwatch.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS1_1 && OPS1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS1_1) || (!OPS1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS2",
+                    "title": "How do you implement MLOps in federated learning?",
+                    "description": "One should consider all the steps in a  Federated learning process for operations",
+                    "choices": [
+                        {
+                            "id": "OPS2_1",
+                            "title": "Flower Server starts and notifies the Client to start the process",
+                            "helpfulResource": {
+                                "displayText": "Initialize and trigger a Federated Learning task and start Flower Server is the init step",
+                                "url": "https://aws.amazon.com/blogs/compute/cross-account-integration-with-amazon-sns/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "SNS can be used to send messages within a single account or to resources in different accounts to create administrative isolation.",
+                                "url": "https://aws.amazon.com/blogs/compute/cross-account-integration-with-amazon-sns/"
+                            }
+                        },
+                        {
+                            "id": "OPS2_2",
+                            "title": "Flower Client can send notification to client team",
+                            "helpfulResource": {
+                                "displayText": "When federated learning is finished or you get some error in Training job, you can send an email to the ML team in your client side account",
+                                "url": "https://repost.aws/questions/QUM-mTUMVsRHqKNO0elOvyYA/how-to-trigger-an-event-bridge-rule-for-sagemaker-training-job-when-failed"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can trigger an event bridge rule for sagemaker training job completed or failed with error and send notification to your team",
+                                "url": "https://repost.aws/questions/QUM-mTUMVsRHqKNO0elOvyYA/how-to-trigger-an-event-bridge-rule-for-sagemaker-training-job-when-failed"
+                            }
+                        },
+                        {
+                            "id": "OPS2_3",
+                            "title": "Deploy and monitor global model",
+                            "helpfulResource": {
+                                "displayText": "You can ask your ML team evaluate the model performance or deploy to SageMaker AI endpoint when model training complete",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/how-it-works-deployment.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can automate model deployment to SageMaker AI when finish federated training.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/how-it-works-deployment.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS2_1 && OPS2_2 && OPS2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SEC",
+            "name": "Security",
+            "questions": [
+                {
+                    "id": "SEC1",
+                    "title": "How will you design network infrastructure for multi-environment federated learning?",
+                    "description": "Use Site to site VPN or Dedicated network connection for secure, scalable connectivity.",
+                    "choices": [
+                        {
+                            "id": "SEC1_1",
+                            "title": "Build a secure VPN connection between AWS and Customer Network",
+                            "helpfulResource": {
+                                "displayText": "Consider a secure and quick network setup for connecting on-premise infrastructure to the cloud.",
+                                "url": "https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Site-to-Site VPN to establish an encrypted VPN connection between on-premise infrastructure and AWS, enabling secure federated learning model updates.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/transit-gateway.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_2",
+                            "title": "Build internal and cross-organization networks",
+                            "helpfulResource": {
+                                "displayText": "Build a centralized network for internal or cross-region connectivity within large enterprises.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/transit-gateway.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Transit Gateway to efficiently manage and route traffic between multiple AWS VPCs, branch offices, and federated learning nodes across regions.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/transit-gateway.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_3",
+                            "title": "Build a high-performance network connection for AWS and Customer Network",
+                            "helpfulResource": {
+                                "displayText": "Consider a high-performance hybrid cloud setup for secure, low-latency data transfer between on-premise and cloud environments.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/aws-direct-connect.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Direct Connect to establish a private, low-latency, high-bandwidth connection for stable and secure model training and updates in a federated learning architecture.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/aws-direct-connect.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_4",
+                            "title": "Ensure TLS connections are enabled for Flower internal communications",
+                            "helpfulResource": {
+                                "displayText": "Make the communications between the analyst and the server + the server and the client secure ",
+                                "url": "https://flower.ai/docs/framework/how-to-enable-tls-connections.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use the TLS-enabled Flower CLI and ensure client to server communication happens with TLS.",
+                                "url": "https://flower.ai/docs/framework/how-to-enable-tls-connections.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC1_1 && SEC1_2 && SEC1_3 && SEC1_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC1_1) || (!SEC1_3) || (!SEC1_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC2",
+                    "title": "How do security and privacy measures influence the reliability of federated learning systems?",
+                    "description": "Implement robust security measures to protect data during transmission, and use privacy-preserving techniques like differential privacy.",
+                    "choices": [
+                        {
+                            "id": "SEC2_1",
+                            "title": "Use Partial Homomorphic Encryption (PHE) for faster operations or Fully Homomorphic Encryption (FHE) for complex computations.",
+                            "helpfulResource": {
+                                "displayText": "Optimize computational overhead by selecting the appropriate HE scheme.",
+                                "url": "https://www.youtube.com/watch?v=rgDx_o0YWR8"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Integrate HE within the Flower framework to manage encrypted computations across clients.",
+                                "url": "https://www.youtube.com/watch?v=rgDx_o0YWR8"
+                            }
+                        },
+                        {
+                            "id": "SEC2_2",
+                            "title": "Consider Secure Multi-Party Computation (SMPC) in your federated learning process.",
+                            "helpfulResource": {
+                                "displayText": "Prioritize network security and careful handling of computation values."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Incorporate SMPC into the Flower framework to handle secure computations in a distributed environment."
+                            }
+                        },
+                        {
+                            "id": "SEC2_3",
+                            "title": "Implement cryptographic techniques for secure model update aggregation.",
+                            "helpfulResource": {
+                                "displayText": "Enhance privacy with differential privacy by adding noise to the model updates.",
+                                "url": "https://arxiv.org/pdf/2205.06117"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use TensorFlow Federated or PyTorch for built-in secure aggregation support.",
+                                "url": "https://arxiv.org/pdf/2205.06117"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC2_1 && SEC2_2 && SEC2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC2_1) || (!SEC2_2) || (!SEC2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "COST",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "COST1",
+                    "title": "Have you considered EC2 Spot Instances for model training, and what are your concerns about interruptions?",
+                    "description": "Utilize EC2 Spot Instances for training models to reduce costs.",
+                    "choices": [
+                        {
+                            "id": "COST1_1",
+                            "title": "Consider Spot instance for your Federated Learning Training job",
+                            "helpfulResource": {
+                                "displayText": "Managed spot training can optimize the cost of training models up to 90% over on-demand instances. SageMaker AI manages the Spot interruptions on your behalf.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-managed-spot-training.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon SageMaker AI makes it easy to train machine learning models using managed Amazon EC2 Spot instances.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-managed-spot-training.html"
+                            }
+                        },
+                        {
+                            "id": "COST1_2",
+                            "title": "Handle your training job interruption with checkpoint",
+                            "helpfulResource": {
+                                "displayText": "Checkpoints are snapshots of the model and can be configured by the callback functions of ML frameworks.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-checkpoints.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use checkpoints in Amazon SageMaker AI to save the state of machine learning (ML) models during training.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-checkpoints.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST1_1 && COST1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST1_1) || (!COST1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST2",
+                    "title": "Do you fully understand the pricing model for Amazon SageMaker AI?",
+                    "description": "SageMaker pricing depends on instance type, training time, inference, storage, and services.",
+                    "choices": [
+                        {
+                            "id": "COST2_1",
+                            "title": "Understand the SageMaker AI pricing model",
+                            "helpfulResource": {
+                                "displayText": "SageMaker AI have different pricing strategy for different feature you engage in model training and inference.",
+                                "url": "https://aws.amazon.com/sagemaker/pricing/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "SageMaker AI pricing page provide more information. ",
+                                "url": "https://aws.amazon.com/sagemaker/pricing/"
+                            }
+                        },
+                        {
+                            "id": "COST2_2",
+                            "title": "Consider SageMaker Saving Plans for your model training and inference",
+                            "helpfulResource": {
+                                "displayText": "These plans automatically apply to the usage of eligible to SageMaker training and real-time infernece",
+                                "url": "https://aws.amazon.com/savingsplans/ml-pricing/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon SageMaker Savings Plans provide the most flexibility and help to reduce your costs by up to 64%.",
+                                "url": "https://aws.amazon.com/savingsplans/ml-pricing/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST2_1 && COST2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
