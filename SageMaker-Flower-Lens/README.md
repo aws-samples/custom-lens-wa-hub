@@ -6,3 +6,4 @@ Federated Learning (Flower) on SageMaker AI Best Practice Lens provides best pra
 
 ## Reviewers
 - Sasi Kumar, Machine Learning Engineer, Flower Labs
+- Dimitris Stripelis, Research Engineer, Flower Labs
