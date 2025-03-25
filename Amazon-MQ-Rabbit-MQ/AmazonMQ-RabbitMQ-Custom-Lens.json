@@ -1,0 +1,1515 @@
+{
+  "schemaVersion": "2021-11-01",
+  "name": "Amazon MQ for RabbitMQ WAFR Custom Lens for Operational Excellence,Performance Efficiency, Security and Reliability pillars",
+  "description": "This custom lens helps evaluate the Operational excellence, Performance Efficiency, Reliability and Security pillars of workloads using Amazon MQ for RabbitMQ.",
+  "pillars": [
+
+          {
+            "id": "security_pillar",
+            "name": "Security",
+            "questions": [
+              {
+                "id": "sec_rabbitmq_network",
+                "title": "How do you secure the network for your Amazon MQ for RabbitMQ broker?",
+                "description": "Amazon MQ brokers should be deployed within a secure network environment to minimize the attack surface. Consider using private subnets, security groups, and network ACLs to restrict access.",
+                "choices": [
+                  {
+                    "id": "sec_rabbitmq_network_a",
+                    "title": "Deploy brokers in private subnets with restrictive security groups",
+                    "helpfulResource": {
+                      "displayText": "Learn about network security for Amazon MQ for RabbitMQ including VPC and security group configuration.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-and-compliance.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Deploy Amazon MQ brokers in private subnets with security groups that limit access to specific CIDR ranges and ports. Configure VPC endpoints to privately access the service."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_network_b",
+                    "title": "Use VPC peering or AWS Transit Gateway for secure cross-VPC communication",
+                    "helpfulResource": {
+                      "displayText": "Learn about VPC peering and Transit Gateway for secure network connectivity.",
+                      "url": "https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Implement VPC peering or AWS Transit Gateway for secure communication between applications in different VPCs and your Amazon MQ broker."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_network_c",
+                    "title": "Implement network traffic monitoring and inspection",
+                    "helpfulResource": {
+                      "displayText": "Learn about VPC Flow Logs and traffic inspection.",
+                      "url": "https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Enable VPC Flow Logs and implement network traffic inspection to monitor and analyze communication with your RabbitMQ brokers."
+                    }
+                  }
+                ],
+                "riskRules": [
+                  {
+                    "condition": "sec_rabbitmq_network_a && sec_rabbitmq_network_b && sec_rabbitmq_network_c",
+                    "risk": "NO_RISK"
+                  },
+                  {
+                    "condition": "sec_rabbitmq_network_a",
+                    "risk": "MEDIUM_RISK"
+                  },
+                  {
+                    "condition": "default",
+                    "risk": "HIGH_RISK"
+                  }
+                ]
+              },
+              {
+                "id": "sec_rabbitmq_auth",
+                "title": "How do you manage authentication and authorization for your RabbitMQ broker?",
+                "description": "Properly managing user authentication and authorization is critical to securing your Amazon MQ for RabbitMQ broker. This includes creating appropriate users with least privilege permissions and integrating with identity providers when possible.",
+                "choices": [
+                  {
+                    "id": "sec_rabbitmq_auth_a",
+                    "title": "Apply least privilege principle for broker users and policies",
+                    "helpfulResource": {
+                      "displayText": "Learn about RabbitMQ user management and permissions in Amazon MQ.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-authentication-authorization.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Configure RabbitMQ users with least privilege permissions. Use vhost isolation to separate workloads and apply appropriate policies for access control."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_auth_b",
+                    "title": "Rotate credentials regularly",
+                    "helpfulResource": {
+                      "displayText": "Learn about credential management best practices.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-best-practices.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Implement a process to regularly rotate RabbitMQ user credentials. Consider using AWS Secrets Manager to store and rotate credentials automatically."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_auth_c",
+                    "title": "Use service accounts for application access",
+                    "helpfulResource": {
+                      "displayText": "Learn about using service accounts with Amazon MQ.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/welcome.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Create dedicated service accounts for application access to RabbitMQ instead of using shared or administrator credentials."
+                    }
+                  }
+                ],
+                "riskRules": [
+                  {
+                    "condition": "sec_rabbitmq_auth_a && sec_rabbitmq_auth_b && sec_rabbitmq_auth_c",
+                    "risk": "NO_RISK"
+                  },
+                  {
+                    "condition": "sec_rabbitmq_auth_a",
+                    "risk": "MEDIUM_RISK"
+                  },
+                  {
+                    "condition": "default",
+                    "risk": "HIGH_RISK"
+                  }
+                ]
+              },
+              {
+                "id": "sec_rabbitmq_encryption",
+                "title": "How do you implement encryption for your Amazon MQ for RabbitMQ broker?",
+                "description": "Data protection through encryption is crucial for securing your messaging system. Amazon MQ for RabbitMQ provides options for encryption in transit and at rest.",
+                "choices": [
+                  {
+                    "id": "sec_rabbitmq_encryption_a",
+                    "title": "Enable encryption in transit using TLS",
+                    "helpfulResource": {
+                      "displayText": "Learn about encryption in transit for Amazon MQ for RabbitMQ.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/data-protection.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Configure your Amazon MQ for RabbitMQ broker to use Transport Layer Security (TLS) for all client connections and enforce the use of TLS in client applications."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_encryption_b",
+                    "title": "Use customer-managed KMS keys for enhanced encryption at rest",
+                    "helpfulResource": {
+                      "displayText": "Learn about encryption at rest with customer-managed KMS keys in Amazon MQ.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/data-protection.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Configure your Amazon MQ for RabbitMQ broker to use customer-managed AWS KMS keys instead of AWS-owned keys for encryption at rest."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_encryption_c",
+                    "title": "Encrypt message payloads at the application level",
+                    "helpfulResource": {
+                      "displayText": "Learn about implementing application-level encryption for sensitive data.",
+                      "url": "https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/protect-data-at-rest.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Implement application-level encryption for sensitive message payloads before sending them to RabbitMQ to add an additional layer of security."
+                    }
+                  }
+                ],
+                "riskRules": [
+                  {
+                    "condition": "sec_rabbitmq_encryption_a && sec_rabbitmq_encryption_b && sec_rabbitmq_encryption_c",
+                    "risk": "NO_RISK"
+                  },
+                  {
+                    "condition": "sec_rabbitmq_encryption_a",
+                    "risk": "MEDIUM_RISK"
+                  },
+                  {
+                    "condition": "default",
+                    "risk": "HIGH_RISK"
+                  }
+                ]
+              },
+              {
+                "id": "sec_rabbitmq_monitoring",
+                "title": "How do you monitor and detect security events in your Amazon MQ for RabbitMQ environment?",
+                "description": "Continuous monitoring and logging are essential for detecting potential security issues, unauthorized access attempts, and other security-related events in your RabbitMQ environment.",
+                "choices": [
+                  {
+                    "id": "sec_rabbitmq_monitoring_a",
+                    "title": "Enable broker logging and integrate with CloudWatch Logs",
+                    "helpfulResource": {
+                      "displayText": "Learn about logging and monitoring in Amazon MQ for RabbitMQ.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-logging-monitoring.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Enable general and audit logging for your Amazon MQ for RabbitMQ broker and configure the logs to be sent to CloudWatch Logs for centralized analysis."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_monitoring_b",
+                    "title": "Set up CloudWatch alarms for security-relevant metrics",
+                    "helpfulResource": {
+                      "displayText": "Learn about Amazon MQ metrics and CloudWatch alarms.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-logging-monitoring.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Configure CloudWatch alarms to detect potential security issues such as failed login attempts, unusual connection patterns, and queue access patterns."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_monitoring_c",
+                    "title": "Use AWS Config rules to monitor broker configuration compliance",
+                    "helpfulResource": {
+                      "displayText": "Learn about using AWS Config to monitor resource configurations.",
+                      "url": "https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Implement AWS Config rules to monitor and detect changes to your Amazon MQ broker configuration that might impact security."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_monitoring_d",
+                    "title": "Enable AWS CloudTrail for API call monitoring",
+                    "helpfulResource": {
+                      "displayText": "Learn about AWS CloudTrail integration with Amazon MQ.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-logging-monitoring.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Enable AWS CloudTrail to monitor and log all API calls made to your Amazon MQ resources to detect unauthorized configuration changes."
+                    }
+                  }
+                ],
+                "riskRules": [
+                  {
+                    "condition": "sec_rabbitmq_monitoring_a && sec_rabbitmq_monitoring_b && sec_rabbitmq_monitoring_c && sec_rabbitmq_monitoring_d",
+                    "risk": "NO_RISK"
+                  },
+                  {
+                    "condition": "sec_rabbitmq_monitoring_a && sec_rabbitmq_monitoring_b",
+                    "risk": "MEDIUM_RISK"
+                  },
+                  {
+                    "condition": "default",
+                    "risk": "HIGH_RISK"
+                  }
+                ]
+              },
+              {
+                "id": "sec_rabbitmq_patching",
+                "title": "How do you maintain up-to-date software and security patches for your Amazon MQ for RabbitMQ broker?",
+                "description": "Keeping your RabbitMQ broker updated with the latest security patches is crucial to protect against known vulnerabilities and maintain a secure messaging environment.",
+                "choices": [
+                  {
+                    "id": "sec_rabbitmq_patching_a",
+                    "title": "Enable automatic minor version upgrades",
+                    "helpfulResource": {
+                      "displayText": "Learn about broker engine version management in Amazon MQ.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/rabbitmq-version-management.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Enable automatic minor version upgrades for your Amazon MQ for RabbitMQ brokers to ensure they receive security patches automatically."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_patching_b",
+                    "title": "Plan and schedule major version upgrades",
+                    "helpfulResource": {
+                      "displayText": "Learn about upgrading RabbitMQ engine versions in Amazon MQ.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/rabbitmq-version-management.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Develop a process to regularly evaluate and upgrade to new major versions of RabbitMQ when they become available in Amazon MQ, with proper testing and validation."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_patching_c",
+                    "title": "Maintain database of broker versions and security advisories",
+                    "helpfulResource": {
+                      "displayText": "Stay informed about RabbitMQ security advisories.",
+                      "url": "https://www.rabbitmq.com/security.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Track RabbitMQ security advisories and maintain documentation of your broker versions to quickly identify when updates are needed for security purposes."
+                    }
+                  }
+                ],
+                "riskRules": [
+                  {
+                    "condition": "sec_rabbitmq_patching_a && sec_rabbitmq_patching_b && sec_rabbitmq_patching_c",
+                    "risk": "NO_RISK"
+                  },
+                  {
+                    "condition": "sec_rabbitmq_patching_a",
+                    "risk": "MEDIUM_RISK"
+                  },
+                  {
+                    "condition": "default",
+                    "risk": "HIGH_RISK"
+                  }
+                ]
+              },
+              {
+                "id": "sec_rabbitmq_disaster_recovery",
+                "title": "How do you ensure security during disaster recovery scenarios for your Amazon MQ for RabbitMQ broker?",
+                "description": "Maintaining security controls during disaster recovery processes is crucial to prevent vulnerabilities during restoration activities.",
+                "choices": [
+                  {
+                    "id": "sec_rabbitmq_dr_a",
+                    "title": "Deploy multi-AZ brokers for high availability",
+                    "helpfulResource": {
+                      "displayText": "Learn about Amazon MQ for RabbitMQ high availability deployment.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/rabbitmq-broker-architecture.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Deploy your RabbitMQ brokers in a multi-AZ configuration to maintain availability and security during zone failures."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_dr_b",
+                    "title": "Implement cross-region disaster recovery with consistent security controls",
+                    "helpfulResource": {
+                      "displayText": "Learn about cross-region disaster recovery for Amazon MQ.",
+                      "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/disaster-recovery-resiliency.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Implement cross-region disaster recovery for RabbitMQ, ensuring that security controls, such as encryption, network security, and access controls, are consistently applied in the recovery region."
+                    }
+                  },
+                  {
+                    "id": "sec_rabbitmq_dr_c",
+                    "title": "Regularly test broker recovery with security validation",
+                    "helpfulResource": {
+                      "displayText": "Learn about disaster recovery testing best practices.",
+                      "url": "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-testing.html"
+                    },
+                    "improvementPlan": {
+                      "displayText": "Regularly test your broker recovery procedures and include validation of security controls as part of the testing process."
+                    }
+                  }
+                ],
+                "riskRules": [
+                  {
+                    "condition": "sec_rabbitmq_dr_a && sec_rabbitmq_dr_b && sec_rabbitmq_dr_c",
+                    "risk": "NO_RISK"
+                  },
+                  {
+                    "condition": "sec_rabbitmq_dr_a",
+                    "risk": "MEDIUM_RISK"
+                  },
+                  {
+                    "condition": "default",
+                    "risk": "HIGH_RISK"
+                  }
+                ]
+              }
+            ]
+          }
+      ,      
+    {
+        "id": "reliability",
+        "name": "Reliability",
+        "questions": [
+          {
+            "id": "mq_reliability_q1",
+            "title": "How do you ensure high availability of your Amazon MQ for RabbitMQ broker?",
+            "description": "Implementing proper high availability configurations for your Amazon MQ for RabbitMQ broker helps ensure service continuity during infrastructure failures. Consider deploying multi-AZ configuration and properly sizing your instance types based on your workload requirements.",
+            "choices": [
+              {
+                "id": "mq_reliability_q1_c1",
+                "title": "We use multi-AZ deployment for our RabbitMQ broker to ensure high availability across Availability Zones",
+                "helpfulResource": {
+                  "displayText": "Learn about Amazon MQ for RabbitMQ deployment options and high availability configurations",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/rabbitmq-broker-architecture.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Deploy your Amazon MQ for RabbitMQ broker in a multi-AZ configuration to ensure high availability and fault tolerance. Configure cluster deployment with at least three nodes."
+                }
+              },
+              {
+                "id": "mq_reliability_q1_c2",
+                "title": "We have calculated the appropriate instance type for our RabbitMQ broker based on our workload requirements",
+                "helpfulResource": {
+                  "displayText": "Learn about instance type selection for Amazon MQ for RabbitMQ",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/broker-instance-types.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Analyze your message throughput, size, and storage requirements to determine the appropriate instance type. Consider using mq.m5 instance types for production workloads."
+                }
+              },
+              {
+                "id": "mq_reliability_q1_c3",
+                "title": "We have implemented application-level retry mechanisms to handle temporary broker unavailability",
+                "helpfulResource": {
+                  "displayText": "Learn about implementing resilient client connections for RabbitMQ",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/connecting-to-amazon-mq.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Implement exponential backoff and retry mechanisms in your client applications to handle temporary broker unavailability or connection issues."
+                }
+              }
+            ],
+            "riskRules": [
+              {
+                "condition": "mq_reliability_q1_c1 && mq_reliability_q1_c2 && mq_reliability_q1_c3",
+                "risk": "NO_RISK"
+              },
+              {
+                "condition": "mq_reliability_q1_c1",
+                "risk": "MEDIUM_RISK"
+              },
+              {
+                "condition": "default",
+                "risk": "HIGH_RISK"
+              }
+            ]
+          },
+          {
+            "id": "mq_reliability_q2",
+            "title": "How do you monitor the health and performance of your Amazon MQ for RabbitMQ broker?",
+            "description": "Comprehensive monitoring of your Amazon MQ for RabbitMQ broker helps you detect and address issues before they impact your applications. Set up monitoring for key metrics and implement automated alerts.",
+            "choices": [
+              {
+                "id": "mq_reliability_q2_c1",
+                "title": "We monitor Amazon MQ for RabbitMQ metrics using CloudWatch",
+                "helpfulResource": {
+                  "displayText": "Learn about monitoring Amazon MQ for RabbitMQ with CloudWatch metrics",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/amazon-mq-monitoring-rabbitmq-with-cloudwatch.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Set up CloudWatch dashboards to monitor key metrics such as CPU utilization, memory usage, queue depth, and network throughput for your RabbitMQ broker."
+                }
+              },
+              {
+                "id": "mq_reliability_q2_c2",
+                "title": "We have configured CloudWatch alarms for critical metrics",
+                "helpfulResource": {
+                  "displayText": "Learn about setting up CloudWatch alarms for Amazon MQ for RabbitMQ",
+                  "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Configure CloudWatch alarms for critical metrics like high CPU utilization, memory usage, disk space, and queue depth. Set thresholds based on your application's tolerance."
+                }
+              },
+              {
+                "id": "mq_reliability_q2_c3",
+                "title": "We use RabbitMQ management plugin or API to monitor detailed queue and exchange metrics",
+                "helpfulResource": {
+                  "displayText": "Learn about accessing the RabbitMQ management console",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/accessing-management-console-of-rabbitmq.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Use the RabbitMQ management plugin to monitor detailed metrics about queues, exchanges, and connections. Consider implementing custom monitoring using the RabbitMQ Management HTTP API."
+                }
+              }
+            ],
+            "riskRules": [
+              {
+                "condition": "mq_reliability_q2_c1 && mq_reliability_q2_c2 && mq_reliability_q2_c3",
+                "risk": "NO_RISK"
+              },
+              {
+                "condition": "mq_reliability_q2_c1",
+                "risk": "MEDIUM_RISK"
+              },
+              {
+                "condition": "default",
+                "risk": "HIGH_RISK"
+              }
+            ]
+          },
+          {
+            "id": "mq_reliability_q3",
+            "title": "How do you implement backup and recovery strategies for your Amazon MQ for RabbitMQ broker?",
+            "description": "Properly backing up your Amazon MQ for RabbitMQ broker configuration and data is essential for disaster recovery scenarios. Ensure you have strategies for backing up and restoring your broker.",
+            "choices": [
+              {
+                "id": "mq_reliability_q3_c1",
+                "title": "We use automated broker configuration backups",
+                "helpfulResource": {
+                  "displayText": "Learn about Amazon MQ for RabbitMQ backup and recovery options",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/amazon-mq-rabbitmq-configuration-backup.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Enable automated broker configuration backups and define appropriate retention periods based on your recovery point objectives."
+                }
+              },
+              {
+                "id": "mq_reliability_q3_c2",
+                "title": "We have documented procedures for recreating broker configurations",
+                "helpfulResource": {
+                  "displayText": "Learn about infrastructure as code for Amazon MQ using AWS CloudFormation",
+                  "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-amazonmq-broker.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Document procedures for recreating your broker configurations or use infrastructure as code tools like CloudFormation or Terraform to automate broker creation."
+                }
+              },
+              {
+                "id": "mq_reliability_q3_c3",
+                "title": "We implement application-level message persistence strategies",
+                "helpfulResource": {
+                  "displayText": "Learn about message durability and persistence in RabbitMQ",
+                  "url": "https://www.rabbitmq.com/persistence-conf.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Implement message persistence strategies at the application level, such as using durable queues, persistent messages, and publisher confirms to prevent message loss."
+                }
+              }
+            ],
+            "riskRules": [
+              {
+                "condition": "mq_reliability_q3_c1 && mq_reliability_q3_c2 && mq_reliability_q3_c3",
+                "risk": "NO_RISK"
+              },
+              {
+                "condition": "mq_reliability_q3_c1 || mq_reliability_q3_c3",
+                "risk": "MEDIUM_RISK"
+              },
+              {
+                "condition": "default",
+                "risk": "HIGH_RISK"
+              }
+            ]
+          },
+          {
+            "id": "mq_reliability_q4",
+            "title": "How do you manage and optimize your RabbitMQ queues and message handling?",
+            "description": "Proper queue management and message handling are critical for ensuring system reliability. Configure your queues, exchanges, and consumers appropriately to handle the expected message load.",
+            "choices": [
+              {
+                "id": "mq_reliability_q4_c1",
+                "title": "We use appropriate queue types and configurations for our use cases",
+                "helpfulResource": {
+                  "displayText": "Learn about RabbitMQ queue types and configurations",
+                  "url": "https://www.rabbitmq.com/queues.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Choose appropriate queue types (classic, quorum, or stream) based on your use case. Configure queue properties like message TTL, max length, and dead letter exchanges."
+                }
+              },
+              {
+                "id": "mq_reliability_q4_c2",
+                "title": "We implement dead letter queues for handling failed message processing",
+                "helpfulResource": {
+                  "displayText": "Learn about dead letter exchanges in RabbitMQ",
+                  "url": "https://www.rabbitmq.com/dlx.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Configure dead letter exchanges and queues to capture messages that cannot be delivered or processed, enabling later analysis and potential reprocessing."
+                }
+              },
+              {
+                "id": "mq_reliability_q4_c3",
+                "title": "We use prefetch settings to optimize consumer throughput and resource utilization",
+                "helpfulResource": {
+                  "displayText": "Learn about consumer prefetch in RabbitMQ",
+                  "url": "https://www.rabbitmq.com/consumer-prefetch.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Configure appropriate prefetch settings for your consumers based on your processing capacity. Use smaller prefetch values for long-running tasks and larger values for quick tasks."
+                }
+              },
+              {
+                "id": "mq_reliability_q4_c4",
+                "title": "We implement circuit breakers and throttling to prevent system overload",
+                "helpfulResource": {
+                  "displayText": "Learn about flow control in distributed systems",
+                  "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/throttle-on-aws-with-a-circuit-breaker-implementation.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Implement circuit breakers, throttling, or flow control mechanisms at the application level to prevent system overload during traffic spikes or partial outages."
+                }
+              }
+            ],
+            "riskRules": [
+              {
+                "condition": "mq_reliability_q4_c1 && mq_reliability_q4_c2 && mq_reliability_q4_c3 && mq_reliability_q4_c4",
+                "risk": "NO_RISK"
+              },
+              {
+                "condition": "mq_reliability_q4_c1 && (mq_reliability_q4_c2 || mq_reliability_q4_c3)",
+                "risk": "MEDIUM_RISK"
+              },
+              {
+                "condition": "default",
+                "risk": "HIGH_RISK"
+              }
+            ]
+          },
+          {
+            "id": "mq_reliability_q5",
+            "title": "How do you ensure reliable network connectivity to your Amazon MQ for RabbitMQ broker?",
+            "description": "Reliable network connectivity is essential for applications to communicate with RabbitMQ brokers. Configure your network appropriately to ensure secure and reliable access to your broker.",
+            "choices": [
+              {
+                "id": "mq_reliability_q5_c1",
+                "title": "We use private VPC access for our RabbitMQ broker",
+                "helpfulResource": {
+                  "displayText": "Learn about VPC access for Amazon MQ",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-and-network-rabbitmq.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Deploy your RabbitMQ broker in a private subnet within your VPC, and ensure proper network ACLs and security groups are configured for secure access."
+                }
+              },
+              {
+                "id": "mq_reliability_q5_c2",
+                "title": "We implement connection pooling and proper connection management",
+                "helpfulResource": {
+                  "displayText": "Learn about connection management best practices for RabbitMQ",
+                  "url": "https://www.rabbitmq.com/connections.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Implement connection pooling in your client applications to efficiently use resources. Handle connection recovery automatically when temporary network issues occur."
+                }
+              },
+              {
+                "id": "mq_reliability_q5_c3",
+                "title": "We configure appropriate security groups and network ACLs",
+                "helpfulResource": {
+                  "displayText": "Learn about security group configuration for Amazon MQ",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-and-network-rabbitmq.html#security-groups-rabbitmq"
+                },
+                "improvementPlan": {
+                  "displayText": "Configure security groups and network ACLs to only allow necessary traffic to your RabbitMQ broker. Use least privilege access controls."
+                }
+              },
+              {
+                "id": "mq_reliability_q5_c4",
+                "title": "We use TLS for encrypted client-broker communication",
+                "helpfulResource": {
+                  "displayText": "Learn about TLS configuration for Amazon MQ for RabbitMQ",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-and-network-rabbitmq.html#security-and-network-rabbitmq-tls"
+                },
+                "improvementPlan": {
+                  "displayText": "Configure your clients to use TLS for encrypted communication with the RabbitMQ broker. Ensure proper certificate validation is implemented."
+                }
+              }
+            ],
+            "riskRules": [
+              {
+                "condition": "mq_reliability_q5_c1 && mq_reliability_q5_c2 && mq_reliability_q5_c3 && mq_reliability_q5_c4",
+                "risk": "NO_RISK"
+              },
+              {
+                "condition": "mq_reliability_q5_c1 && (mq_reliability_q5_c2 || mq_reliability_q5_c3)",
+                "risk": "MEDIUM_RISK"
+              },
+              {
+                "condition": "default",
+                "risk": "HIGH_RISK"
+              }
+            ]
+          }
+        ]
+      },
+    {
+        "id": "performance_efficiency",
+        "name": "Performance Efficiency",
+        "questions": [
+          {
+            "id": "rabbitmq_instance_sizing",
+            "title": "How do you select appropriate instance types for your Amazon MQ for RabbitMQ broker?",
+            "description": "Instance type selection directly impacts the performance and throughput of your RabbitMQ workload. Choosing the right instance size based on your message throughput, connection count, and queue patterns is critical for optimal performance.",
+            "choices": [
+              {
+                "id": "instance_sizing_benchmark",
+                "title": "We benchmark our workload and select instance types based on measured performance metrics",
+                "helpfulResource": {
+                  "displayText": "Learn more about Amazon MQ for RabbitMQ instance types and performance considerations",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/rabbitmq-broker-instance-types.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Conduct load testing with representative workloads to determine the optimal instance type. Monitor metrics like CPU utilization, memory usage, and message throughput under various loads."
+                }
+              },
+              {
+                "id": "instance_sizing_overprovisioning",
+                "title": "We overprovision resources to ensure performance without regular evaluation",
+                "helpfulResource": {
+                  "displayText": "Best practices for cost optimization with Amazon MQ",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/amazon-mq-cost-optimization.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Implement a regular evaluation process to right-size your RabbitMQ instances based on actual usage patterns. Use CloudWatch metrics to identify opportunities for right-sizing."
+                }
+              },
+              {
+                "id": "instance_sizing_metrics",
+                "title": "We use CloudWatch metrics to monitor and adjust instance types as needed",
+                "helpfulResource": {
+                  "displayText": "Monitoring Amazon MQ for RabbitMQ brokers with CloudWatch",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/monitoring-rabbitmq-with-cloudwatch.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Set up automated scaling policies or regular reviews based on metrics like CPU utilization, memory usage, and queue depth to ensure optimal instance sizing."
+                }
+              }
+            ],
+            "riskRules": [
+              {
+                "condition": "instance_sizing_benchmark && instance_sizing_metrics",
+                "risk": "NO_RISK"
+              },
+              {
+                "condition": "instance_sizing_benchmark || instance_sizing_metrics",
+                "risk": "MEDIUM_RISK"
+              },
+              {
+                "condition": "default",
+                "risk": "HIGH_RISK"
+              }
+            ]
+          },
+          {
+            "id": "rabbitmq_queue_optimization",
+            "title": "How do you optimize queue configurations in your RabbitMQ workload?",
+            "description": "Queue configuration significantly affects message throughput and latency. Optimizing queue properties, message TTL, queue limits, and message size is essential for high-performance message processing.",
+            "choices": [
+              {
+                "id": "queue_pattern_design",
+                "title": "We design queue patterns based on workload characteristics (pub/sub, work queues, etc.)",
+                "helpfulResource": {
+                  "displayText": "RabbitMQ messaging patterns and use cases",
+                  "url": "https://www.rabbitmq.com/tutorials/tutorial-three-python.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Review your messaging patterns and ensure you're using the most appropriate exchange types and queue bindings for your specific workload characteristics."
+                }
+              },
+              {
+                "id": "queue_ttl_limits",
+                "title": "We configure appropriate message TTL and queue limits",
+                "helpfulResource": {
+                  "displayText": "RabbitMQ TTL and Expiration",
+                  "url": "https://www.rabbitmq.com/ttl.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Implement message TTL and queue limits to prevent resource exhaustion and ensure efficient resource utilization. Configure dead letter exchanges for expired messages."
+                }
+              },
+              {
+                "id": "lazy_queues",
+                "title": "We use lazy queues for queues with large backlogs",
+                "helpfulResource": {
+                  "displayText": "RabbitMQ Lazy Queues",
+                  "url": "https://www.rabbitmq.com/lazy-queues.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Identify queues that tend to accumulate large backlogs and configure them as lazy queues to reduce memory usage and improve stability."
+                }
+              }
+            ],
+            "riskRules": [
+              {
+                "condition": "queue_pattern_design && queue_ttl_limits && lazy_queues",
+                "risk": "NO_RISK"
+              },
+              {
+                "condition": "queue_pattern_design || queue_ttl_limits || lazy_queues",
+                "risk": "MEDIUM_RISK"
+              },
+              {
+                "condition": "default",
+                "risk": "HIGH_RISK"
+              }
+            ]
+          },
+          {
+            "id": "rabbitmq_clustering",
+            "title": "How do you configure Amazon MQ for RabbitMQ clusters for optimal performance?",
+            "description": "Proper cluster configuration ensures high availability and optimal performance across your RabbitMQ brokers. Configuring the right number of nodes, policies, and quorum mechanisms is essential.",
+            "choices": [
+              {
+                "id": "cluster_sizing",
+                "title": "We determine the optimal number of nodes based on workload requirements and availability needs",
+                "helpfulResource": {
+                  "displayText": "Amazon MQ for RabbitMQ deployment options and broker types",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/rabbitmq-deployment-options.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Evaluate your workload requirements and select the appropriate cluster size. For high-throughput workloads, consider multi-AZ deployments with 3 nodes."
+                }
+              },
+              {
+                "id": "queue_mirroring",
+                "title": "We configure appropriate queue mirroring or quorum queues for high availability",
+                "helpfulResource": {
+                  "displayText": "RabbitMQ Quorum Queues",
+                  "url": "https://www.rabbitmq.com/quorum-queues.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Use quorum queues instead of mirrored queues for critical workloads that require high durability and availability. Configure appropriate replication factors."
+                }
+              },
+              {
+                "id": "policy_based_configuration",
+                "title": "We use policy-based configuration to manage cluster-wide settings consistently",
+                "helpfulResource": {
+                  "displayText": "RabbitMQ Policies Overview",
+                  "url": "https://www.rabbitmq.com/parameters.html#policies"
+                },
+                "improvementPlan": {
+                  "displayText": "Implement RabbitMQ policies to manage queue properties, TTL, limits, and other settings across your cluster consistently."
+                }
+              }
+            ],
+            "riskRules": [
+              {
+                "condition": "cluster_sizing && queue_mirroring && policy_based_configuration",
+                "risk": "NO_RISK"
+              },
+              {
+                "condition": "cluster_sizing || queue_mirroring || policy_based_configuration",
+                "risk": "MEDIUM_RISK"
+              },
+              {
+                "condition": "default",
+                "risk": "HIGH_RISK"
+              }
+            ]
+          },
+          {
+            "id": "rabbitmq_connection_management",
+            "title": "How do you manage client connections to your RabbitMQ broker?",
+            "description": "Connection management affects both performance and stability. Optimizing connection pooling, channel usage, and client libraries is crucial for efficient resource utilization.",
+            "choices": [
+              {
+                "id": "connection_pooling",
+                "title": "We implement connection pooling to reuse connections across multiple publishers/consumers",
+                "helpfulResource": {
+                  "displayText": "RabbitMQ Connection and Channel Best Practices",
+                  "url": "https://www.rabbitmq.com/connections.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Implement connection pooling in your application code. Reuse connections and create multiple channels for concurrent operations."
+                }
+              },
+              {
+                "id": "long_lived_connections",
+                "title": "We use long-lived connections with heartbeats to maintain connection stability",
+                "helpfulResource": {
+                  "displayText": "RabbitMQ Heartbeats",
+                  "url": "https://www.rabbitmq.com/heartbeats.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Configure appropriate heartbeat intervals to detect dead connections and implement proper connection recovery mechanisms."
+                }
+              },
+              {
+                "id": "client_library_optimization",
+                "title": "We optimize client library settings for performance (prefetch count, acknowledgment modes)",
+                "helpfulResource": {
+                  "displayText": "RabbitMQ Consumer Prefetch",
+                  "url": "https://www.rabbitmq.com/consumer-prefetch.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Tune consumer prefetch counts based on workload characteristics. Use appropriate acknowledgment modes (manual vs. automatic) for your reliability requirements."
+                }
+              }
+            ],
+            "riskRules": [
+              {
+                "condition": "connection_pooling && long_lived_connections && client_library_optimization",
+                "risk": "NO_RISK"
+              },
+              {
+                "condition": "connection_pooling || long_lived_connections || client_library_optimization",
+                "risk": "MEDIUM_RISK"
+              },
+              {
+                "condition": "default",
+                "risk": "HIGH_RISK"
+              }
+            ]
+          },
+          {
+            "id": "rabbitmq_monitoring",
+            "title": "How do you monitor and optimize the performance of your Amazon MQ for RabbitMQ broker?",
+            "description": "Comprehensive monitoring is essential for identifying performance bottlenecks and ensuring optimal operation. Setting up proper metrics collection, alerts, and performance dashboards helps maintain high performance.",
+            "choices": [
+              {
+                "id": "cloudwatch_integration",
+                "title": "We use CloudWatch metrics to monitor key performance indicators",
+                "helpfulResource": {
+                  "displayText": "Monitoring Amazon MQ for RabbitMQ brokers using CloudWatch",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/monitoring-rabbitmq-with-cloudwatch.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Set up CloudWatch dashboards to track key metrics like CPU utilization, memory usage, queue depth, and message throughput. Configure alarms for critical thresholds."
+                }
+              },
+              {
+                "id": "management_ui",
+                "title": "We use RabbitMQ Management UI for real-time monitoring and troubleshooting",
+                "helpfulResource": {
+                  "displayText": "Accessing the RabbitMQ Web Console",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/accessing-web-console-of-broker.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Leverage the RabbitMQ Management UI for detailed insights into queue performance, message rates, and consumer status. Use it to identify bottlenecks and problematic queues."
+                }
+              },
+              {
+                "id": "performance_testing",
+                "title": "We conduct regular performance testing to identify bottlenecks and optimization opportunities",
+                "helpfulResource": {
+                  "displayText": "RabbitMQ Performance Testing Tools",
+                  "url": "https://www.rabbitmq.com/java-tools.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Implement a regular performance testing process using tools like PerfTest to understand your broker's capacity limits and identify optimization opportunities."
+                }
+              },
+              {
+                "id": "automated_scaling",
+                "title": "We use automated scaling or upgrades based on performance metrics",
+                "helpfulResource": {
+                  "displayText": "Amazon MQ Broker Configuration Management",
+                  "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/amazon-mq-updating-broker-engine-version.html"
+                },
+                "improvementPlan": {
+                  "displayText": "Implement scripts or automated processes to upgrade broker instances or configurations when performance metrics indicate the need for additional capacity."
+                }
+              }
+            ],
+            "riskRules": [
+              {
+                "condition": "cloudwatch_integration && management_ui && performance_testing && automated_scaling",
+                "risk": "NO_RISK"
+              },
+              {
+                "condition": "(cloudwatch_integration && management_ui) || (cloudwatch_integration && performance_testing) || (cloudwatch_integration && automated_scaling) || (management_ui && performance_testing) || (management_ui && automated_scaling) || (performance_testing && automated_scaling)",
+                "risk": "MEDIUM_RISK"
+              },
+              {
+                "condition": "default",
+                "risk": "HIGH_RISK"
+              }
+            ]
+          }
+        ]
+      },
+    {
+      "id": "operational_excellence",
+      "name": "Operational Excellence",
+      "questions": [
+        {
+          "id": "mq_monitoring",
+          "title": "How do you monitor your Amazon MQ for RabbitMQ broker health and performance?",
+          "description": "Comprehensive monitoring of broker health and performance metrics is essential for detecting and addressing issues before they impact your applications. This includes monitoring CPU, memory, storage, connections, and queue metrics.",
+          "choices": [
+            {
+              "id": "mq_monitoring_cloudwatch",
+              "title": "We use Amazon CloudWatch to monitor Amazon MQ metrics",
+              "helpfulResource": {
+                "displayText": "Monitoring Amazon MQ using CloudWatch",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-logging-monitoring.html"
+              },
+              "improvementPlan": {
+                "displayText": "Set up CloudWatch alarms for key Amazon MQ metrics such as CpuUtilization, HeapUsage, NetworkIn/Out, and QueueCount."
+              }
+            },
+            {
+              "id": "mq_monitoring_dashboard",
+              "title": "We have created custom CloudWatch dashboards for our Amazon MQ brokers",
+              "helpfulResource": {
+                "displayText": "Creating CloudWatch dashboards for Amazon MQ",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-dashboard.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create custom CloudWatch dashboards that provide a consolidated view of your Amazon MQ brokers' health and performance metrics."
+              }
+            },
+            {
+              "id": "mq_monitoring_alerts",
+              "title": "We have configured CloudWatch alarms for critical Amazon MQ metrics with appropriate thresholds",
+              "helpfulResource": {
+                "displayText": "Setting up CloudWatch alarms for Amazon MQ",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure CloudWatch alarms for critical metrics such as disk usage, CPU utilization, and connection count with appropriate thresholds."
+              }
+            },
+            {
+              "id": "mq_monitoring_logs",
+              "title": "We collect and analyze Amazon MQ logs using CloudWatch Logs",
+              "helpfulResource": {
+                "displayText": "Configuring Amazon MQ to publish logs to CloudWatch Logs",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-logging-monitoring-configure-cloudwatch.html"
+              },
+              "improvementPlan": {
+                "displayText": "Enable logging for your Amazon MQ brokers and configure log groups in CloudWatch Logs to store and analyze these logs."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "mq_monitoring_cloudwatch && mq_monitoring_dashboard && mq_monitoring_alerts && mq_monitoring_logs",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "mq_monitoring_cloudwatch",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "mq_automation",
+          "title": "How do you automate operational tasks for your Amazon MQ for RabbitMQ brokers?",
+          "description": "Automating operational tasks reduces the risk of human error and improves operational efficiency. This includes automating broker deployments, configuration changes, and routine maintenance tasks.",
+          "choices": [
+            {
+              "id": "mq_automation_iac",
+              "title": "We use Infrastructure as Code (IaC) to provision and manage our Amazon MQ brokers",
+              "helpfulResource": {
+                "displayText": "Managing Amazon MQ resources using AWS CloudFormation",
+                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-amazonmq-broker.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use AWS CloudFormation, Terraform, or AWS CDK to provision and manage your Amazon MQ brokers, ensuring consistency and repeatability."
+              }
+            },
+            {
+              "id": "mq_automation_operations",
+              "title": "We automate routine operational tasks such as configuration updates and maintenance",
+              "helpfulResource": {
+                "displayText": "Using AWS Systems Manager Automation for routine tasks",
+                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-automation.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement automation for routine operational tasks using AWS Systems Manager Automation, AWS Lambda, or Step Functions."
+              }
+            },
+            {
+              "id": "mq_automation_ci_cd",
+              "title": "We have CI/CD pipelines for deploying Amazon MQ configuration changes",
+              "helpfulResource": {
+                "displayText": "AWS DevOps best practices",
+                "url": "https://docs.aws.amazon.com/whitepapers/latest/practicing-continuous-integration-continuous-delivery/welcome.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement CI/CD pipelines for deploying changes to your Amazon MQ configurations, ensuring proper testing and rollback mechanisms."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "mq_automation_iac && mq_automation_operations && mq_automation_ci_cd",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "mq_automation_iac",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "mq_resilience",
+          "title": "How do you ensure the resilience of your Amazon MQ for RabbitMQ brokers?",
+          "description": "Ensuring broker resilience is crucial for maintaining message processing continuity. This includes configuring high availability, managing failover scenarios, and implementing proper recovery procedures.",
+          "choices": [
+            {
+              "id": "mq_resilience_ha",
+              "title": "We deploy Amazon MQ brokers in a clustered deployment with multi-AZ configuration",
+              "helpfulResource": {
+                "displayText": "Amazon MQ broker deployment modes and high availability",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/rabbitmq-broker-architecture.html"
+              },
+              "improvementPlan": {
+                "displayText": "Deploy your Amazon MQ brokers in clustered mode across multiple availability zones to ensure high availability."
+              }
+            },
+            {
+              "id": "mq_resilience_backup",
+              "title": "We have automated backup and recovery procedures for our Amazon MQ brokers",
+              "helpfulResource": {
+                "displayText": "Backing up and restoring Amazon MQ brokers",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/amazon-mq-rabbitmq-backup-and-restore.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure automatic backups for your Amazon MQ brokers and implement recovery procedures. Test these procedures regularly."
+              }
+            },
+            {
+              "id": "mq_resilience_dr",
+              "title": "We have implemented disaster recovery strategies for Amazon MQ workloads",
+              "helpfulResource": {
+                "displayText": "Disaster recovery strategies on AWS",
+                "url": "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-workloads-on-aws.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement cross-region disaster recovery for critical Amazon MQ workloads to ensure business continuity in case of regional outages."
+              }
+            },
+            {
+              "id": "mq_resilience_testing",
+              "title": "We regularly test our failover and recovery procedures",
+              "helpfulResource": {
+                "displayText": "Testing recovery procedures with AWS Fault Injection Simulator",
+                "url": "https://docs.aws.amazon.com/fis/latest/userguide/what-is.html"
+              },
+              "improvementPlan": {
+                "displayText": "Regularly test your failover and recovery procedures using controlled fault injection to ensure they work as expected when needed."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "mq_resilience_ha && mq_resilience_backup && mq_resilience_dr && mq_resilience_testing",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "mq_resilience_ha && mq_resilience_backup",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "mq_incident_response",
+          "title": "How do you manage incident response for your Amazon MQ for RabbitMQ workloads?",
+          "description": "Effective incident response processes help minimize the impact of operational issues on your business. This includes detection, investigation, mitigation, and post-incident analysis.",
+          "choices": [
+            {
+              "id": "mq_incident_detection",
+              "title": "We have automated detection mechanisms for Amazon MQ incidents",
+              "helpfulResource": {
+                "displayText": "Setting up anomaly detection with CloudWatch",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Anomaly_Detection.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement automated detection for common Amazon MQ incidents using CloudWatch alarms, anomaly detection, and composite alarms."
+              }
+            },
+            {
+              "id": "mq_incident_runbooks",
+              "title": "We have documented and tested runbooks for common Amazon MQ incidents",
+              "helpfulResource": {
+                "displayText": "Creating runbooks in AWS Systems Manager",
+                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-documents.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create detailed runbooks for common Amazon MQ incidents such as high memory usage, connection issues, and queue backlog. Implement these as automated procedures where possible."
+              }
+            },
+            {
+              "id": "mq_incident_escalation",
+              "title": "We have clear escalation paths and on-call rotations for Amazon MQ incidents",
+              "helpfulResource": {
+                "displayText": "AWS Incident Detection and Response",
+                "url": "https://docs.aws.amazon.com/incident-manager/latest/userguide/what-is-incident-manager.html"
+              },
+              "improvementPlan": {
+                "displayText": "Define clear escalation paths and implement on-call rotations using tools like AWS Systems Manager Incident Manager or third-party tools."
+              }
+            },
+            {
+              "id": "mq_incident_postmortem",
+              "title": "We conduct thorough post-incident reviews to identify root causes and improvements",
+              "helpfulResource": {
+                "displayText": "AWS Well-Architected Framework: Operational Excellence",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/oe-learn.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement a post-incident review process to analyze incidents, identify root causes, and make continuous improvements to your systems and processes."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "mq_incident_detection && mq_incident_runbooks && mq_incident_escalation && mq_incident_postmortem",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "mq_incident_detection && mq_incident_runbooks",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "mq_configuration",
+          "title": "How do you manage configuration for your Amazon MQ for RabbitMQ brokers?",
+          "description": "Proper configuration management ensures consistent, traceable, and auditable changes to your broker configurations. This includes version control, change approval, and documentation.",
+          "choices": [
+            {
+              "id": "mq_config_versioning",
+              "title": "We version-control our Amazon MQ configurations",
+              "helpfulResource": {
+                "displayText": "Using AWS CodeCommit for version control",
+                "url": "https://docs.aws.amazon.com/codecommit/latest/userguide/welcome.html"
+              },
+              "improvementPlan": {
+                "displayText": "Store your Amazon MQ configurations in a version control system like AWS CodeCommit or GitHub, ensuring all changes are tracked and auditable."
+              }
+            },
+            {
+              "id": "mq_config_audit",
+              "title": "We audit and validate configuration changes before deployment",
+              "helpfulResource": {
+                "displayText": "AWS Config for configuration auditing",
+                "url": "https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement processes for reviewing and validating configuration changes before deployment, possibly using AWS Config rules or custom validation checks."
+              }
+            },
+            {
+              "id": "mq_config_documentation",
+              "title": "We maintain comprehensive documentation of our Amazon MQ configurations",
+              "helpfulResource": {
+                "displayText": "AWS Systems Manager Documents",
+                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-documents.html"
+              },
+              "improvementPlan": {
+                "displayText": "Maintain comprehensive documentation of your Amazon MQ configurations, including architecture diagrams, configuration parameters, and change history."
+              }
+            },
+            {
+              "id": "mq_config_drift",
+              "title": "We detect and remediate configuration drift",
+              "helpfulResource": {
+                "displayText": "Detecting configuration drift with AWS Config",
+                "url": "https://docs.aws.amazon.com/config/latest/developerguide/how-does-config-work.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement automated detection of configuration drift using AWS Config or custom checks, with defined processes for remediation."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "mq_config_versioning && mq_config_audit && mq_config_documentation && mq_config_drift",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "mq_config_versioning && mq_config_audit",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "mq_networking",
+          "title": "How do you ensure optimal network configuration for your Amazon MQ for RabbitMQ brokers?",
+          "description": "Proper network configuration is essential for ensuring reliable and secure communication with your Amazon MQ brokers. This includes VPC configuration, security groups, and connectivity monitoring.",
+          "choices": [
+            {
+              "id": "mq_network_vpc",
+              "title": "We deploy Amazon MQ brokers in private subnets with appropriate VPC configuration",
+              "helpfulResource": {
+                "displayText": "Amazon MQ and Amazon VPC",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/broker-instance-access.html"
+              },
+              "improvementPlan": {
+                "displayText": "Deploy Amazon MQ brokers in private subnets within a VPC, with appropriate route tables and network ACLs for security and isolation."
+              }
+            },
+            {
+              "id": "mq_network_sg",
+              "title": "We use restrictive security groups to limit broker access",
+              "helpfulResource": {
+                "displayText": "Security groups for Amazon MQ",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-groups.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure security groups to allow only necessary inbound and outbound traffic to your Amazon MQ brokers, following the principle of least privilege."
+              }
+            },
+            {
+              "id": "mq_network_monitoring",
+              "title": "We monitor network connectivity and latency to our Amazon MQ brokers",
+              "helpfulResource": {
+                "displayText": "Monitoring VPC connectivity with VPC Flow Logs",
+                "url": "https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement monitoring for network connectivity and latency to your Amazon MQ brokers using CloudWatch metrics, VPC Flow Logs, and application-level monitoring."
+              }
+            },
+            {
+              "id": "mq_network_vpce",
+              "title": "We use VPC Endpoints or VPN/Direct Connect for secure broker access",
+              "helpfulResource": {
+                "displayText": "Interface VPC Endpoints for Amazon MQ",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/amazon-mq-accessing-api-vpc-endpoint.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use Interface VPC Endpoints, AWS Site-to-Site VPN, or AWS Direct Connect to establish secure private connections to your Amazon MQ brokers."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "mq_network_vpc && mq_network_sg && mq_network_monitoring && mq_network_vpce",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "mq_network_vpc && mq_network_sg",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "mq_scaling",
+          "title": "How do you manage capacity and scaling for your Amazon MQ for RabbitMQ workloads?",
+          "description": "Effective capacity management ensures your broker has sufficient resources to handle your messaging workload while optimizing costs. This includes instance sizing, scaling strategies, and traffic management.",
+          "choices": [
+            {
+              "id": "mq_scaling_sizing",
+              "title": "We right-size our Amazon MQ broker instances based on workload requirements",
+              "helpfulResource": {
+                "displayText": "Amazon MQ instance types",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/broker-instance-types.html"
+              },
+              "improvementPlan": {
+                "displayText": "Select appropriate instance types for your Amazon MQ brokers based on your workload requirements. Regularly review and adjust as needed."
+              }
+            },
+            {
+              "id": "mq_scaling_patterns",
+              "title": "We implement appropriate messaging patterns to optimize throughput and scalability",
+              "helpfulResource": {
+                "displayText": "Amazon MQ best practices",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/best-practices.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement appropriate messaging patterns such as publisher-subscriber, request-reply, and competing consumers to optimize throughput and scalability."
+              }
+            },
+            {
+              "id": "mq_scaling_forecast",
+              "title": "We forecast capacity needs based on historical and projected usage patterns",
+              "helpfulResource": {
+                "displayText": "AWS Cost Explorer for forecasting",
+                "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-forecasting.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use historical metrics and business forecasts to anticipate capacity needs. Implement processes to scale your Amazon MQ brokers ahead of anticipated demand increases."
+              }
+            },
+            {
+              "id": "mq_scaling_throttling",
+              "title": "We implement client-side throttling and backpressure mechanisms",
+              "helpfulResource": {
+                "displayText": "RabbitMQ flow control",
+                "url": "https://www.rabbitmq.com/flow-control.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement client-side throttling and backpressure mechanisms to prevent overwhelming your Amazon MQ brokers during traffic spikes."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "mq_scaling_sizing && mq_scaling_patterns && mq_scaling_forecast && mq_scaling_throttling",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "mq_scaling_sizing && mq_scaling_patterns",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "mq_security_operations",
+          "title": "How do you manage security operations for your Amazon MQ for RabbitMQ brokers?",
+          "description": "Security operations ensure your Amazon MQ brokers remain secure over time. This includes authentication, authorization, encryption, and continuous compliance monitoring.",
+          "choices": [
+            {
+              "id": "mq_security_auth",
+              "title": "We implement strong authentication and access controls for broker access",
+              "helpfulResource": {
+                "displayText": "Authentication and authorization for Amazon MQ",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-authentication-authorization.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement strong authentication mechanisms for broker access, including complex passwords, certificate-based authentication, and IAM-based authentication where applicable."
+              }
+            },
+            {
+              "id": "mq_security_encryption",
+              "title": "We ensure encryption for data in transit and at rest",
+              "helpfulResource": {
+                "displayText": "Encryption for Amazon MQ",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/data-protection.html"
+              },
+              "improvementPlan": {
+                "displayText": "Enable encryption for data at rest using KMS keys and ensure TLS encryption for data in transit to and from your Amazon MQ brokers."
+              }
+            },
+            {
+              "id": "mq_security_compliance",
+              "title": "We continuously monitor our Amazon MQ brokers for security compliance",
+              "helpfulResource": {
+                "displayText": "AWS Security Hub",
+                "url": "https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use AWS Security Hub, AWS Config, and AWS CloudTrail to continuously monitor security compliance for your Amazon MQ resources."
+              }
+            },
+            {
+              "id": "mq_security_rotation",
+              "title": "We regularly rotate credentials and audit security configurations",
+              "helpfulResource": {
+                "displayText": "AWS Secrets Manager",
+                "url": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement regular rotation of broker credentials using AWS Secrets Manager and conduct periodic audits of security configurations."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "mq_security_auth && mq_security_encryption && mq_security_compliance && mq_security_rotation",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "mq_security_auth && mq_security_encryption",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "mq_maintenance",
+          "title": "How do you manage maintenance and upgrades for your Amazon MQ for RabbitMQ brokers?",
+          "description": "Regular maintenance and timely upgrades are essential for keeping your Amazon MQ brokers secure, stable, and performant. This includes patch management, version upgrades, and maintenance windows.",
+          "choices": [
+            {
+              "id": "mq_maintenance_window",
+              "title": "We configure and monitor maintenance windows for our Amazon MQ brokers",
+              "helpfulResource": {
+                "displayText": "Amazon MQ maintenance windows",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/broker-maintenance.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure maintenance windows for your Amazon MQ brokers during periods of low traffic. Monitor these windows and be prepared to handle any issues that may arise."
+              }
+            },
+            {
+              "id": "mq_maintenance_upgrades",
+              "title": "We have a proactive strategy for RabbitMQ version upgrades",
+              "helpfulResource": {
+                "displayText": "Amazon MQ version management",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/rabbitmq-version-management.html"
+              },
+              "improvementPlan": {
+                "displayText": "Develop a proactive strategy for RabbitMQ version upgrades, including testing in non-production environments and planning for any compatibility issues."
+              }
+            },
+            {
+              "id": "mq_maintenance_testing",
+              "title": "We test broker updates in non-production environments before applying to production",
+              "helpfulResource": {
+                "displayText": "AWS testing best practices",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/oe-prepare.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement a testing process for broker updates in non-production environments to identify and address any issues before applying to production."
+              }
+            },
+            {
+              "id": "mq_maintenance_rollback",
+              "title": "We have rollback procedures in case of issues during maintenance or upgrades",
+              "helpfulResource": {
+                "displayText": "Amazon MQ backup and restore",
+                "url": "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/amazon-mq-rabbitmq-backup-and-restore.html"
+              },
+              "improvementPlan": {
+                "displayText": "Develop and test rollback procedures for use in case of issues during maintenance or upgrades, including restoring from backups if necessary."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "mq_maintenance_window && mq_maintenance_upgrades && mq_maintenance_testing && mq_maintenance_rollback",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "mq_maintenance_window && mq_maintenance_upgrades",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
