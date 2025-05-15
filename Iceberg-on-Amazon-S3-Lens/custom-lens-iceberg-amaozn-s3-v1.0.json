@@ -1,0 +1,565 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "Iceberg on Amazon S3 Best Practice Lens",
+    "description": "Best practices for configuring Iceberg on Amazon S3",
+    "pillars": [
+        {
+            "id": "PERF",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "PERF1",
+                    "title": "How you optimizing read performance",
+                    "description": "Optimizing data layout and file size in Iceberg tables is crucial for data pruning in order to maintain query efficiency, especially at scale with large datasets.",
+                    "choices": [
+                        {
+                            "id": "PERF1_1",
+                            "title": "Partition your data",
+                            "helpfulResource": {
+                                "displayText": "To reduce the amount of data that's scanned when querying Iceberg tables, choose a balanced partition strategy that aligns with your expected read patterns",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-read.html#read-partitioning"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Identify columns that are frequently used in queries. These are ideal partitioning candidates. \nChoose a low cardinality partition column to avoid creating an excessive number of partitions. Too many partitions can increase the number of files in the table, which can negatively impact query performance.",
+                                "url": "https://iceberg.apache.org/docs/latest/partitioning/#what-is-partitioning"
+                            }
+                        },
+                        {
+                            "id": "PERF1_2",
+                            "title": "Use hidden partitioning",
+                            "helpfulResource": {
+                                "displayText": "If you typically query by using filters on a high cardinality column (for example, an id column that can have thousands of values), use Iceberg's hidden partitioning feature with bucket transforms",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-read.html#read-partitioning"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The most common use cases for hidden partitioning are: \nPartitioning on date or time, when the data has a timestamp column. Iceberg offers multiple transforms to extract the date or time parts of a timestamp.\nPartitioning on a hash function of a column, when the partitioning column has high cardinality and would result in too many partitions. Iceberg's bucket transform groups multiple partition values together into fewer, hidden (bucket) partitions by using hash functions on the partitioning column.",
+                                "url": "https://iceberg.apache.org/docs/latest/partitioning/#icebergs-hidden-partitioning"
+                            }
+                        },
+                        {
+                            "id": "PERF1_3",
+                            "title": "Use partition evolution",
+                            "helpfulResource": {
+                                "displayText": "Use Iceberg's partition evolution when the existing partition strategy isn't optimal. For example, if you choose hourly partitions that turn out to be too small (just a few megabytes each), consider shifting to daily or monthly partitions.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-read.html#read-partitioning"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use this approach when the best partition strategy for a table is initially unclear, and you want to refine your partitioning strategy as you gain more insights. Another effective use of partition evolution is when data volumes change and the current partitioning strategy becomes less effective over time.\nFor instructions on how to evolve partitions, see ALTER TABLE SQL extensions in the Iceberg documentation. ",
+                                "url": "https://iceberg.apache.org/docs/latest/spark-ddl/#alter-table-sql-extensions"
+                            }
+                        },
+                        {
+                            "id": "PERF1_4",
+                            "title": "Set target file and row group size",
+                            "helpfulResource": {
+                                "displayText": "Small tables (up to few gigabytes)   Reduce the target file size to 128 MB. Also reduce the row group or stripe size (for example, to 8 or 16 MB).\nMedium to large tables (from a few gigabytes to hundreds of gigabytes)   The default values are a good starting point for these tables. If your queries are very selective, adjust the row group or stripe size (for example, to 16 MB).\nVery large tables (hundreds of gigabytes or terabytes)   Increase the target file size to 1024 MB or more, and consider increasing the row group or stripe size if your queries usually pull large sets of data.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-read.html#read-file-size"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Based on your expected table size, follow these general guidelines.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-read.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_5",
+                            "title": "Run regular compaction",
+                            "helpfulResource": {
+                                "displayText": "Run compaction regularly to combine small files into larger files. Re-cluster the data with desired distribution if you need.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-read.html#read-file-size"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Iceberg includes features that enable you to carry out table maintenance operations after writing data to the table. Some maintenance operations focus on streamlining metadata files, while others enhance how the data is clustered in the files so that query engines can efficiently locate the necessary information to respond to user requests. ",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-compaction.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_6",
+                            "title": "Optimize column statistics",
+                            "helpfulResource": {
+                                "displayText": "Iceberg uses column statistics to perform file pruning. It estimates the number of distinct values in each column of the Iceberg table and and store them in Puffin files. To benefit from column statistics, make sure that Iceberg collects statistics for columns that are frequently used in query filters. ",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-read.html#read-column-statistics"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Run the column statistics on-demand or in a regualr scheduled basis. You can also configure AWS Glue for the column statistics generation task using AWS Glue console or AWS CLI.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/iceberg-column-statistics.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_7",
+                            "title": "Choose the right update/delete strategy",
+                            "helpfulResource": {
+                                "displayText": "Use a copy-on-write strategy to optimize read performance, when slower write operations are acceptable for your use case. ",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-read.html#read-update"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Copy-on-write results in better read performance, because files are directly written to storage in a read-optimized fashion. However, compared with merge-on-read, each write operation takes longer and consumes more compute resources. This presents a classic trade-off between read and write latency. Typically, copy-on-write is ideal for use cases where most updates are collocated in the same table partitions (for example, for daily batch loads).\nCopy-on-write configurations (write.update.mode, write.delete.mode, and write.merge.mode) can be set at the table level or independently on the application side.",
+                                "url": "https://iceberg.apache.org/docs/latest/configuration/#write-properties"
+                            }
+                        },
+                        {
+                            "id": "PERF1_8",
+                            "title": "Use ZSTD compression",
+                            "helpfulResource": {
+                                "displayText": "We recommend that you use the ZSTD compression codec to improve overall performance on tables.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-read.html#read-compression"
+                            },
+                            "improvementPlan": {
+                                "displayText": "By default, Iceberg versions 1.3 and earlier use GZIP compression, which provides slower read/write performance compared with ZSTD. You can modify the compression codec used by Iceberg by using the table property write.<file_type>.compression-codec. ",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/compression-support-iceberg.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_9",
+                            "title": "Set the sort order",
+                            "helpfulResource": {
+                                "displayText": "Sorting, combined with Iceberg's column statistics, can make file pruning significantly more efficient, which results in faster read operations. Sorting also reduces the number of Amazon S3 requests for queries that use the sort columns in query filters.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-read.html#read-sort-order"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can set a hierarchical sort order at the table level by running a data definition language (DDL) statement with Spark. For available options, see the Iceberg documentation. After you set the sort order, writers will apply this sorting to subsequent data write operations in the Iceberg table.",
+                                "url": "https://iceberg.apache.org/docs/latest/spark-ddl/#alter-table-write-ordered-by"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF1_1 && PERF1_2 && PERF1_3 && PERF1_4 && PERF1_5 && PERF1_6 && PERF1_7 && PERF1_8 && PERF1_9",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF1_1) || (!PERF1_3) || (!PERF1_4) || (!PERF1_5) || (!PERF1_7)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF2",
+                    "title": "How you optimizing write performance",
+                    "description": "Iceberg's write performance is optimized through strategic configuration choices that eliminate unnecessary processing overhead.",
+                    "choices": [
+                        {
+                            "id": "PERF2_1",
+                            "title": "Set the table write distribution mode",
+                            "helpfulResource": {
+                                "displayText": "For use cases that prioritize write speed, especially in streaming workloads, set write.distribution-mode to none. This ensures that Iceberg doesn't request additional Spark shuffling and that data is written as it becomes available in Spark tasks. But not suggested for partitioned tables when we have write operations that touch multiple partitions.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-write.html#write-distribution-mode"
+                            },
+                            "improvementPlan": {
+                                "displayText": "There are 3 options for write.distribution-mode:\nnone - This is the previous default for Iceberg. This mode does not request any shuffles or sort to be performed automatically by Spark. \nhash - This mode is the new default and requests that Spark uses a hash-based exchange to shuffle the incoming write data before writing.\nrange - This mode is the most expensive one. Requests that Spark perform a range-based exchange to shuffle the data before writing. This is a two stage procedure. The first stage samples the data to be written based on the partition and sort columns. The second stage uses the range information to shuffle the input data into Spark tasks.",
+                                "url": "https://iceberg.apache.org/docs/latest/spark-writes/#writing-distribution-modes"
+                            }
+                        },
+                        {
+                            "id": "PERF2_2",
+                            "title": "Choose the right update/delete strategy",
+                            "helpfulResource": {
+                                "displayText": "Use a merge-on-read strategy to optimize write performance, when slower read operations on the latest data are acceptable for your use case.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-write.html#write-update-strategy"
+                            },
+                            "improvementPlan": {
+                                "displayText": "When you use merge-on-read, Iceberg writes updates and deletes to storage as separate small files. When the table is read, the reader has to merge these changes with the base files to return the latest view of the data. This results in a performance penalty for read operations, but speeds up the writing of updates and deletes. Typically, merge-on-read is ideal for streaming workloads with updates or jobs with few updates that are spread across many table partitions.\nYou can set merge-on-read configurations (write.update.mode, write.delete.mode, and write.merge.mode) at the table level or independently on the application side.",
+                                "url": "https://iceberg.apache.org/docs/latest/configuration/#write-properties"
+                            }
+                        },
+                        {
+                            "id": "PERF2_3",
+                            "title": "Choose the right file format",
+                            "helpfulResource": {
+                                "displayText": "If write speed is important for your use case, such as in streaming workloads, consider writing in Avro format by setting write-format to Avro in the writer's options. Because Avro is a row-based format, it provides faster write times at the cost of slower read performance. To improve read performance, run regular compaction to merge and transform small Avro files into larger Parquet files. ",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-write.html#write-file-format"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve read performance, run regular compaction to merge and transform small Avro files into larger Parquet files. The outcome of the compaction process is governed by the write.format.default table setting. The default format for Iceberg is Parquet, so if you write in Avro and then run compaction, Iceberg will transform the Avro files into Parquet files. ",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-write.html#write-file-format"
+                            }
+                        },
+                        {
+                            "id": "PERF2_4",
+                            "title": "Manage concurrent write conflicts",
+                            "helpfulResource": {
+                                "displayText": "Iceberg uses optimistic concurrency control, where multiple writers can proceed with their operations simultaneously, and conflicts are detected at commit time. For append-only use cases, manage catalog commit conflicts for multi-writers.",
+                                "url": "https://aws.amazon.com/blogs/big-data/manage-concurrent-write-conflicts-in-apache-iceberg-on-the-aws-glue-data-catalog/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Before diving into specific implementation patterns, it s essential to understand how Iceberg manages concurrent writes through its table architecture and transaction model. Iceberg uses a layered architecture to manage table state and data:\nCatalog layer   Maintains a pointer to the current table metadata file, serving as the single source of truth for table state. The Data Catalog provides the functionality as the Iceberg catalog.\nMetadata layer   Contains metadata files that track table history, schema evolution, and snapshot information. These files are stored on Amazon Simple Storage Service (Amazon S3).\nData layer   Stores the actual data files and delete files (for Merge-on-Read operations). These files are also stored on Amazon S3.\nThe most critical concept to remember is the distinction between catalog commit conflicts and data conflicts. ",
+                                "url": "https://aws.amazon.com/blogs/big-data/manage-concurrent-write-conflicts-in-apache-iceberg-on-the-aws-glue-data-catalog/"
+                            }
+                        },
+                        {
+                            "id": "PERF2_5",
+                            "title": "Set that granularity to file",
+                            "helpfulResource": {
+                                "displayText": "This configure works for the write performance because this option controls the number of delete files. The default options is the faster one (file) if customers are using Spark.",
+                                "url": "https://github.com/apache/iceberg/blob/main/core/src/main/java/org/apache/iceberg/TableProperties.java"
+                            },
+                            "improvementPlan": {
+                                "displayText": "'write.delete.granularity'='file' (spark default: file since 1.8.0, other defaults to partition)\n",
+                                "url": "https://iceberg.apache.org/docs/nightly/spark-configuration/#write-options"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF2_1 && PERF2_2 && PERF2_3 && PERF2_4 && PERF2_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF2_1) || (!PERF2_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF3",
+                    "title": "Have you use last version of Icebreg",
+                    "description": "The format version number is incremented when new features are added that will break forward-compatibility. Versions 1 and 2 of the Iceberg spec are complete and adopted by the community. Version 3 is under active development and has not been formally adopted.",
+                    "choices": [
+                        {
+                            "id": "PERF3_1",
+                            "title": "Use Iceberg format version 2",
+                            "helpfulResource": {
+                                "displayText": "The primary change in version 2 adds delete files to encode rows that are deleted in existing data files. This version can be used to delete or replace individual rows in immutable data files without rewriting the files.",
+                                "url": "https://iceberg.apache.org/spec/#version-1-analytic-data-tables"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Version 3 of the Iceberg spec extends data types and existing metadata structures to add new capabilities:\nNew data types: nanosecond timestamp(tz), unknown, variant, geometry, geography\nDefault value support for columns\nMulti-argument transforms for partitioning and sorting\nRow Lineage tracking\nBinary deletion vectors",
+                                "url": "https://iceberg.apache.org/spec/#version-1-analytic-data-tables"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF3_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "OPS",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "OPS1",
+                    "title": "How you manage your data catalog",
+                    "description": "Iceberg has several catalog back-ends that can be used to track tables, like JDBC, Hive MetaStore and Glue. Each has its characteristics. We recommand you Glue catalog as its cloud-native and better scalability.",
+                    "choices": [
+                        {
+                            "id": "OPS1_1",
+                            "title": "Use the AWS Glue Data Catalog as your data catalog",
+                            "helpfulResource": {
+                                "displayText": "Regardless of your use case, when you use Apache Iceberg on AWS, we recommend that you use the AWS Glue Data Catalog as your data catalog.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-general.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Glue Data Catalog as your data catalog.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-general.html"
+                            }
+                        },
+                        {
+                            "id": "OPS1_2",
+                            "title": "Use the AWS Glue Data Catalog as lock manager",
+                            "helpfulResource": {
+                                "displayText": "AWS Glue 4.0 or later uses optimistic locking by default. Please use AWS SDK version >= 2.17.131 to leverage Glue's Optimistic Locking. If the AWS SDK version is below 2.17.131, only in-memory lock is used. ",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-format-iceberg.html#aws-glue-programming-etl-format-iceberg-enable"
+                            },
+                            "improvementPlan": {
+                                "displayText": "With optimistic locking, each table has a version id. If users retrieve the table metadata, Iceberg records the version id of that table. Users can update the table as long as the version ID on the server side remains unchanged. Version mismatch occurs if someone else modified the table before you did, causing an update failure. Iceberg then refreshes metadata and checks if there is a conflict. If there is no commit conflict, the operation will be retried. Optimistic locking guarantees atomic transaction of Iceberg tables in Glue. It also prevents others from accidentally overwriting your changes.",
+                                "url": "https://iceberg.apache.org/docs/latest/aws/#optimistic-locking"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS1_1 && OPS1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS2",
+                    "title": "How you maintaining iceberg tables",
+                    "description": "Iceberg requires regular maintenance operations since it uses a multi-layered metadata approach that accumulates state over time. Without maintenance, tables experience degraded query performance from fragmented metadata, excessive storage costs from unreferenced files, and slower scan planning due to metadata bloat, ultimately compromising the performance advantages that make Iceberg valuable.",
+                    "choices": [
+                        {
+                            "id": "OPS2_1",
+                            "title": "Expire Snapshots",
+                            "helpfulResource": {
+                                "displayText": "Each write to an Iceberg table creates a new snapshot, or version, of a table. Snapshots can be used for time-travel queries, or the table can be rolled back to any valid snapshot.\nSnapshots accumulate until they are expired by the expireSnapshots operation. Regularly expiring snapshots is recommended to delete data files that are no longer needed, and to keep the size of table metadata small.",
+                                "url": "https://iceberg.apache.org/docs/latest/maintenance/#expire-snapshots"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Data files are not deleted until they are no longer referenced by a snapshot that may be used for time travel or rollback. Regularly expiring snapshots deletes unused data files.",
+                                "url": "https://iceberg.apache.org/docs/latest/maintenance/#expire-snapshots"
+                            }
+                        },
+                        {
+                            "id": "OPS2_2",
+                            "title": "Remove old metadata files",
+                            "helpfulResource": {
+                                "displayText": "Old metadata files are kept for history by default. Tables with frequent commits, like those written by streaming jobs, may need to regularly clean metadata files.\nTo automatically clean metadata files, set write.metadata.delete-after-commit.enabled=true in table properties. This will keep some metadata files (up to write.metadata.previous-versions-max) and will delete the oldest metadata file after each new one is created.",
+                                "url": "https://iceberg.apache.org/docs/latest/maintenance/#remove-old-metadata-files"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Example: With write.metadata.delete-after-commit.enabled=false and write.metadata.previous-versions-max=10, one will have 10 tracked metadata files and 90 orphaned metadata files after 100 commits",
+                                "url": "https://iceberg.apache.org/docs/latest/maintenance/#remove-old-metadata-files"
+                            }
+                        },
+                        {
+                            "id": "OPS2_3",
+                            "title": "Delete orphan files",
+                            "helpfulResource": {
+                                "displayText": "In Spark and other distributed processing engines, task or job failures can leave files that are not referenced by table metadata, and in some cases normal snapshot expiration may not be able to determine a file is no longer needed and delete it.\nTo clean up these \"orphan\" files under a table location, use the deleteOrphanFiles action.",
+                                "url": "https://iceberg.apache.org/docs/latest/maintenance/#delete-orphan-files"
+                            },
+                            "improvementPlan": {
+                                "displayText": "This action may take a long time to finish if you have lots of files in data and metadata directories. It is recommended to execute this periodically, but you may not need to execute this often. ",
+                                "url": "https://iceberg.apache.org/docs/latest/maintenance/#delete-orphan-files"
+                            }
+                        },
+                        {
+                            "id": "OPS2_4",
+                            "title": "Compact data files",
+                            "helpfulResource": {
+                                "displayText": "Iceberg tracks each data file in a table. More data files leads to more metadata stored in manifest files, and small data files causes an unnecessary amount of metadata and less efficient queries from file open costs.",
+                                "url": "https://iceberg.apache.org/docs/latest/maintenance/#compact-data-files"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon EMR or AWS Glue. If you use Glue auto compaction and takes too long, you can raise a support case so that we can fine tune the compaction.",
+                                "url": "https://iceberg.apache.org/docs/latest/maintenance/#compact-data-files"
+                            }
+                        },
+                        {
+                            "id": "OPS2_5",
+                            "title": "Rewrite manifests",
+                            "helpfulResource": {
+                                "displayText": "When a table's write pattern doesn't align with the query pattern, metadata can be rewritten to re-group data files into manifests using rewriteManifests or the rewriteManifests action (for parallel rewrites using Spark).",
+                                "url": "https://iceberg.apache.org/docs/latest/maintenance/#rewrite-manifests"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Rewrite the manifest can reorganize file metadata according to query-relevant dimensions rather than just creation order. This reduces scan planning time by grouping files with similar partition values together, enabling Iceberg to efficiently prune entire manifests during query planning.",
+                                "url": "https://iceberg.apache.org/docs/latest/maintenance/#rewrite-manifests"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS2_1 && OPS2_2 && OPS2_3 && OPS2_4 && OPS2_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS2_1) || (!OPS2_3) || (!OPS2_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS3",
+                    "title": "What's your compaction strategy",
+                    "description": "Iceberg supports multiple compaction strategies. This flexibility allows organizations to tailor their maintenance approach to their specific query patterns, data freshness requirements, and computational resource constraints.",
+                    "choices": [
+                        {
+                            "id": "OPS3_1",
+                            "title": "Running bin packing compaction",
+                            "helpfulResource": {
+                                "displayText": "Bin packing strategy determines which files to be rewritten based on their size. If files are either smaller than the MIN_FILE_SIZE_BYTES threshold or larger than the MAX_FILE_SIZE_BYTES threshold, they are considered targets for being rewritten.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-compaction.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon EMR or AWS Glue with dynamic scaling when you expect large volumes of small files to be compacted.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-compaction.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_2",
+                            "title": "Running compaction to sort data",
+                            "helpfulResource": {
+                                "displayText": "Sort strategy for data files which aims to reorder data with data files to optimally lay them out in relation to a column. ",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-compaction.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon EMR or AWS Glue, because sorting is an expensive operation and might need to spill data to disk.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-compaction.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_3",
+                            "title": "Running compaction to cluster the data using z-order sorting",
+                            "helpfulResource": {
+                                "displayText": "Z-order sorting organizes data by interleaving the bits of multiple column values, effectively creating a space-filling curve that groups similar values from different dimensions close together in storage. This multi-dimensional clustering dramatically improves query performance when filtering on several columns simultaneously.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-compaction.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon EMR or AWS Glue, because z-order sorting is a very expensive operation and might need to spill data to disk.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-compaction.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_4",
+                            "title": "Running compaction on partitions that might be updated by other applications because of late-arriving data",
+                            "helpfulResource": {
+                                "displayText": "Enable the Iceberg PARTIAL_PROGRESS_ENABLED property. When you use this option, Iceberg splits the compaction output into multiple commits. If there is a collision (that is, if the data file is updated while compaction is running), this setting reduces the cost of retry by limiting it to the commit that includes the affected file. Otherwise, you might have to recompact all files.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-compaction.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon EMR or AWS Glue. If you use Glue auto compaction and takes too long, you can raise a support case so that we can fine tune the compaction.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-compaction.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS3_1 && OPS3_2 && OPS3_3 && OPS3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS4",
+                    "title": "Do you konw to troubleshooting when using Iceberg workloads in Amazon S3",
+                    "description": "This section discusses Iceberg properties that you can use to optimize Iceberg's interaction with Amazon S3.",
+                    "choices": [
+                        {
+                            "id": "OPS4_1",
+                            "title": "Prevent hot partitioning (HTTP 503 errors)",
+                            "helpfulResource": {
+                                "displayText": " Set write.distribution-mode to hash or range so that Iceberg writes large files which results in fewer Amazon S3 requests. Also set write.object-storage.enabled to true in Iceberg. This instructs Iceberg to hash object names and distribute the load across multiple, randomized Amazon S3 prefixes.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-workloads.html#workloads-503"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Some data lake applications that run on Amazon S3 handle millions or billions of objects and process petabytes of data. This can lead to prefixes that receive a high volume of traffic, which are typically detected through HTTP 503 (service unavailable) errors.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-workloads.html#workloads-503"
+                            }
+                        },
+                        {
+                            "id": "OPS4_2",
+                            "title": "Use Iceberg maintenance operations to release unused data",
+                            "helpfulResource": {
+                                "displayText": "To delete old or unused files from Amazon S3, we recommend that you only use Iceberg native APIs to remove snapshots, remove old metadata files, and delete orphan files.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-workloads.html#workloads-unused-data"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Using Amazon S3 APIs through Boto3, the Amazon S3 SDK, or the AWS Command Line Interface (AWS CLI), or using any other, non-Iceberg methods to overwrite or remove Amazon S3 files for an Iceberg table leads to table corruption and query failures.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-workloads.html#workloads-unused-data"
+                            }
+                        },
+                        {
+                            "id": "OPS4_3",
+                            "title": "Replicate data across AWS Regions",
+                            "helpfulResource": {
+                                "displayText": "When you store Iceberg tables in Amazon S3, you can use the built-in features in Amazon S3, such as Cross-Region Replication (CRR) and Multi-Region Access Points (MRAP), to replicate data across multiple AWS Regions. MRAP provides a global endpoint for applications to access S3 buckets that are located in multiple AWS Regions. ",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-workloads.html#workloads-replication"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Currently, Iceberg integration with MRAP works only with Apache Spark. If you need to fail over to the secondary AWS Region, you have to plan to redirect user queries to a Spark SQL environment (such as Amazon EMR) in the failover Region.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-workloads.html#workloads-replication"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS4_1 && OPS4_2 && OPS4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS4_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "COST",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "COST1",
+                    "title": "Do you know how optimizing storage effect to your storage cost",
+                    "description": "Iceberg designs to keep the historical data and snapshots for time travel.  Implementing strategic snapshot retention policies  and running regular orphan file cleanup. For compliance requirements, moving the old objects to appropriate  S3 storage classes can optimize your storage costs. ",
+                    "choices": [
+                        {
+                            "id": "COST1_1",
+                            "title": "Enable S3 Intelligent-Tiering",
+                            "helpfulResource": {
+                                "displayText": "Use the Amazon S3 Intelligent-Tiering storage class to automatically move data to the most cost-effective access tier when access patterns change. This option has no operational overhead or impact on performance.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-storage.html#storage-s3-intelligent-tiering"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Don't use the optional tiers (such as Archive Access and Deep Archive Access) in S3 Intelligent-Tiering with Iceberg tables. To archive data, see the guidelines in the next section.\nYou can also use Amazon S3 Lifecycle rules to set your own rules for moving objects to another Amazon S3 storage class, such as S3 Standard-IA or S3 One Zone-IA (see Supported transitions and related constraints in the Amazon S3 documentation).",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html"
+                            }
+                        },
+                        {
+                            "id": "COST1_2",
+                            "title": "Archive or delete historic snapshots",
+                            "helpfulResource": {
+                                "displayText": "Keeping snapshots of a table is required for features such as snapshot isolation, table rollback, and time travel queries. However, storage costs grow with the number of versions that you retain.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-storage.html#storage-snapshots"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can consider:1. Delete old snapshots\n2. Set retention policies for specific snapshots\n3. Archive old snapshots",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-storage.html#storage-snapshots"
+                            }
+                        },
+                        {
+                            "id": "COST1_3",
+                            "title": "Delete orphan files",
+                            "helpfulResource": {
+                                "displayText": "In certain situations, Iceberg applications can fail before you commit your transactions. This leaves data files in Amazon S3. Because there was no commit, these files won't be associated with any table, so you might have to clean them up asynchronously.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/apache-iceberg-on-aws/best-practices-storage.html#storage-orphan-files"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To handle these deletions, you can use the VACUUM statement in Amazon Athena. This statement removes snapshots and also deletes orphaned files. This is very cost-efficient, because Athena doesn't charge for the compute cost of this operation. Also, you don't have to schedule any additional operations when you use the VACUUM statement.\nAlternatively, you can use Spark on Amazon EMR or AWS Glue to run the remove_orphan_files procedure. This operation has a compute cost and has to be scheduled independently. For more information, see the Iceberg documentation.",
+                                "url": "https://iceberg.apache.org/docs/latest/spark-procedures/#remove_orphan_files"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST1_1 && COST1_2 && COST1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST1_1) || (!COST1_2) || (!COST1_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
