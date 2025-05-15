@@ -3,6 +3,6 @@ Iceberg on Amazon S3 Best Practice Lens provides best practices for using Apache
 
 ## Contributing
 - Noritaka Sekiyama, Principal Big Data Architect, AWS
-- Tomohiro Tanaka, Sr. Cloud Supp Eng (Big Data), Iceberg Contributor, AWS
+- Tomohiro Tanaka, Sr. Cloud Supp Eng (Big Data), AWS
 - Joey Wu, Solutions Architect, AWS
 - Ray Wang, Senior Solutions Architect, AWS
