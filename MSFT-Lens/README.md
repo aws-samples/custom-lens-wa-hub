@@ -123,7 +123,7 @@ This custom lens contains:
 
 * [Bruno Lopes](https://www.linkedin.com/in/blopesinfo/), Sr. Specialist SA, Containers
 * [Carlos Felicio](https://www.linkedin.com/in/cafeliciobrz/), Sr. TAM (Partner)
-* [Luciano Bernardes](https://www.linkedin.com/in/lucianobernardes/), Sr. Specialist SA, MSFT
+* [Luciano Bernardes](https://www.linkedin.com/in/lucianobernardes/), US, Specialist Sr. SA
 * [Vitor Euphrasio](https://www.linkedin.com/in/vitoreuphrasio/), Sr. Specialist SA, Infra Mig & Mod
 
 ## Resources
