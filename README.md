@@ -44,6 +44,8 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [ElastiCache](/ElastiCache/)
 * [ECS](/Amazon-ECS-Lens/)
 * [S3](/Amazon-S3-Lens/)
+* [Federated Learning (Flower) on SageMaker AI](/SageMaker-Flower-Lens/)
+* [Apache Iceberg on Amazon S3](/Iceberg-S3-Lens)
 
 ### Custom Lens for AWS Solutions
 * [Streaming Media Lens](/Streaming-Media-Lens/)

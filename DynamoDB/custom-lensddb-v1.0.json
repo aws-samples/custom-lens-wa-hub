@@ -1695,7 +1695,7 @@
                             "id": "DDBREL3_2",
                             "title": "Use PITR for DR",
                             "helpfulResource": {
-                                "displayText": "DynamoDB can back up your data with per-second granularity and restore to any single second from the time PITR was enabled up to the prior 35 days.",
+                                "displayText": "DynamoDB can back up your data with per-second granularity and restore to any single second from the time PITR was enabled up to the prior 35 days (you can adjust the recovery period downward as well).",
                                 "url": "https://aws.amazon.com/blogs/aws/new-amazon-dynamodb-continuous-backups-and-point-in-time-recovery-pitr/"
                             },
                             "improvementPlan": {
@@ -2210,7 +2210,7 @@
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/PointInTimeRecovery_Howitworks.html"
                             },
                             "improvementPlan": {
-                                "displayText": "For EarliestRestorableDateTime, you can restore your table to any point in time during the last 35 days. The retention period is a fixed 35 days (5 calendar weeks) and can't be modified.",
+                                "displayText": "For EarliestRestorableDateTime, you can restore to any single second from the time PITR was enabled up to a maximum of 35 days (or you can adjust the maximum recovery period downward as well).",
                                 "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/PointInTimeRecovery_Howitworks.html"
                             }
                         }
