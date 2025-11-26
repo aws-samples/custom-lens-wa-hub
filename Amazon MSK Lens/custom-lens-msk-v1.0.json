@@ -1,0 +1,2148 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "Amazon Managed Streaming for Apache Kafka Best Practice Lens",
+    "description": "Best practices for configuring Amazon Managed Streaming for Apache Kafka",
+    "pillars": [
+        {
+            "id": "PERF",
+            "name": "Performance",
+            "questions": [
+                {
+                    "id": "PERF1",
+                    "title": "How do you ensure your cluster is sizing efficiently?",
+                    "description": "Right-sizing your cluster from all aspects to optimize performance and cost-efficiency. Some key areas like number of brokers, number of partitions per broker, replication factors...etc. Remember that right-sizing is an ongoing process, and it's important to continuously monitor and adjust your MSK cluster configuration based on changing workload patterns and requirements.",
+                    "choices": [
+                        {
+                            "id": "PERF1_1",
+                            "title": "The number of brokers per cluster is estimated to meet your throughput, availability, cost and latency requirements.",
+                            "helpfulResource": {
+                                "displayText": "This spreadsheet provides an estimate for sizing an MSK cluster and the associated costs of Amazon MSK compared to a similar, self-managed, EC2-based Apache Kafka cluster. A good tool to determine the right number of brokers for your MSK cluster and understand costs. ",
+                                "url": "https://view.officeapps.live.com/op/view.aspx?src=https percent3A percent2F percent2Fdy7oqpxkwhskb.cloudfront.net percent2FMSK_Sizing_Pricing.xlsx&amp;wdOrigin=BROWSELINK"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Check the blog post which provides information about how to size your clusters to meet your throughput, availability, and latency requirements. It also provides answers to questions such as when you should scale up versus scale out, and guidance on how to continuously verify the size of your production clusters.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            }
+                        },
+                        {
+                            "id": "PERF1_2",
+                            "title": "The number of partitions (including leader and follower replicas) per broker is following the recommended value for each instan",
+                            "helpfulResource": {
+                                "displayText": "A high number of partitions can also result in missing Kafka metrics on CloudWatch and on Prometheus scraping.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#partitions-per-broker"
+                            },
+                            "improvementPlan": {
+                                "displayText": "If the number of partitions per broker exceeds the recommended value and your cluster becomes overloaded, you may be prevented from performing the following operations:\n1. Update the cluster configuration\n2. Update the cluster to a smaller broker size\n3. Associate an AWS Secrets Manager secret with a cluster that has SASL/SCRAM authentication",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#partitions-per-broker"
+                            }
+                        },
+                        {
+                            "id": "PERF1_3",
+                            "title": "Ensure the leader replicas are balanced evenly across the cluster.",
+                            "helpfulResource": {
+                                "displayText": "Uneven distribution of leader replicas across the cluster can result in imbalanced resource utilization. To move partitions to different brokers on the same cluster, you can use the partition reassignment tool named kafka-reassign-partitions.sh.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-balance-cluster"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Adding servers to a Kafka cluster is easy, just assign them a unique broker id and start up Kafka on your new servers. However these new servers will not automatically be assigned any data partitions, so unless partitions are moved to them they won't be doing any work until new topics are created. So usually when you add machines to your cluster you will want to migrate some existing data to these machines.",
+                                "url": "https://kafka.apache.org/documentation/#basic_ops_cluster_expansion"
+                            }
+                        },
+                        {
+                            "id": "PERF1_4",
+                            "title": "Use KRaft mode for any new MSK clusters running versions 3.7 to 3.9.",
+                            "helpfulResource": {
+                                "displayText": "Amazon MSK now supports KRaft mode starting from Apache Kafka 3.7, which removes the dependency on ZooKeeper. This new mode enables larger and more scalable clusters, supporting up to 60 brokers double the default 30-broker quota in ZooKeeper mode. KRaft mode also allows clusters to host more partitions, helping customers scale their Kafka infrastructure for higher throughput and larger workloads.\n For more details, see the Amazon MSK Developer Guide   KRaft mode and Kafka 3.7 release notes.",
+                                "url": "https://aws.amazon.com/blogs/big-data/introducing-support-for-apache-kafka-on-raft-mode-kraft-with-amazon-msk-clusters/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve performance and scalability, consider migrating to Amazon MSK clusters running Kafka 3.7+ in KRaft mode. This allows scaling the cluster to 60 brokers and increasing the number of partitions supported. Review your workload s broker utilization, partition count, and latency requirements, then create a migration plan that includes validating client compatibility, testing failover behavior, and benchmarking partition throughput. Moving to KRaft mode provides a more scalable control plane and removes ZooKeeper operational limits.",
+                                "url": "https://aws.amazon.com/blogs/big-data/introducing-support-for-apache-kafka-on-raft-mode-kraft-with-amazon-msk-clusters/"
+                            }
+                        },
+                        {
+                            "id": "PERF1_5",
+                            "title": "Choose the Amazon MSK cluster type that best fits your business needs.",
+                            "helpfulResource": {
+                                "displayText": "Amazon MSK offers two cluster types Provisioned and Serverless and selecting the right one ensures optimal use of resources and alignment with business needs. Provisioned clusters provide more control and flexibility and support Standard and Express brokers, with Express brokers offering higher performance. In contrast, Serverless clusters simplify operations by automatically managing capacity. Reviewing the characteristics of each option helps determine the most suitable cluster type for your workload. Refer to the Amazon MSK cluster type documentation for detailed comparisons.",
+                                "url": "https://aws.amazon.com/blogs/big-data/how-to-choose-the-right-amazon-msk-cluster-type-for-you/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve alignment between resource usage and workload requirements, evaluate whether your application would benefit more from Provisioned or Serverless MSK clusters. If you need fine-grained control and higher performance, consider using Provisioned clusters with Express brokers. Assess factors such as throughput, latency, cost expectations, and operational overhead, then adjust the cluster type and broker selection accordingly. Validating workload patterns and testing performance on the recommended cluster type will help ensure the chosen configuration meets your business goals.",
+                                "url": "https://aws.amazon.com/blogs/big-data/how-to-choose-the-right-amazon-msk-cluster-type-for-you/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF1_1 && PERF1_2 && PERF1_3 && PERF1_4 && PERF1_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF1_1) || (!PERF1_2) || (!PERF1_3) || (!PERF1_5)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF2",
+                    "title": "How do you ensure the instances resources are utilized efficiently?",
+                    "description": "Instance resources like CPU utilization, network throughput, memory and JVM heap..etc. Make sure you select the correct instance configuration to maintain the performance requirement.",
+                    "choices": [
+                        {
+                            "id": "PERF2_1",
+                            "title": "When using m5.4xl, m7g.4xl, or larger instances, you can optimize the cluster throughput by tuning the num.io.threads and num.n",
+                            "helpfulResource": {
+                                "displayText": "Kafka broker performance can be improved by tuning thread-related configurations to match the underlying instance s CPU capacity. Increasing num.io.threads up to the number of CPU cores available helps maximize I/O parallelism and improve overall broker throughput. Similarly, setting num.network.threads to about half the available CPU cores enables efficient handling of network requests and fully utilizes the larger instance size. For more details, refer to the Kafka performance tuning guidance in the Amazon MSK and Apache Kafka documentation.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#optimize-broker-threads"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve throughput after scaling to a larger instance size, review and adjust your Kafka broker thread configuration. Increase num.io.threads to match the instance s CPU core count and set num.network.threads to approximately half that value. Validate CPU usage, network traffic patterns, and request handling latency after tuning. This ensures that the broker fully leverages the upgraded compute capacity and can better sustain higher workloads.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#optimize-broker-threads"
+                            }
+                        },
+                        {
+                            "id": "PERF2_2",
+                            "title": "Maintain the total CPU utilization for your brokers, defined as CPU User + CPU System under 60 percent.",
+                            "helpfulResource": {
+                                "displayText": "Maintaining sufficient CPU headroom is important for stable Kafka cluster operations. When at least 40 percent of total cluster CPU is available, Apache Kafka can effectively redistribute CPU load across brokers during operational events. This becomes critical during scenarios such as Amazon MSK s automatic recovery from broker faults or maintenance activities (for example, patching or rolling updates). Ensuring adequate CPU capacity helps Kafka continue processing traffic smoothly during these events. For more details, see the Amazon MSK performance and capacity planning guidance.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-monitor-cpu"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To enhance cluster resilience during operational events, assess current CPU utilization and ensure that at least 40 percent CPU headroom is maintained across the cluster. This allows Kafka to rebalance load efficiently when a broker becomes unavailable or when Amazon MSK performs automated maintenance. Consider scaling broker instance sizes or adjusting workload distribution to maintain this buffer. Continuously monitor CPU trends to ensure the cluster can tolerate broker failures, maintenance cycles, and other operational fluctuations without impacting performance.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-monitor-cpu"
+                            }
+                        },
+                        {
+                            "id": "PERF2_3",
+                            "title": "Take action when HeapMemoryAfterGC increases above 60 percent.",
+                            "helpfulResource": {
+                                "displayText": "Monitoring Kafka s memory usage is essential to maintaining cluster stability. If memory consumption becomes too high, brokers may become unresponsive and the cluster can experience availability issues. Apache Kafka exposes the HeapMemoryAfterGC metric, which helps you understand how much heap memory remains after garbage collection and whether brokers are operating within safe limits. Reviewing this metric regularly ensures early detection of memory pressure. For more information, refer to the Amazon MSK monitoring and metrics guidance.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-monitor-memory"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To reduce the risk of cluster unavailability, start by monitoring Kafka s memory usage and specifically track the HeapMemoryAfterGC metric. Evaluate how much heap memory remains after GC cycles and identify any upward trends that may indicate memory leaks, oversized workloads, or insufficient broker resources. If the metric shows persistent high usage, consider tuning heap settings, adjusting producer/consumer workloads, or scaling broker instance sizes. Implementing proactive memory monitoring ensures brokers maintain healthy operation and avoid memory-related outages.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-monitor-memory"
+                            }
+                        },
+                        {
+                            "id": "PERF2_4",
+                            "title": "Right size for network and storage throughput.",
+                            "helpfulResource": {
+                                "displayText": "The following formula for the theoretical sustained throughput limit t\ncluster given the infrastructure characteristics of a specific cluster:max(t\ncluster) &lt;= min{ max(t\nstorage) * #brokers/r, max(t\nEBSnetwork) * #brokers/r, max(t\nEC2network) * #brokers/(#consumer groups + r-1) }",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve sustained throughput, analyze which component storage I/O, EBS network bandwidth, or EC2 network throughput is acting as the limiting factor in your cluster. Start by comparing observed throughput against the theoretical limits defined by the formula. If storage or EBS bandwidth is the constraint, consider switching to higher-throughput broker types or increasing the broker count. If EC2 network bandwidth is the bottleneck, reduce the number of consumer groups, adjust replication factor r, or scale to larger instance types with higher network throughput. Optimizing the limiting dimension ensures the cluster can sustain higher and more consistent throughput.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            }
+                        },
+                        {
+                            "id": "PERF2_5",
+                            "title": "Monitor that VolumeReadBytes and VolumeWriteBytes stay within EBS throughput capacity.",
+                            "helpfulResource": {
+                                "displayText": "You can use the VolumeReadBytes and VolumeWriteBytes metrics to measure the average storage throughput of a cluster. Average storage throughput in MiB/s = (Sum(VolumeReadBytes) + Sum(VolumeWriteBytes)) / (60 * 1024 * 1024).",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-provision-throughput-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "If exceeded, please consider to enable provisioned storage throughput to adjust volume throuighput.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-provision-throughput-management.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_6",
+                            "title": "Ensure TrafficShaping remains within the instance's network capacity.",
+                            "helpfulResource": {
+                                "displayText": "Metric indicating packets shaped (dropped or queued) due to exceeding network capacity. Values greater than 0  indicate that network throughput has exceeded the instance's bandwidth limit.",
+                                "url": "https://repost.aws/knowledge-center/ec2-instance-exceeding-network-limits"
+                            },
+                            "improvementPlan": {
+                                "displayText": "If exceeded, please consider to vertical or horizontal scaling to require more resources.",
+                                "url": "https://repost.aws/knowledge-center/ec2-instance-exceeding-network-limits"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF2_1 && PERF2_2 && PERF2_3 && PERF2_4 && PERF2_5 && PERF2_6",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF3",
+                    "title": "How do you ensure the storage resources are utilized efficiently?",
+                    "description": "Producer's performance is influenced by the disk IOPS and throughput of the broker storing log segments.  On the other hand, disk capacity is also a factor to consider, it directly impacts the cluster's ability to retain messages, handle high-volume data streams, and maintain performance over time.",
+                    "choices": [
+                        {
+                            "id": "PERF3_1",
+                            "title": "Store data in tiered storage for historical data",
+                            "helpfulResource": {
+                                "displayText": "Tiered storage makes it more cost-effective to run Kafka workloads. You can storemore data without worrying about limits. Effectively balance your performance and costs by using the performance-optimized primary storage for real-time data and the new low-cost tier for the historical data.",
+                                "url": "https://aws.amazon.com/blogs/big-data/retain-more-for-less-with-tiered-storage-for-amazon-msk/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To optimize both performance and cost, evaluate how your workload accesses data and configure tiered storage accordingly. Keep real-time or frequently accessed data on primary storage to maintain low latency, and move long-term or infrequently accessed data to the low-cost tiered storage layer. Review retention policies, monitor access patterns, and adjust storage configurations to ensure that performance-critical data remains on primary storage while historical data benefits from cost-efficient tiering. This strategy enables you to expand retention without overspending on broker resources.",
+                                "url": "https://aws.amazon.com/blogs/big-data/retain-more-for-less-with-tiered-storage-for-amazon-msk/"
+                            }
+                        },
+                        {
+                            "id": "PERF3_2",
+                            "title": "Specify a retention time period or retention log size to free up spaces.",
+                            "helpfulResource": {
+                                "displayText": "To specify a retention policy at the cluster level, set one or more of the following parameters: log.retention.hours, log.retention.minutes, log.retention.ms, or log.retention.bytes. ",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-retention-period"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To better manage storage usage and meet data lifecycle requirements, review and apply a cluster-level retention policy. Choose one or more parameters such as log.retention.ms for time-based retention or log.retention.bytes for size-based limits to control how long Kafka retains log data. Ensure that these values align with your workload s access patterns, storage budget, and compliance needs. Periodically monitor log segment usage and adjust these settings as data volume or retention needs change.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-retention-period"
+                            }
+                        },
+                        {
+                            "id": "PERF3_3",
+                            "title": "Take action when KafkaDataLogsDiskUsed metric is reaches or exceeds 85 percent.",
+                            "helpfulResource": {
+                                "displayText": "Perform one or more of the following actions:\n1. Use Automatic scaling for Amazon MSK clusters. You can also manually increase broker storage as described in Manual scaling.\n2. Reduce the message retention period or log size. For information on how to do that, see Adjust data retention parameters.\n3. Delete unused topics.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-monitor-disk-space"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For information on how to set up KafkaDataLogsDiskUsed and use alarms, see Using Amazon CloudWatch Alarms",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html"
+                            }
+                        },
+                        {
+                            "id": "PERF3_4",
+                            "title": "If disk throughput is the bottleneck, enable provisioned storage throughput to specify a higher throughput without having to pr",
+                            "helpfulResource": {
+                                "displayText": "You can specify the provisioned throughput rate in MiB per second for clusters whose brokers are of size kafka.m5.4xlarge or larger and if the storage volume is 10 GiB or greater. It is possible to specify provisioned throughput during cluster creation. You can also enable or disable provisioned throughput for a cluster that is in the ACTIVE state.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-provision-throughput.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve consistency in high-volume data pipelines, evaluate whether your MSK cluster meets the requirements for provisioned throughput and enable it if sustained performance is needed. Confirm that brokers are at least kafka.m5.4xlarge and that storage volumes exceed 10 GiB. Then configure an appropriate throughput rate either at cluster creation or by updating an ACTIVE cluster. Regularly monitor actual throughput and adjust the provisioned rate as workload patterns evolve to maintain predictable broker performance.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-provision-throughput.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF3_1 && PERF3_2 && PERF3_3 && PERF3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF3_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF4",
+                    "title": "How do you make sure your producers execute efficiently?",
+                    "description": "Kafka producers send messages to the Kafka cluster. This section explains how to monitor and improve producer s performance.",
+                    "choices": [
+                        {
+                            "id": "PERF4_1",
+                            "title": "Scale out or enable provisioned throughput to increase cluster write throughput.",
+                            "helpfulResource": {
+                                "displayText": "Kafka relies on disk I/O performance to provide good response times to producers. This is also the reason that the log segments are usually put on a fast disk type. Between two same amount of storage capacity clusters, the one with more nodes has better write throughput and lower put latency in general.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve producer latency and write throughput, review the storage configuration and broker count of your Kafka cluster. Ensure log segments are stored on fast disk types to support high I/O demand, and consider increasing the number of brokers if total storage capacity is fixed but throughput or latency requirements are rising. Adding brokers spreads disk I/O across more nodes, reducing contention and improving performance. Monitor producer latency and throughput after changes to validate the impact and optimize further.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            }
+                        },
+                        {
+                            "id": "PERF4_2",
+                            "title": "Monitor broker-level BytesInPerSec for the amount of data ingested into the cluster.",
+                            "helpfulResource": {
+                                "displayText": "The metric reflects the ingestion rate from producers. If a broker has a high values or is skewed, the broker might experience a high CPU usage. Check theh partition count for the topic, it might not spread evenly on the brokers.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To address ingestion or CPU hotspots, monitor the ingestion-rate metric across brokers and identify any skewed values. If a broker shows significantly higher throughput, review the partition count and distribution for the affected topics. Consider redistributing partitions, increasing the number of partitions, or rebalancing them across brokers to achieve a more even load. This helps reduce CPU pressure on individual brokers and improves overall ingestion performance.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            }
+                        },
+                        {
+                            "id": "PERF4_3",
+                            "title": "Monitoring the producer-side metrics such as request-latency-avg using your preferred metric capture mechanism.",
+                            "helpfulResource": {
+                                "displayText": "Apache Kafka producers expose several key metrics that help you evaluate publishing performance and detect issues. Metrics such as byte-rate, record-send-rate, and records-per-request-avg indicate how efficiently producers are sending data. Latency-focused metrics acks-latency-avg, request-latency-avg, and request-latency-max show how long producers wait for acknowledgments and broker responses. Error-related metrics like record-error-rate, record-retry-rate, and error-rate help identify network problems, broker saturation, or misconfigurations. Monitoring these metrics provides visibility into throughput, latency, and reliability. For more details, refer to the Kafka producer monitoring documentation.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-monitoring"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve producer performance and reliability, regularly review the core producer metrics. Investigate high latency metrics to determine whether brokers are overloaded or acks settings are too strict. If record-error-rate or retry-rate rises, examine network stability, partition distribution, and broker health. Validate that producer configurations such as batching, linger time, compression, and acks level align with your throughput and durability requirements. Adjust these settings, scale brokers if needed, and monitor the impact to ensure stable, efficient producer performance.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-monitoring"
+                            }
+                        },
+                        {
+                            "id": "PERF4_4",
+                            "title": "Set linger.ms to control the amount of time a producer waits for a batch to fill.",
+                            "helpfulResource": {
+                                "displayText": "Smaller batches are computationally expensive for Kafka as they translate to more threads and I/O operations at once. We recommend the following values.\n1. A minimum value of 5ms for all use cases inc low latency.\n2. We recommend a higher value of 25ms, for most use cases.\n3. We recommend against ever using a value of zero in low latency use cases. (A value of zero typically causes latency irrespective because of the IO overhead).",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-performance"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve producer efficiency and reduce unnecessary I/O overhead, review your batching configuration specifically the linger.ms setting. Set a minimum of 5 ms for low-latency applications to avoid the overhead caused by excessively small batches, and use 25 ms for most workloads to achieve better throughput. Avoid using linger.ms = 0, as it generally results in poorer latency due to high per-message processing cost. After adjustment, monitor producer latency and throughput to verify performance improvements.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-performance"
+                            }
+                        },
+                        {
+                            "id": "PERF4_5",
+                            "title": "Batch send message (recommend batch.size 128KB and buffer.memory 64MB for most use cases).",
+                            "helpfulResource": {
+                                "displayText": "Producer sends batched messages in a request can reduce the network overheads like establishing the connections or transmitting the request metadata.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-performance"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To reduce network overhead, configure producer settings so that multiple messages are batched into each request. Adjust parameters such as batch.size and linger.ms to enable effective batching while still meeting your latency requirements. After tuning, observe producer throughput and latency metrics to confirm that batching reduces connection and metadata overhead. Continue refining batch size and timing to achieve optimal performance.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-performance"
+                            }
+                        },
+                        {
+                            "id": "PERF4_6",
+                            "title": "Understang the trade-off between message size and performance.",
+                            "helpfulResource": {
+                                "displayText": "Increasing message size can significantly impact performance (message.max.bytes default 1MB compressed size). Larger messages burden broker threads with longer network request processing times and increase disk write sizes, potentially reducing I/O throughput. ",
+                                "url": "https://repost.aws/articles/ARfShOOzvBSra6UwgWOz9GXg/handling-large-messages-in-amazon-managed-streaming-for-apache-kafka-msk"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve throughput, evaluate current message sizes and reduce them when possible to lessen network and disk I/O pressure on brokers. Consider splitting oversized payloads or using more efficient serialization to keep messages well below the message.max.bytes threshold. After adjustment, monitor broker CPU, network, and disk metrics to confirm performance improvements.",
+                                "url": "https://repost.aws/articles/ARfShOOzvBSra6UwgWOz9GXg/handling-large-messages-in-amazon-managed-streaming-for-apache-kafka-msk"
+                            }
+                        },
+                        {
+                            "id": "PERF4_7",
+                            "title": "Enable data compression for messages (recommend either lz4 or zstd running a producer on a high latency network).",
+                            "helpfulResource": {
+                                "displayText": "Compression can reduce message size and help improve throughput. Set compression.type  for a given topic and compression.&lt;compression.type&gt;.level for desired compression level.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-performance"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve producer and broker efficiency, configure an appropriate compression.type and adjust the corresponding compression level for your workload. Choose a level that reduces message size without causing excessive CPU overhead. Monitor throughput and latency after tuning to ensure compression provides the expected performance benefits.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-performance"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF4_1 && PERF4_2 && PERF4_3 && PERF4_4 && PERF4_5 && PERF4_6 && PERF4_7",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF5",
+                    "title": "How do you make sure your consumers execute efficiently?",
+                    "description": "Kafka consumers retrieve and process messages from brokers. The way you configure partitions and batch messages directly affects the throughput and latency. This section shows you how to monitor and improve consumer's performance.",
+                    "choices": [
+                        {
+                            "id": "PERF5_1",
+                            "title": "Number of consumers at least equal to the number of partitions.",
+                            "helpfulResource": {
+                                "displayText": "If partititions are more than consumers, consumers might be overload. If partitions are less than consumers, some consumers are sitting idled.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To optimize throughput and avoid hotspots or idle consumers, adjust the number of partitions or the size of the consumer group to achieve a balanced ratio. Aim for each consumer to handle a manageable number of partitions while keeping all consumers active. Reevaluate this configuration as workload patterns or consumer counts change.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_2",
+                            "title": "Scale up to increase cluster read throughput.",
+                            "helpfulResource": {
+                                "displayText": "The more consumer groups are reading from the cluster, the more data egresses over the Amazon EC2 network of the brokers. Larger brokers have a higher network baseline throughput (up to 25 Gb/sec) and can therefore support more consumer groups reading from the cluster. Scale up also facilitate in-transit or in-cluster encryption and consumers that aren t reading form the tip of the stream.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To support additional consumer groups or workloads requiring encryption or historical reads, consider scaling brokers to larger instance types with higher network throughput. Evaluate current egress patterns and upgrade instances when the cluster approaches network bottlenecks. This ensures consumer performance remains stable even as read volume grows.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            }
+                        },
+                        {
+                            "id": "PERF5_3",
+                            "title": "Monitor broker-level BytesOutPerSec  for the amount of data consumed from the cluster.",
+                            "helpfulResource": {
+                                "displayText": "The metric reflects the consumption rate from consumers. Likewise, you can monitor the CPUIdle metric and alarm when your cluster is under- or over-provisioned in terms of CPU utilization.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To keep your cluster properly sized, monitor consumption rate and CPUIdle levels to identify imbalances. If CPUIdle is consistently low, consider scaling up or adding brokers; if it is high, evaluate opportunities to reduce cluster size or reallocate workload. Adjusting capacity based on these metrics helps maintain efficient and cost-effective resource utilization.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            }
+                        },
+                        {
+                            "id": "PERF5_4",
+                            "title": "Monitor consumer lags metrics: EstimatedMaxTimeLag, EstimatedTimeLag, MaxOffsetLag, OffsetLag, and SumOffsetLag for consumer's ",
+                            "helpfulResource": {
+                                "displayText": "Monitoring consumer lag allows you to identify slow or stuck consumers that aren't keeping up with the latest data available in a topic. When necessary, you can then take remedial actions, such as scaling or rebooting those consumers.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/consumer-lag.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consumer lag metrics quantify the difference between the latest data written to your topics and the data read by your applications. ",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/metrics-details.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_5",
+                            "title": "Monitoring the producer-side metrics such as records-lag-max using your preferred metric capture mechanism.",
+                            "helpfulResource": {
+                                "displayText": "Kafka consumer metrics such as records-consumed-rate, bytes-consumed-rate, fetch-rate, and records-lag-max help assess how efficiently consumers are reading data and whether they are keeping up with producers. Error-related metrics like record-error-rate and fetch-error-rate, along with poll-rate, rebalance-latency-avg, and commit-rate, provide insight into consumer stability, responsiveness, and offset management. Monitoring these metrics helps identify bottlenecks, lag, or misconfigurations in consumer workloads.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-monitoring"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve consumer performance, regularly review consumption rates and lag metrics to ensure that consumers can keep up with incoming data. Investigate elevated error rates or long rebalance latency to identify issues with network stability, partition assignment, or consumer configuration. Tune fetch size, concurrency, and commit behavior based on these metrics to maintain efficient and reliable consumption.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-monitoring"
+                            }
+                        },
+                        {
+                            "id": "PERF5_6",
+                            "title": "Reduce the number of fetches (recommend  fetch.min.bytes for a minimum 32 bytes to a higher value of 128 bytes for most use cas",
+                            "helpfulResource": {
+                                "displayText": "Control the minimum fetch size to reduce number of fetches and cluster load.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-performance"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To reduce unnecessary broker load, increase the minimum fetch size so consumers retrieve data in larger batches. Adjust this setting based on your latency tolerance and observe changes in fetch-rate, consumption rate, and CPU usage to validate improvements. Continue tuning until you achieve an optimal balance between reduced fetch overhead and acceptable read latency.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-performance"
+                            }
+                        },
+                        {
+                            "id": "PERF5_7",
+                            "title": "Reduce consumer rebalance events.",
+                            "helpfulResource": {
+                                "displayText": "When a new consumer joins or leaves, it triggers consumer rebalance in Kafka. The group coordicator initiates a rebalance to reassign partitions to other consumers. This help utilize each consumer more evenly, but it can also have some side effects. You can take actions in the reference link to reduce the rebalancing events or side effects.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To minimize the impact of consumer rebalances, review configuration settings and operational practices that reduce how often rebalances occur. Consider tuning session timeouts, using cooperative rebalancing, or stabilizing consumer membership to avoid frequent group changes. Applying these measures helps maintain smoother consumption and reduces interruptions caused by rebalancing events.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF5_1 && PERF5_2 && PERF5_3 && PERF5_4 && PERF5_5 && PERF5_6 && PERF5_7",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF5_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "OPS",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "OPS1",
+                    "title": "Does your MSK cluster performance metrics meet the suggested criteria?",
+                    "description": "Do you know the key cloudwatch metrics that need to be monitored?",
+                    "choices": [
+                        {
+                            "id": "OPS1_1",
+                            "title": "CPU Utilization (CpuUser + CpuSystem)",
+                            "helpfulResource": {
+                                "displayText": "Amazon MSK strongly recommends that you maintain the CPU utilization for your brokers (defined as CPU User + CPU System) under 60%. This ensures that your cluster retains sufficient CPU headroom to handle operational events, such as broker failures, patching, and rolling upgrades.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-monitor-cpu"
+                            },
+                            "improvementPlan": {
+                                "displayText": "If you observe CPU usage exceed 60%, consider applying following option to allocate more CPU resource. \nOption 1 (recommended): Update your broker size to the next larger size. \nOption 2: If there are topics with all messages ingested from producers that use round-robin writes (in other words, messages aren't keyed and ordering isn't important to consumers), expand your cluster by adding brokers. \nOption 3: Expand your cluster by adding brokers, then reassign existing partitions by using the partition reassignment tool named kafka-reassign-partitions.sh. ",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-monitor-cpu"
+                            }
+                        },
+                        {
+                            "id": "OPS1_2",
+                            "title": "KafkaDataLogsDiskUsed",
+                            "helpfulResource": {
+                                "displayText": "KafkaDataLogsDiskUsed should not reach or exceed 85% of disk space usage. Higher disk space usage can impact receiving and transmitting.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/amazon-msk-migration-guide/amazon-managed-streaming-for-apache-kafka-amazon-msk.html#recommended-metrics-to-monitor-with-amazon-cloudwatch"
+                            },
+                            "improvementPlan": {
+                                "displayText": "When the value of this metric reaches or exceeds 85%, perform one or more of the following actions:\nUse Automatic scaling for Amazon MSK clusters. You can also manually increase broker storage as described in Manual scaling.\nReduce the message retention period or log size. For information on how to do that, see Adjust data retention parameters.\nDelete unused topics.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-monitor-disk-space"
+                            }
+                        },
+                        {
+                            "id": "OPS1_3",
+                            "title": "PartitionCount",
+                            "helpfulResource": {
+                                "displayText": "The partition count exceeds the recommended limit, which may overload the cluster.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#partitions-per-broker"
+                            },
+                            "improvementPlan": {
+                                "displayText": "If the number of partitions per broker exceeds the recommended value and your cluster becomes overloaded, you may be prevented from performing the following operations:\n- Update the cluster configuration\n- Update the cluster to a smaller broker size\n- Associate an AWS Secrets Manager secret with a cluster that has SASL/SCRAM authentication",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#partitions-per-broker"
+                            }
+                        },
+                        {
+                            "id": "OPS1_4",
+                            "title": "TrafficShaping",
+                            "helpfulResource": {
+                                "displayText": "High-level metrics indicating the number of packets shaped (dropped or queued) due to exceeding network allocations. ",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/metrics-details.html#default-metrics"
+                            },
+                            "improvementPlan": {
+                                "displayText": "High traffic shaping usually causes consumer lag, so you might consider scaling up brokers to a higher class if you observe traffic shaping issues.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/metrics-details.html#default-metrics"
+                            }
+                        },
+                        {
+                            "id": "OPS1_5",
+                            "title": "UnderMinIsrPartitionCount",
+                            "helpfulResource": {
+                                "displayText": "The number of under minIsr partitions for the broker. If it exceeds 0, that means the number of ISRs for a partition falls below the configured minimum ISR count, which may lead to potential data loss if not addressed.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/metrics-details.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To reduce the risk of data loss, investigate any under-minISR partitions and identify why replicas are not staying in sync. Check broker health, network stability, and replica throttling, and consider scaling or rebalancing if sustained load is preventing followers from keeping up. Restore ISR counts promptly and tune replication settings to prevent recurrence.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/metrics-details.html"
+                            }
+                        },
+                        {
+                            "id": "OPS1_6",
+                            "title": "ActiveControllerCount",
+                            "helpfulResource": {
+                                "displayText": "Monitor ActiveControllerCount and set an alarm to alert you in the event ActiveControllerCount  statistics equals to 1.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/amazon-msk-migration-guide/amazon-managed-streaming-for-apache-kafka-amazon-msk.html#recommended-metrics-to-monitor-with-amazon-cloudwatch"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve observability, set up a CloudWatch alarm on ActiveControllerCount so that you are alerted whenever it reports the expected value of 1 for your cluster. When an alarm is triggered, investigate controller logs and broker health to confirm that the controller is functioning correctly and that no unexpected failovers or coordination problems are occurring.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/amazon-msk-migration-guide/amazon-managed-streaming-for-apache-kafka-amazon-msk.html#recommended-metrics-to-monitor-with-amazon-cloudwatch"
+                            }
+                        },
+                        {
+                            "id": "OPS1_7",
+                            "title": "UnderReplicatedPartitions",
+                            "helpfulResource": {
+                                "displayText": "In a healthy MSK cluster, this metric has the value 0. If UnderReplicatedPartitions is spiky, the issue might be that the cluster isn't provisioned at the right size to handle incoming and outgoing traffic.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/troubleshooting.html#troubleshooting-urp"
+                            },
+                            "improvementPlan": {
+                                "displayText": "If UnderReplicatedPartitions increases, evaluate whether the cluster is properly sized for its ingestion and replication traffic. Consider scaling brokers, increasing instance sizes, or rebalancing partitions to ensure replicas can stay in sync. Addressing these capacity issues helps maintain data durability and overall cluster stability.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/troubleshooting.html#troubleshooting-urp"
+                            }
+                        },
+                        {
+                            "id": "OPS1_8",
+                            "title": "HeapMemoryAfterGC",
+                            "helpfulResource": {
+                                "displayText": "We recommend that you create a CloudWatch alarm that takes action when HeapMemoryAfterGC increases above 60% to ensure the stability of cluster.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To protect your MSK cluster from memory-related instability, configure a CloudWatch alarm on HeapMemoryAfterGC that fires when usage rises above 60%. When the alarm is triggered, investigate broker heap usage, GC behavior, and application workloads, and consider tuning heap settings or scaling brokers. Taking action at this threshold helps you resolve memory issues before they degrade performance or cause failures.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS1_1 && OPS1_2 && OPS1_3 && OPS1_4 && OPS1_5 && OPS1_6 && OPS1_7 && OPS1_8",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS1_2) || (!OPS1_6)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS2",
+                    "title": "How will you manage MSK cluster's metadata?",
+                    "description": "Do you know Kafka can be decoupled from ZooKeeper?",
+                    "choices": [
+                        {
+                            "id": "OPS2_1",
+                            "title": "Amazon MSK replaced ZooKeeper with KRaft since version 3.7",
+                            "helpfulResource": {
+                                "displayText": "The traditional Kafka architecture relies on ZooKeeper as the authoritative source for cluster metadata. Read and write access to metadata in ZooKeeper is funneled through a single Kafka controller. For clusters with a large number of partitions, this architecture can create a bottleneck during scenarios such as an uncontrolled broker shutdown or controller failover, due to a single-controller approach. Amazon MSK has launched support for KRaft mode for metadata management since May 2024.",
+                                "url": "https://aws.amazon.com/blogs/big-data/introducing-support-for-apache-kafka-on-raft-mode-kraft-with-amazon-msk-clusters/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve metadata scalability and reduce controller bottlenecks, consider migrating to KRaft mode for clusters that currently rely on ZooKeeper. Evaluate compatibility, plan for controlled migration, and test failover scenarios to confirm improved behavior under load. Adopting KRaft mode provides a more resilient, high-performance metadata architecture for large or mission-critical MSK deployments.",
+                                "url": "https://aws.amazon.com/blogs/big-data/introducing-support-for-apache-kafka-on-raft-mode-kraft-with-amazon-msk-clusters/"
+                            }
+                        },
+                        {
+                            "id": "OPS2_2",
+                            "title": "Create a whole new cluster with KRaft for metadata management.",
+                            "helpfulResource": {
+                                "displayText": "KRaft mode is only available for new clusters.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/kraft-intro.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To take advantage of KRaft mode, plan to create new MSK clusters rather than attempting to migrate existing ZooKeeper-based ones in place. Evaluate workloads that could benefit from KRaft s enhanced scalability and design a migration or cutover approach that transitions traffic to the new cluster cleanly. This ensures you can adopt KRaft while maintaining operational continuity.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/kraft-intro.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS2_1 && OPS2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS3",
+                    "title": "Do you know how to avoide impact during MSK maintenance",
+                    "description": "Do you know the key Kafka parameters that need to be considered?",
+                    "choices": [
+                        {
+                            "id": "OPS3_1",
+                            "title": "Replication factor",
+                            "helpfulResource": {
+                                "displayText": "Replication factor(RF)  refers to the total number of replicas (including the leader) for each partition. RF of 1 can lead to offline partitions during a rolling update; and a RF of 2 may lead to data loss. .For a two brokers cluster, ensure the RF is set to 2. For cluster that contains more than 3 brokers, ensure that the replication factor is at least 3.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#ensure-high-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You may update the parameters through MSK configurations or Kafka command(kafka-topics.sh)",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-configuration-properties.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_2",
+                            "title": "min.insync.replicas",
+                            "helpfulResource": {
+                                "displayText": "The data is considered committed when it is written to all in-sync replicas - min.insync.replicas. A value of 2 implies that at least 2 brokers that are ISR (including leader) must respond that they have the data. Set minimum in-sync replicas (minISR) to at most RF - 1. A minISR that is equal to the RF can prevent producing to the cluster during a rolling update. A minISR of 2 allows three-way replicated topics to be available when one replica is offline.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#ensure-high-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You may update the parameters through MSK configurations or Kafka command(kafka-topics.sh)",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-configuration-properties.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_3",
+                            "title": "Ensure client connection strings include at least one broker from each availability zone.",
+                            "helpfulResource": {
+                                "displayText": "Before producing or consuming messages from the MSK cluster, the client should issue a metadata request. Ensure that the client s connection string includes multiple brokers, allowing the available broker to return updated metadata during maintenance.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#ensure-high-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You may update the parameters through MSK configurations or Kafka command(kafka-topics.sh)",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-configuration-properties.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_4",
+                            "title": "retries",
+                            "helpfulResource": {
+                                "displayText": "Recommend to set the value to max or similar high for most use cases.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For workloads that demand high throughput or low latency, evaluate whether the relevant parameter should be set to its maximum or near-maximum value. Adjust this configuration, monitor system behavior, and validate that the change improves performance without causing resource contention. Tuning these values appropriately helps ensure efficient use of cluster capacity.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            }
+                        },
+                        {
+                            "id": "OPS3_5",
+                            "title": "retry.backoff.ms",
+                            "helpfulResource": {
+                                "displayText": "Recommend to set the value to minimum value of 200ms for most use cases to avoid retry storms and availability impact.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To reduce the risk of retry-related load spikes, configure the parameter to at least 200 ms and avoid overly aggressive retry intervals. After applying the change, monitor client retry patterns and broker CPU or network usage to confirm that retry storms no longer occur. Tuning this value helps maintain availability and smooth cluster operation.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS3_1 && OPS3_2 && OPS3_3 && OPS3_4 && OPS3_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS3_1) || (!OPS3_2) || (!OPS3_3) || (!OPS3_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS4",
+                    "title": "Do you know MSK by default does not clean any old messages?",
+                    "description": "How to set retention policy to clean old messages?",
+                    "choices": [
+                        {
+                            "id": "OPS4_1",
+                            "title": "Kafka log.retention parameters",
+                            "helpfulResource": {
+                                "displayText": "Kafka s log.retention.* parameters control topic log size to prevent storage exhaustion; set log.retention.hours, log.retention.minutes, log.retention.ms, or log.retention.bytes to define a cluster-level retention policy.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-retention-period"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You may update the parameters through MSK configurations or Kafka command(kafka-topics.sh)",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-configuration-properties.html"
+                            }
+                        },
+                        {
+                            "id": "OPS4_2",
+                            "title": "Kafka log.segment.bytes",
+                            "helpfulResource": {
+                                "displayText": "The parameters control when the segment will be closed and rolled out. After the segment is closed, delete operations will check whether it meet the condition. For example: log.segment.bytes, log.roll.ms",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-default-configuration.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You may update the parameters through MSK configurations or Kafka command(kafka-topics.sh)",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-configuration-properties.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS4_1 && OPS4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS4_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SEC",
+            "name": "Security",
+            "questions": [
+                {
+                    "id": "SEC1",
+                    "title": "How are you managing security control for your Amazon MSK cluster?",
+                    "description": "Review your security settings to ensure that access is restricted only to trusted networks and clients.",
+                    "choices": [
+                        {
+                            "id": "SEC1_1",
+                            "title": "Network isolation",
+                            "helpfulResource": {
+                                "displayText": "Use Secrutiy Group and VPC to limit exposure to the internet, reducing security risks.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/security.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve security, configure restrictive Security Groups and place your MSK cluster within a private VPC so only trusted networks and applications can connect. Regularly review inbound and outbound rules to ensure least-privilege access. This approach helps minimize attack surface and strengthens overall cluster protection.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/security.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_2",
+                            "title": "Encryption",
+                            "helpfulResource": {
+                                "displayText": "Enable encryption at rest and in transit to protect data from unauthorized access or tampering.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To strengthen data security, enable MSK s encryption at rest and configure TLS for all client and broker communications. Verify that your clients trust the correct certificates and enforce encrypted connections. Regularly audit encryption settings to ensure all traffic and stored data remain fully protected.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_3",
+                            "title": "Audit with AWS CloudTrail",
+                            "helpfulResource": {
+                                "displayText": "Enable CloudTrail logging for MSK to track management actions like cluster creation, deletion, or configuration changes. ",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/logging-using-cloudtrail.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve auditability and security oversight, enable CloudTrail for all MSK-related API calls and retain logs according to your compliance needs. Review these logs regularly to detect unauthorized or unexpected changes. Integrating CloudTrail insights into your monitoring processes enhances accountability and operational transparency.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/logging-using-cloudtrail.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_4",
+                            "title": "Monitoring with Amazon CloudWatch",
+                            "helpfulResource": {
+                                "displayText": "Monitor CloudWatch logs for unusual access patterns or failed access attempts, which may indicate unauthorized access attempts or configuration issues.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/monitoring.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve security, set up log filters and alerts in CloudWatch to flag suspicious access attempts or unexpected connection errors. Investigate these events promptly to determine whether they stem from misconfigurations or unauthorized access attempts. Regular log monitoring ensures issues are addressed before they escalate.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/monitoring.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_5",
+                            "title": "Authentication",
+                            "helpfulResource": {
+                                "displayText": "You can select one of methods to authenticate clients. For example: Unauthenticated, IAM, SASL/SCRAM or mTLS.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/kafka_apis_iam.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To strengthen security, evaluate your workload s requirements and select an authentication method such as IAM, SASL/SCRAM, or mTLS instead of leaving the cluster unauthenticated. Configure clients accordingly and validate connectivity to ensure the chosen method works reliably. Regularly review authentication settings as your security needs evolve.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/kafka_apis_iam.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_6",
+                            "title": "Authorization",
+                            "helpfulResource": {
+                                "displayText": "You can use IAM or ACL to control which actions are allowed or denied for users.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/kafka_apis_iam.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve security, review your access requirements and apply IAM or ACL-based permissions to restrict client operations to the minimum necessary actions. Validate permissions through testing to ensure they work as intended and adjust rules as your environment evolves. Regularly auditing authorization settings helps maintain strict access control and reduce security risks.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/kafka_apis_iam.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_7",
+                            "title": "Patching",
+                            "helpfulResource": {
+                                "displayText": "Periodically, Amazon MSK updates software on the brokers in your cluster to maintain the health, security, and performance of your cluster.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/patching-impact.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To ensure smooth updates, monitor MSK maintenance notifications and plan for rolling updates during lower-traffic periods. Validate client retry and failover configurations so applications continue operating while brokers restart. Proactively preparing for these periodic updates helps maintain cluster security and performance with minimal disruption.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/patching-impact.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC1_1 && SEC1_2 && SEC1_3 && SEC1_4 && SEC1_5 && SEC1_6 && SEC1_7",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC1_1) || (!SEC1_2) || (!SEC1_3) || (!SEC1_4) || (!SEC1_5) || (!SEC1_6) || (!SEC1_7)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC2",
+                    "title": "How are you managing access permissions for your Amazon MSK cluster?",
+                    "description": "This prevents unauthorized interception and ensures data protection.",
+                    "choices": [
+                        {
+                            "id": "SEC2_1",
+                            "title": "Access control",
+                            "helpfulResource": {
+                                "displayText": "Implement IAM roles, resource policies, and fine-grained access control for topics to prevent unauthorized access, which could impact data integrity or availability.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/iam-access-control.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To strengthen security, define IAM roles and resource policies that enforce least-privilege access, and apply topic-level ACLs to control which actions each client can perform. Periodically review and audit these permissions to ensure they continue to meet security and compliance requirements. Adjust rules as workloads evolve to maintain robust protection against unauthorized access.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/iam-access-control.html"
+                            }
+                        },
+                        {
+                            "id": "SEC2_2",
+                            "title": "Client authentication and authorization",
+                            "helpfulResource": {
+                                "displayText": "Enable TLS (Transport Layer Security) for secure client-broker communication. Require client authentication using TLS certificates to ensure that only authorized applications can connect to the cluster.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/iam-access-control.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To enhance security, enable TLS on your MSK cluster and configure clients to use valid certificates for mutual authentication. Verify certificate trust chains and test connectivity to confirm that only authorized applications can establish secure connections. Regularly rotate certificates and audit TLS configurations to maintain ongoing protection.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/iam-access-control.html"
+                            }
+                        },
+                        {
+                            "id": "SEC2_3",
+                            "title": "Regular access audits",
+                            "helpfulResource": {
+                                "displayText": "Periodic access reviews and least privilege enforcement",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/devops-guidance/ag.sad.6-conduct-periodic-identity-and-access-management-reviews.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve security, schedule recurring access reviews to remove unused or overly broad permissions and align all access with least-privilege principles. Update IAM roles, resource policies, and topic-level ACLs accordingly, and document changes for audit purposes. Consistent review and tightening of permissions help maintain a secure and well-governed MSK deployment.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/devops-guidance/ag.sad.6-conduct-periodic-identity-and-access-management-reviews.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC2_1 && SEC2_2 && SEC2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC2_1) || (!SEC2_2) || (!SEC2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC3",
+                    "title": "How are you managing data security?",
+                    "description": "How are you secure communication between clients and Amazon MSK brokers, and data at rest?",
+                    "choices": [
+                        {
+                            "id": "SEC3_1",
+                            "title": "Only allow TLS encrypted data in transit. This is the default setting.",
+                            "helpfulResource": {
+                                "displayText": "Amazon MSK uses TLS 1.2. By default, it encrypts data in transit between the brokers of your MSK cluster.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To maintain secure communication, verify that your Kafka clients also support TLS 1.2 and are configured to use encrypted connections for all client-broker traffic. Periodically review TLS settings and certificate configurations to ensure ongoing compliance and security. This helps preserve end-to-end encryption across your MSK environment.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            }
+                        },
+                        {
+                            "id": "SEC3_2",
+                            "title": "Only allow plaintext data in transit",
+                            "helpfulResource": {
+                                "displayText": "MSK support you enable plaintext data only communication but it's not secure.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve security, avoid using plaintext communication and instead enable TLS encryption for all broker-to-client and broker-to-broker traffic. Update client configurations to enforce encrypted connections and validate that no plaintext endpoints remain exposed. This ensures data remains protected and significantly reduces security risks.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            }
+                        },
+                        {
+                            "id": "SEC3_3",
+                            "title": "Allow both plaintext, as well as TLS encrypted data in transit.",
+                            "helpfulResource": {
+                                "displayText": "MSK support you enable both plaintext and TLS encrypted in transit.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To enhance security, configure your MSK clusters and clients to use TLS-only communication and avoid enabling plaintext unless absolutely necessary for testing. Review client configurations to ensure they enforce encrypted connections and remove any plaintext endpoints. This approach keeps data protected and minimizes security vulnerabilities.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            }
+                        },
+                        {
+                            "id": "SEC3_4",
+                            "title": "Encryption at rest with SSE (sever-side-encryption)",
+                            "helpfulResource": {
+                                "displayText": "If you don't specify a KMS key, Amazon MSK creates an AWS managed key for you.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve control and meet compliance requirements, consider using a customer-managed KMS key instead of relying solely on the AWS managed key. This allows you to manage key rotation, access policies, and audit visibility more granularly. Review your encryption strategy regularly to ensure it aligns with organizational security policies.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            }
+                        },
+                        {
+                            "id": "SEC3_5",
+                            "title": "Encryption at rest with CMK (customer-managed-keys)",
+                            "helpfulResource": {
+                                "displayText": "You can specify the AWS KMS key that you want Amazon MSK to use to encrypt your data at rest.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To strengthen encryption control, configure your MSK cluster to use a customer-managed KMS key and define appropriate key policies and rotation schedules. Regularly audit access to the key to ensure it aligns with least-privilege principles. This approach improves transparency and ensures encryption practices meet organizational security standards.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC3_1 && SEC3_2 && SEC3_3 && SEC3_4 && SEC3_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC3_1) || (!SEC3_2) || (!SEC3_3) || (!SEC3_4) || (!SEC3_5)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC4",
+                    "title": "How do you manage logs?",
+                    "description": "How do you manage your MSK logs and incident?",
+                    "choices": [
+                        {
+                            "id": "SEC4_1",
+                            "title": "View on incident",
+                            "helpfulResource": {
+                                "displayText": "Reviewing Kafka incident reports helps you understand common failure patterns and operational risks that may also impact your MSK clusters."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use insights from past incidents to improve monitoring, scaling, and failover strategies so your environment is better prepared for similar issues."
+                            }
+                        },
+                        {
+                            "id": "SEC4_2",
+                            "title": "Enable broker logs to external storage (S3, CloudWatch, Data Firehose etc.)",
+                            "helpfulResource": {
+                                "displayText": "Enabling broker logs to external storage such as S3, CloudWatch, or Firehose provides durable, centralized access to diagnostic information for troubleshooting and audits.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-logging.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure external log delivery so broker logs are retained reliably and can be analyzed outside the cluster, improving your ability to detect issues and support incident investigations.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-logging.html"
+                            }
+                        },
+                        {
+                            "id": "SEC4_3",
+                            "title": "Automatic review and alert system like OpenSearch.",
+                            "helpfulResource": {
+                                "displayText": "Automatic review and alerting systems like OpenSearch help detect anomalies, errors, and unusual patterns in MSK logs or metrics in real time. This improves visibility and speeds up issue detection before they impact availability.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-logging.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set up automated log ingestion and alert rules in OpenSearch to flag abnormal behavior early, and refine thresholds as workloads evolve. This proactive monitoring helps you respond quickly and maintain cluster stability.",
+                                "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/configure-client-msk.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC4_1 && SEC4_2 && SEC4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC4_1) || (!SEC4_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC5",
+                    "title": "How do you manage the organization compliance?",
+                    "description": "How do you managed the organization compliance?",
+                    "choices": [
+                        {
+                            "id": "SEC5_1",
+                            "title": "Regular audit to comply for internal",
+                            "helpfulResource": {
+                                "displayText": "Regular internal audits help ensure your MSK environment complies with organizational policies and security standards. These reviews provide visibility into configurations, permissions, and operational practices.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/MSK-compliance.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Schedule periodic audits to validate adherence to internal requirements and update configurations or access controls as needed. This proactive approach strengthens compliance and reduces operational risk.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/MSK-compliance.html"
+                            }
+                        },
+                        {
+                            "id": "SEC5_2",
+                            "title": "Regular audit to comply with 3rd-party",
+                            "helpfulResource": {
+                                "displayText": "Regular audits against third-party or industry compliance standards help ensure your MSK environment meets required external regulations. These checks verify security, access controls, and operational practices align with mandated guidelines.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/MSK-compliance.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Conduct periodic third-party compliance reviews and update configurations, policies, or documentation to address any gaps identified. Maintaining this audit cycle reduces compliance risk and ensures continued alignment with external requirements.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/MSK-compliance.html"
+                            }
+                        },
+                        {
+                            "id": "SEC5_3",
+                            "title": "I don't know any compliance",
+                            "helpfulResource": {
+                                "displayText": "If you re not familiar with compliance requirements, using AWS-managed services like MSK helps you inherit many built-in security and compliance controls. This gives you a secure foundation even without deep compliance knowledge.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/MSK-compliance.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review AWS documentation or consult your organization s security team to understand which compliance standards apply, and gradually align your MSK configuration with those requirements. Start with basics like encryption, access control, and logging to build a compliant environment.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/MSK-compliance.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC5_1 && SEC5_2 && SEC5_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC6",
+                    "title": "How will you manage secuirty patches?",
+                    "description": "What is your strategy for keeping MSK brokers updated and patched?",
+                    "choices": [
+                        {
+                            "id": "SEC6_1",
+                            "title": "Understand the supported Apache Kafka versions",
+                            "helpfulResource": {
+                                "displayText": "The Apache Kafka community provides approximately 12 months of support for a version after its release date.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/supported-kafka-versions.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To maintain security and compatibility, upgrade your Kafka cluster to a supported version within the 12-month support window. Plan regular version upgrades by monitoring Apache Kafka release schedules, test new versions in non-production environments first, then schedule rolling upgrades to make sure your cluster remains on a community-supported version with active security patches.\n",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/supported-kafka-versions.html"
+                            }
+                        },
+                        {
+                            "id": "SEC6_2",
+                            "title": "Set the topic replication factor (RF) and min.insync.replicas as best practices.",
+                            "helpfulResource": {
+                                "displayText": "To a minimum value of 2 for two-AZ clusters and a minimum value of 3 for three-AZ clusters. An RF value larger than 1 can lead to offline partitions during patching.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/version-upgrades-best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve partition availability during maintenance, configure your topic replication factor to match your cluster setup: set RF to 2 for two-AZ clusters and RF to 3 for three-AZ clusters. Update existing topics using kafka-configs or recreate them with the correct replication factor, then verify the configuration to make sure partitions remain online during broker patching operations.\n",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/version-upgrades-best-practices.html"
+                            }
+                        },
+                        {
+                            "id": "SEC6_3",
+                            "title": "Configure clients to use multiple broker connection strings.",
+                            "helpfulResource": {
+                                "displayText": "Having multiple brokers in a client s connection string allows for failover if a specific broker supporting client I/O begins to be patched.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/version-upgrades-best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve client availability during maintenance, configure your Kafka client connection strings with multiple broker endpoints instead of a single broker. Update your client configurations to include at least 3-5 broker addresses, then test failover behavior by taking brokers offline one at a time to make sure clients automatically connect to available brokers during patching operations.\n",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/version-upgrades-best-practices.html"
+                            }
+                        },
+                        {
+                            "id": "SEC6_4",
+                            "title": "Set the retries and retry.backoff.ms as client best practices.",
+                            "helpfulResource": {
+                                "displayText": "We recommend to set retries as a value of integer max or similar high value, and retry.backoff.ms as a minimum value of 200ms for most use cases.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve client resilience, configure your Kafka clients with retries set to Integer.MAX_VALUE and retry.backoff.ms set to at least 200ms. Update your producer and consumer configurations to include these settings, then test the retry behavior by temporarily blocking network connectivity to make sure clients automatically retry failed operations with appropriate backoff intervals.\n",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC6_1 && SEC6_2 && SEC6_3 && SEC6_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC7",
+                    "title": "How are you managing and rotating credentials used for MSK authentication?",
+                    "description": "Evaluate the use of AWS Secrets Manager or other secure methods for storing and rotating SASL/SCRAM credentials, certificates, etc.",
+                    "choices": [
+                        {
+                            "id": "SEC7_1",
+                            "title": "Set up a secret in AWS Secrets Manager",
+                            "helpfulResource": {
+                                "displayText": "Set up SASL/SCRAM authentication for an Amazon MSK cluster",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-password-tutorial.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve cluster security, enable SASL/SCRAM authentication on your MSK cluster by creating user credentials in AWS Secrets Manager and updating the cluster configuration to use SASL_SCRAM authentication. Make sure to test the authentication setup with your client applications before enabling it in production to ensure seamless connectivity.\n",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-password-tutorial.html"
+                            }
+                        },
+                        {
+                            "id": "SEC7_2",
+                            "title": "Connecting to your cluster with sign-in credentials",
+                            "helpfulResource": {
+                                "displayText": "Connect a client to a cluster that uses SASL/SCRAM authentication",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-password-tutorial-connect.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve client security, configure SASL/SCRAM authentication by updating your client properties with the correct security protocol, SASL mechanism, username, and password. Make sure to test the connection thoroughly to verify successful authentication with the MSK cluster before deploying to production.\n",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-password-tutorial-connect.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC7_1 && SEC7_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC7_1) || (!SEC7_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "REL",
+            "name": "Reliability",
+            "questions": [
+                {
+                    "id": "REL1",
+                    "title": "How are you ensuring that your Amazon MSK cluster is set up to support high availability and reliability?",
+                    "description": "Ensure cluster has the right architectural foundation to handle growth and potential failures.",
+                    "choices": [
+                        {
+                            "id": "REL1_1",
+                            "title": "Deploy across multiple Availability Zones (AZs)",
+                            "helpfulResource": {
+                                "displayText": "Ensure that the MSK cluster spans multiple Availability Zones. This way, if an AZ failure occurs, the data is still available in other AZs, minimizing downtime.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#ensure-high-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To enhance fault tolerance, verify that your MSK cluster is configured to run across multiple AZs and adjust the deployment if it is currently limited to fewer zones. Monitor replica placement and partition distribution to ensure data is evenly spread across AZs. This approach helps maintain service continuity during AZ-level disruptions.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#ensure-high-availability"
+                            }
+                        },
+                        {
+                            "id": "REL1_2",
+                            "title": "Appropriate broker and topic configuration",
+                            "helpfulResource": {
+                                "displayText": "Set a replication factor to the availability zone count and configure the min.insync.replicas to RF - 1.",
+                                "url": "https://repost.aws/knowledge-center/msk-avoid-disruption-during-patching"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve data durability and write reliability, configure your topics with a replication factor of 3 and set min.insync.replicas to 2. Verify that brokers hosting replicas are spread across different AZs to maximize resilience. Monitoring commit behavior after applying these settings helps ensure your cluster maintains strong availability guarantees.",
+                                "url": "https://repost.aws/knowledge-center/msk-avoid-disruption-during-patching"
+                            }
+                        },
+                        {
+                            "id": "REL1_3",
+                            "title": "Storage management",
+                            "helpfulResource": {
+                                "displayText": "Effective storage management is essential for maintaining cluster availability and reliability.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-storage-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve reliability, regularly review storage usage and ensure that brokers have adequate free space for logs and retention policies. Adjust retention settings, scale storage, or rebalance partitions as needed to avoid hitting disk limits. Proactive storage management helps maintain high availability and prevents disruptions caused by storage exhaustion.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-storage-management.html"
+                            }
+                        },
+                        {
+                            "id": "REL1_4",
+                            "title": "Chaos testing",
+                            "helpfulResource": {
+                                "displayText": "Regularly simulate broker failures, AZ outages, and client disconnections to ensure that your MSK setup can handle disruptions.",
+                                "url": "https://repost.aws/knowledge-center/msk-avoid-disruption-during-patching"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To strengthen operational readiness, schedule routine simulations of broker failures, AZ outages, and client disconnect events. Review how the cluster responds, analyze any bottlenecks or slow recoveries, and adjust configurations or scaling strategies accordingly. This practice helps ensure your MSK environment can withstand disruptions without impacting availability.",
+                                "url": "https://repost.aws/knowledge-center/msk-avoid-disruption-during-patching"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL1_1 && REL1_2 && REL1_3 && REL1_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!REL1_1) || (!REL1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL2",
+                    "title": "Are you monitoring your Amazon MSK cluster to maintain availability?",
+                    "description": "Introduce that AWS provides several tools to monitor the health of resources.",
+                    "choices": [
+                        {
+                            "id": "REL2_1",
+                            "title": "CloudWatch Metrics",
+                            "helpfulResource": {
+                                "displayText": "Configure CloudWatch set the monitoring level according to your requirements (e.g basic or enhanced level).",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/metrics-details.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve visibility, configure CloudWatch monitoring for your MSK cluster at the level that matches your operational requirements. Use enhanced monitoring for deeper broker-level metrics or retain basic monitoring if minimal visibility is sufficient. Regularly review these metrics to guide scaling decisions and catch emerging issues.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/metrics-details.html"
+                            }
+                        },
+                        {
+                            "id": "REL2_2",
+                            "title": "CloudWatch Alarms",
+                            "helpfulResource": {
+                                "displayText": "Set up alerts for critical thresholds, such as high CPU or disk usage, under-replicated partitions, or latency, to take proactive measures.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve operational readiness, configure CloudWatch alarms for key metrics like CPU, disk usage, replication status, and latency. When alerts trigger, investigate performance bottlenecks or broker health and take corrective actions such as scaling, rebalancing, or tuning workloads. This approach ensures that potential issues are addressed before they escalate into outages.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html"
+                            }
+                        },
+                        {
+                            "id": "REL2_3",
+                            "title": "CloudWatch Logs",
+                            "helpfulResource": {
+                                "displayText": "Enable CloudWatch Logs for cluster monitoring and troubleshooting.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-logging.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve observability, enable CloudWatch Logs and ensure key broker logs are being captured for analysis. Use these logs to investigate anomalies, validate configuration changes, and diagnose failures more effectively. Regularly reviewing log patterns helps you resolve issues proactively and maintain cluster health.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-logging.html"
+                            }
+                        },
+                        {
+                            "id": "REL2_4",
+                            "title": "AWS Health Dashboard",
+                            "helpfulResource": {
+                                "displayText": "AWS Health helps you be aware of and to prepare for planned activities.  For example: security patch event, version end of support etc.",
+                                "url": "https://docs.aws.amazon.com/health/latest/ug/what-is-aws-health.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To stay prepared for operational changes, regularly review AWS Health notifications and integrate them into your maintenance planning. Use these alerts to schedule updates, adjust workloads, or test failover procedures before planned events occur. This proactive approach helps maintain availability and reduces the risk of unexpected service impact.",
+                                "url": "https://docs.aws.amazon.com/health/latest/ug/what-is-aws-health.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL2_1 && REL2_2 && REL2_3 && REL2_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL3",
+                    "title": "What is your Amazon MSK cluster backup strategy, and how quickly can you recover from a disaster or outage?",
+                    "description": "It s important to review the client s backup and disaster recovery (DR) plans.",
+                    "choices": [
+                        {
+                            "id": "REL3_1",
+                            "title": "Understand the definition of RTO and RPO",
+                            "helpfulResource": {
+                                "displayText": "Your resiliency strategy should also include Disaster Recovery (DR) objectives based on strategies to recover your workload in case of a disaster event. ",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/disaster-recovery-dr-objectives.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve resiliency, establish DR objectives that define how quickly and how much data your workload must recover during a disaster. Implement supporting strategies such as cross-Region replication, backups, and automated recovery procedures aligned with these objectives. Regularly test your DR plan to validate readiness and ensure it meets business requirements.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/disaster-recovery-dr-objectives.html"
+                            }
+                        },
+                        {
+                            "id": "REL3_2",
+                            "title": "Automatic Recovery",
+                            "helpfulResource": {
+                                "displayText": "AWS MSK monitors the health of brokers and automatically replaces unhealthy nodes, reducing the risk of prolonged downtime.",
+                                "url": "https://www.amazonaws.cn/en/msk/features/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To enhance availability, rely on MSK s automatic broker replacement and ensure your cluster is sized appropriately to handle temporary capacity loss during recovery. Monitor broker health and replication status so you can respond quickly to issues that may delay replacement or recovery. Incorporating this automated resilience into your operational planning helps maintain consistent uptime.",
+                                "url": "https://www.amazonaws.cn/en/msk/features/"
+                            }
+                        },
+                        {
+                            "id": "REL3_3",
+                            "title": "Client Configuration for Resilience",
+                            "helpfulResource": {
+                                "displayText": "Ensure Kafka clients are configured with appropriate retry and backoff strategies to handle broker downtime or temporary network issues gracefully.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve client stability, review and adjust retry intervals, backoff timings, and maximum retry counts in your Kafka client configurations. Ensure these values balance responsiveness with protection against retry storms during outages. Monitoring client behavior after tuning helps verify that retries are handled safely and efficiently.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL3_1 && REL3_2 && REL3_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!REL3_1) || (!REL3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL4",
+                    "title": "How about your data retention and durability policy?",
+                    "description": "Ensure your data retention policies",
+                    "choices": [
+                        {
+                            "id": "REL4_1",
+                            "title": "Define data retention policies",
+                            "helpfulResource": {
+                                "displayText": "Consider using longer retention for critical data and shorter for temporary logs.",
+                                "url": "https://aws.amazon.com/blogs/big-data/create-more-partitions-and-retain-data-for-longer-in-your-msk-serverless-clusters/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To optimize storage and meet business needs, review your topics and assign longer retention periods to essential data and shorter periods to ephemeral logs. Monitor disk usage and adjust retention settings as data patterns evolve. This approach ensures storage efficiency while maintaining the required level of data availability.",
+                                "url": "https://aws.amazon.com/blogs/big-data/create-more-partitions-and-retain-data-for-longer-in-your-msk-serverless-clusters/"
+                            }
+                        },
+                        {
+                            "id": "REL4_2",
+                            "title": "Backups",
+                            "helpfulResource": {
+                                "displayText": "While Kafka doesn t natively support backups, you can set up a data pipeline (e.g., with Amazon S3) to persist messages for recovery if needed.",
+                                "url": "https://aws.amazon.com/blogs/big-data/back-up-and-restore-kafka-topic-data-using-amazon-msk-connect/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve recoverability, implement a pipeline such as Kafka Connect or a custom consumer to continuously archive messages to Amazon S3. Validate that the archived data can be replayed during recovery events and ensure storage lifecycle policies align with retention needs. This strategy provides an additional safety layer for critical Kafka data.",
+                                "url": "https://aws.amazon.com/blogs/big-data/back-up-and-restore-kafka-topic-data-using-amazon-msk-connect/"
+                            }
+                        },
+                        {
+                            "id": "REL4_3",
+                            "title": "Segment cleanup policies",
+                            "helpfulResource": {
+                                "displayText": "Use appropriate cleanup policies (e.g., delete or compact) to prevent excessive disk usage, which could lead to cluster instability.",
+                                "url": "https://repost.aws/questions/QU1fSZhXZHRxWdhCysMmkpwQ/is-log-cleaner-logging-anything-on-aws-msk"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve storage efficiency, review topic configurations and apply the appropriate cleanup policy based on data requirements using delete for time-based retention and compact for key-based datasets. Monitor disk usage and adjust retention or cleanup settings before storage pressure becomes a risk. This proactive tuning helps protect cluster stability and performance.",
+                                "url": "https://repost.aws/questions/QU1fSZhXZHRxWdhCysMmkpwQ/is-log-cleaner-logging-anything-on-aws-msk"
+                            }
+                        },
+                        {
+                            "id": "REL4_4",
+                            "title": "Tiered storage",
+                            "helpfulResource": {
+                                "displayText": "Tiered storage is a storage management feature in MSK that helps you retain data cost-effectively.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-tiered-storage.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To optimize costs, enable tiered storage and adjust retention policies so that only recent, high-traffic data remains on primary storage while historical data shifts to the lower-cost tier. Monitor access patterns to ensure performance-sensitive workloads continue using primary storage. This approach helps balance cost, performance, and long-term retention needs.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-tiered-storage.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL4_1 && REL4_2 && REL4_3 && REL4_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL5",
+                    "title": "How are you handling increases in traffic or demand without impacting performance?",
+                    "description": "Discuss how the client handles fluctuating workloads and plans for growth.",
+                    "choices": [
+                        {
+                            "id": "REL5_1",
+                            "title": "Right-sizing partitions",
+                            "helpfulResource": {
+                                "displayText": "Set an optimal number of partitions based on anticipated load, as each partition is handled by a single broker thread. More partitions can increase parallelism, improving throughput for high-demand scenarios.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve throughput, estimate your workload and configure a partition count that enables sufficient parallelism without overwhelming broker resources. Monitor broker CPU, thread utilization, and consumer lag to validate that the chosen partition count meets performance needs. Adjust the number of partitions as traffic patterns evolve to maintain optimal efficiency.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html"
+                            }
+                        },
+                        {
+                            "id": "REL5_2",
+                            "title": "Right-sizing brokers",
+                            "helpfulResource": {
+                                "displayText": "Use multiple brokers distributed across Availability Zones to avoid overloading any single broker. Increasing broker counts can help balance load distribution.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To better balance load, scale your MSK cluster by adding brokers and ensuring they are evenly distributed across AZs. Reevaluate partition placement and workload distribution after scaling to confirm improved load spreading. This approach helps maintain performance while increasing the cluster s fault tolerance.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html"
+                            }
+                        },
+                        {
+                            "id": "REL5_3",
+                            "title": "Autoscaling with MSK Serverless",
+                            "helpfulResource": {
+                                "displayText": "MSK Serverless automatically adjusts the number of partitions based on demand, which is ideal for applications with unpredictable workloads.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/serverless.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To support workloads with uneven or unpredictable demand, consider adopting MSK Serverless so partition scaling occurs automatically. Evaluate traffic patterns and verify that serverless scaling meets your throughput and latency requirements. This approach reduces operational overhead and ensures the cluster adapts seamlessly to changing workloads.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/serverless.html"
+                            }
+                        },
+                        {
+                            "id": "REL5_4",
+                            "title": "CloudWatch Alarms for Provisioned MSK Clusters",
+                            "helpfulResource": {
+                                "displayText": "Set up CloudWatch alarms to monitor CPUUtilization, DiskUsage, and BytesInPerSecond. These alarms can indicate when the cluster is nearing capacity, prompting you to scale partitions or brokers as needed.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/metrics-details.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To avoid capacity-related performance issues, set CloudWatch alarms on CPUUtilization, DiskUsage, and BytesInPerSecond with thresholds that reflect your scaling strategy. When alarms trigger, evaluate whether to add brokers, increase instance sizes, or scale partitions to handle the additional load. This proactive approach helps you scale before resource saturation affects availability.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/metrics-details.html"
+                            }
+                        },
+                        {
+                            "id": "REL5_5",
+                            "title": "Use of data compression",
+                            "helpfulResource": {
+                                "displayText": "Compression reduces the size of data sent across the network, lowering bandwidth usage and reducing broker load.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve efficiency, enable compression on producers and tune the compression type and level to balance CPU cost with network savings. Monitor throughput and latency to confirm that compression is reducing broker load without introducing excessive overhead. Adjust settings as workload patterns evolve to maintain optimal performance.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/"
+                            }
+                        },
+                        {
+                            "id": "REL5_6",
+                            "title": "Shorten log retention for high-traffic topics",
+                            "helpfulResource": {
+                                "displayText": "Adjust retention policies to retain only the data you need, which helps control disk usage and keeps brokers available to handle new traffic.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-retention-period"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve storage management, review topic-level retention settings and shorten retention for less critical data while preserving what is required for compliance or processing. Monitor disk usage after adjustments to confirm that brokers have sufficient capacity for new traffic. Regularly tuning retention policies helps maintain healthy broker operations and prevents storage exhaustion.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#bestpractices-retention-period"
+                            }
+                        },
+                        {
+                            "id": "REL5_7",
+                            "title": "Storage management",
+                            "helpfulResource": {
+                                "displayText": "Effective storage management is essential for maintaining cluster availability and reliability.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-storage-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve reliability, regularly check broker disk usage and adjust retention settings or scale storage before capacity becomes constrained. Rebalance partitions or enable tiered storage when necessary to manage long-term growth. Proactive storage management ensures brokers remain healthy and capable of handling ongoing traffic.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-storage-management.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL5_1 && REL5_2 && REL5_3 && REL5_4 && REL5_5 && REL5_6 && REL5_7",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL6",
+                    "title": "How do you manage Amazon MSK updates or infrastructure changes while maintaining reliability?",
+                    "description": "Understand how the client introduces changes to their Amazon MSK cluster.",
+                    "choices": [
+                        {
+                            "id": "REL6_1",
+                            "title": "Leverage rolling upgrades",
+                            "helpfulResource": {
+                                "displayText": "Amazon MSK supports rolling updates, which allow you to update brokers one at a time rather than all at once.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/patching-impact.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To reduce downtime during maintenance, leverage MSK s rolling update capability so only a single broker is updated at any given time. Plan updates during low-traffic periods and monitor cluster health as brokers cycle through the upgrade. This approach ensures continuous availability while keeping broker software current.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/patching-impact.html"
+                            }
+                        },
+                        {
+                            "id": "REL6_2",
+                            "title": "Distribute replicas across AZs",
+                            "helpfulResource": {
+                                "displayText": "Configure the MSK cluster with cross-zone replication and ensure topics have a replication factor that matches the number of AZs. This helps maintain data availability if a broker or AZ becomes temporarily unavailable during an update.",
+                                "url": "https://repost.aws/knowledge-center/msk-avoid-disruption-during-patching"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve resilience, enable cross-zone replication and set your topic replication factor to match the number of AZs used by the cluster. Verify that replicas are evenly distributed so data stays accessible during broker updates or AZ failures. Regularly review replication placement to ensure your cluster maintains the desired level of availability.",
+                                "url": "https://repost.aws/knowledge-center/msk-avoid-disruption-during-patching"
+                            }
+                        },
+                        {
+                            "id": "REL6_3",
+                            "title": "Implement client-side retry logic and backpressure management",
+                            "helpfulResource": {
+                                "displayText": "Configure Kafka clients with retry and backoff settings to handle broker restarts gracefully during updates.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve resilience during updates, review your Kafka client configurations and set reasonable retry counts and exponential backoff intervals. Ensure these values balance quick recovery with protection against retry storms while brokers restart. Monitor client error and retry metrics during maintenance windows to verify that updates complete without significant impact to your applications.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            }
+                        },
+                        {
+                            "id": "REL6_4",
+                            "title": "Ensure client connection strings include at least one broker from each availability zone.",
+                            "helpfulResource": {
+                                "displayText": "Before producing or consuming messages from the MSK cluster, the client should issue a metadata request. Ensure that the client s connection string includes multiple brokers, allowing the available broker to return updated metadata during maintenance.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#ensure-high-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To make your applications more robust during maintenance, configure client bootstrap servers with multiple broker endpoints instead of a single host. Verify that clients refresh metadata before sending traffic, so they can adjust to broker changes during rolling updates. Test failover behavior by restarting brokers and confirming that clients successfully connect to alternate brokers and continue operating.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#ensure-high-availability"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL6_1 && REL6_2 && REL6_3 && REL6_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL7",
+                    "title": "How often do you test your Amazon MSK cluster s resilience to failure and recovery procedures?",
+                    "description": "Discuss the importance of simulating failure scenarios.",
+                    "choices": [
+                        {
+                            "id": "REL7_1",
+                            "title": "Test in a staging environment",
+                            "helpfulResource": {
+                                "displayText": "Create a staging MSK cluster that mirrors the production environment. Test updates, configuration changes, and new versions here first to identify potential issues before deploying to production.",
+                                "url": "https://repost.aws/knowledge-center/msk-upgrade-cluster-issues"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve update reliability, build and maintain a staging MSK cluster with the same configuration and workload patterns as production. Test all upgrades, tuning adjustments, and client changes in staging first to validate behavior and catch issues early. Once validated, roll out changes to production with greater confidence and reduced risk of disruption.",
+                                "url": "https://repost.aws/knowledge-center/msk-upgrade-cluster-issues"
+                            }
+                        },
+                        {
+                            "id": "REL7_2",
+                            "title": "periodically failover and recovery drills",
+                            "helpfulResource": {
+                                "displayText": "Test recovery of specific topics and partitions to verify that data restoration from backups or replicas is smooth.",
+                                "url": "https://aws.amazon.com/blogs/big-data/back-up-and-restore-kafka-topic-data-using-amazon-msk-connect/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve recoverability, periodically simulate failures and attempt to restore selected topics or partitions from backups or replicas. Document any gaps in the recovery workflow and adjust backup frequency, tooling, or replication settings as needed. Consistent testing ensures that restoration procedures are smooth and effective when real incidents occur.",
+                                "url": "https://aws.amazon.com/blogs/big-data/back-up-and-restore-kafka-topic-data-using-amazon-msk-connect/"
+                            }
+                        },
+                        {
+                            "id": "REL7_3",
+                            "title": "After significant changes",
+                            "helpfulResource": {
+                                "displayText": "After major updates, such as Kafka version upgrades, configuration changes, or infrastructure adjustments, perform targeted resilience tests.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/version-upgrades.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To maintain strong resilience, schedule focused tests after each significant update to verify broker failover behavior, client reconnection logic, and data durability. Monitor system performance during these tests and address any issues uncovered before promoting changes broadly. This proactive approach helps ensure your cluster remains robust following major modifications.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/version-upgrades.html"
+                            }
+                        },
+                        {
+                            "id": "REL7_4",
+                            "title": "Document disaster recovery runbooks",
+                            "helpfulResource": {
+                                "displayText": "Develop and document disaster recovery runbooks to streamline recovery in case of a failure.",
+                                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-authoring-runbooks.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve recovery readiness, create detailed DR runbooks that outline step-by-step actions for restoring clusters, rerouting traffic, and validating data after an incident. Review and update these documents regularly, and practice executing them during DR simulations. This preparation streamlines recovery efforts and ensures teams can respond quickly during real failures.",
+                                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-authoring-runbooks.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL7_1 && REL7_2 && REL7_3 && REL7_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL8",
+                    "title": "How are your Kafka clients configured for reliable operations?",
+                    "description": "Evaluate client retry policies, timeout settings, buffer configurations, and consumer group strategies.",
+                    "choices": [
+                        {
+                            "id": "REL8_1",
+                            "title": "Producer configuration",
+                            "helpfulResource": {
+                                "displayText": "To ensure high availability, we recommend configuring your Kafka clients following best practices for Apache Kafka client.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve availability, review your Kafka client configurations and align them with documented Apache Kafka client best practices. Tune settings like retries, backoff intervals, request timeouts, and bootstrap server lists to handle failures without overwhelming the cluster. Validate these configurations through failover tests to ensure clients remain resilient under real-world conditions.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            }
+                        },
+                        {
+                            "id": "REL8_2",
+                            "title": "Consumer configuraiton",
+                            "helpfulResource": {
+                                "displayText": "To ensure high availability, we recommend configuring your Kafka clients following best practices for Apache Kafka client.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To improve availability, review your Kafka client configurations and align them with the official Apache Kafka client best practices. Adjust retries, backoff intervals, timeouts, and bootstrap server lists so clients can recover from failures without causing retry storms or connection issues. Validate these settings through chaos or failover tests to ensure your applications remain resilient under real-world conditions.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices-kafka-client.html#bestpractices-kafka-client-client-availability"
+                            }
+                        },
+                        {
+                            "id": "REL8_3",
+                            "title": "Ensure client connection strings include at least one broker from each availability zone",
+                            "helpfulResource": {
+                                "displayText": "Before producing or consuming messages from the MSK cluster, the client should issue a metadata request. Ensure that the client s connection string includes multiple brokers, allowing the available broker to return updated metadata during maintenance.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#ensure-high-availability"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To make your clients more robust, configure their connection strings with several broker endpoints instead of relying on just one. Verify that clients refresh metadata before sending traffic so they can seamlessly route requests to the correct brokers during rolling updates or outages. Test this behavior by restarting brokers and confirming that clients successfully obtain metadata from alternate brokers and continue processing.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/bestpractices.html#ensure-high-availability"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL8_1 && REL8_2 && REL8_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "COST",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "COST1",
+                    "title": "Are you optimizing your cluster size to meet workload needs while minimizing cost?",
+                    "description": "Ensure your cluster is sized appropriately to meet workload needs while minimizing unnecessary cost.",
+                    "choices": [
+                        {
+                            "id": "COST1_1",
+                            "title": "Have you evaluated and selected the appropriate number of brokers?",
+                            "helpfulResource": {
+                                "displayText": "Assess optimal broker count based on workload and traffic patterns",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/ "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Begin with the minimum required brokers, monitor CPU, memory, network, and throughput metrics, and scale as needed. Consider running a pilot phase to compare broker configurations and validate performance before finalizing the cluster design.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/ "
+                            }
+                        },
+                        {
+                            "id": "COST1_2",
+                            "title": "Are current instance types meeting performance requirements?",
+                            "helpfulResource": {
+                                "displayText": "Evaluate CPU, memory usage, and network throughput to verify instance specification appropriateness ",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-instance-types.html "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Start with the minimum number of brokers, track performance metrics, and scale up as needed. Use a pilot phase to test different broker configurations and validate that the chosen setup meets workload demands.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-instance-types.html "
+                            }
+                        },
+                        {
+                            "id": "COST1_3",
+                            "title": "Is auto-scaling mechanism in place?",
+                            "helpfulResource": {
+                                "displayText": "Verify capability to automatically adjust cluster size based on load",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-autoexpand.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure scaling policies, set CloudWatch alarms for key triggers, and test auto-scaling behavior in a staging environment before enabling it in production. This ensures scaling actions happen reliably and without impacting workload stability.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-autoexpand.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST1_1 && COST1_2 && COST1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST2",
+                    "title": "Are you optimizing your storage configuration to meet workload requirements while reducing unnecessary cost?",
+                    "description": "Evaluate and adjust your storage configuration to meet workload requirements while avoiding over-provisioning and unnecessary cost.",
+                    "choices": [
+                        {
+                            "id": "COST2_1",
+                            "title": "Do you regularly assess storage capacity usage?",
+                            "helpfulResource": {
+                                "displayText": "Monitor storage space utilization to ensure sufficient capacity for growth ",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-storage.html "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure dashboards and alerts for storage thresholds, automate reporting, and hold periodic reviews to assess capacity needs. Use these insights to adjust retention policies or scale storage before limits are reached.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-storage.html "
+                            }
+                        },
+                        {
+                            "id": "COST2_2",
+                            "title": "Have you selected the most cost-effective storage type?",
+                            "helpfulResource": {
+                                "displayText": "Compare price and performance characteristics of different storage options",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-storage-types.html "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Compare GP2 and GP3 costs, evaluate performance through targeted tests, and document findings to guide future storage decisions. Use this analysis to select the storage type that best meets both performance and budget requirements.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-storage-types.html "
+                            }
+                        },
+                        {
+                            "id": "COST2_3",
+                            "title": "Is data lifecycle management implemented?",
+                            "helpfulResource": {
+                                "displayText": "Confirm appropriate data retention and cleanup mechanisms are in place",
+                                "url": "https://docs.confluent.io/platform/current/installation/configuration/topic-configs.html#topicconfigs_retention.ms "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set retention and cleanup policies, automate archival workflows, and monitor lifecycle events to keep storage usage predictable. Use these controls to maintain broker availability and ensure data is managed efficiently across its lifecycle.",
+                                "url": "https://docs.confluent.io/platform/current/installation/configuration/topic-configs.html#topicconfigs_retention.ms "
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST2_1 && COST2_2 && COST2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST3",
+                    "title": "Are you optimizing your network configuration to support workload needs while minimizing unnecessary cost?",
+                    "description": "Assess and configure your network setup to meet performance needs while minimizing data transfer and infrastructure costs.",
+                    "choices": [
+                        {
+                            "id": "COST3_1",
+                            "title": "Is network traffic compression implemented?",
+                            "helpfulResource": {
+                                "displayText": "Evaluate the use of compression strategies for data transfer",
+                                "url": "https://docs.confluent.io/platform/current/installation/configuration/producer-configs.html#compression.type "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Test different compression settings, monitor their impact, and document a consistent compression strategy for your workloads. Use these insights to tune compression for optimal performance and resource savings.",
+                                "url": "https://docs.confluent.io/platform/current/installation/configuration/producer-configs.html#compression.type "
+                            }
+                        },
+                        {
+                            "id": "COST3_2",
+                            "title": "Have network routing configurations been optimized?",
+                            "helpfulResource": {
+                                "displayText": "Check if network routing settings are optimized to avoid unnecessary traffic routing",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/vpc-connectivity.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize routing, use VPC endpoints where needed, and analyze network logs while monitoring performance metrics to maintain smooth communication between clients and brokers. Apply these insights to refine your network architecture and improve overall reliability.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-securing-amazon-msk-clusters/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST3_1 && COST3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST4",
+                    "title": "Are you improving operational efficiency to streamline processes and reduce unnecessary operational costs?",
+                    "description": "Evaluate and refine your operational workflows to minimize manual effort, lower overhead, and maintain cost-effective operations.",
+                    "choices": [
+                        {
+                            "id": "COST4_1",
+                            "title": "Are automated operational processes established?",
+                            "helpfulResource": {
+                                "displayText": "Confirm whether key operational tasks are automated ",
+                                "url": "https://aws.amazon.com/blogs/big-data/automate-cluster-operations-using-amazon-msk-apis/ "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Adopt IaC, automate deployments and backups, and implement continuous health checks while documenting all automation workflows. These steps streamline operations and make your MSK environment more resilient and easier to manage.",
+                                "url": "https://aws.amazon.com/blogs/big-data/automate-cluster-operations-using-amazon-msk-apis/ "
+                            }
+                        },
+                        {
+                            "id": "COST4_2",
+                            "title": "Is a comprehensive monitoring system implemented?",
+                            "helpfulResource": {
+                                "displayText": "Verify monitoring coverage and alerting mechanism completeness",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/monitoring.html "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create dashboards, define custom metrics, configure alerts, and centralize logs, then document your monitoring approach. These steps help maintain consistent observability and enable faster troubleshooting.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/monitoring.html "
+                            }
+                        },
+                        {
+                            "id": "COST4_3",
+                            "title": "Are standardized operating procedures in place?",
+                            "helpfulResource": {
+                                "displayText": "Check for documented standard operating procedures",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/best-practices.html "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Document operational workflows, establish change and incident management procedures, and review them regularly to keep them current. These steps strengthen operational readiness and ensure teams can respond efficiently to issues.",
+                                "url": "https://docs.aws.amazon.com/msk/latest/developerguide/best-practices.html "
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST4_1 && COST4_2 && COST4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST5",
+                    "title": "Are you using a cost-saving checklist to consistently identify and eliminate unnecessary spend across your workloads?",
+                    "description": "Implement and review a structured cost-saving checklist to ensure ongoing visibility, accountability, and optimization of cloud resources.",
+                    "choices": [
+                        {
+                            "id": "COST5_1",
+                            "title": "Do you conduct regular resource utilization reviews?",
+                            "helpfulResource": {
+                                "displayText": "Confirm regular checks and optimization of resource usage ",
+                                "url": "https://aws.amazon.com/blogs/architecture/cost-optimization-strategies-for-amazon-msk/ "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Hold monthly review meetings, analyze automated tracking data, and apply optimization recommendations while documenting findings for future reference. This structured process helps maintain efficient resource usage and continuous operational improvement.",
+                                "url": "https://aws.amazon.com/blogs/architecture/cost-optimization-strategies-for-amazon-msk/ "
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST5_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST6",
+                    "title": "Are you setting up effective cost monitoring to track spending, detect anomalies, and maintain cost control?",
+                    "description": "Establish and configure cost monitoring tools to provide visibility into usage patterns and enable timely cost optimization actions.",
+                    "choices": [
+                        {
+                            "id": "COST6_1",
+                            "title": "Have you set up daily cost tracking in AWS Cost Explorer?",
+                            "helpfulResource": {
+                                "displayText": "Enable AWS Cost Explorer for daily cost tracking, set up cost reports and dashboards to monitor MSK cluster resource usage and associated costs",
+                                "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable cost tracking, create dashboards and daily reports, and document consistent analysis procedures to manage and optimize MSK expenses. Review these insights regularly to adjust resources and maintain cost control.",
+                                "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html"
+                            }
+                        },
+                        {
+                            "id": "COST6_2",
+                            "title": "Have you established cost alerting mechanisms?",
+                            "helpfulResource": {
+                                "displayText": "Use AWS Budgets to set cost threshold alerts that send notifications when costs exceed preset thresholds ",
+                                "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure budgets, alerts, and trend analysis, and document clear response procedures for cost warnings. This ensures teams can act promptly to maintain cost control and prevent budget overruns.",
+                                "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html "
+                            }
+                        },
+                        {
+                            "id": "COST6_3",
+                            "title": "Have you implemented a resource tagging strategy?",
+                            "helpfulResource": {
+                                "displayText": "Implement consistent tagging strategy for all MSK-related resources to enable cost allocation and tracking ",
+                                "url": "https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define mandatory tags, enforce compliance through automated checks, and document tagging policies to maintain consistency across all resources. Regularly review tagging coverage to improve governance and streamline reporting.",
+                                "url": "https://aws.amazon.com/blogs/aws-cost-management/aws-cost-allocation-tagging/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST6_1 && COST6_2 && COST6_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST7",
+                    "title": "Are you optimizing your pricing model choices to align with workload patterns and minimize overall cost?",
+                    "description": "Evaluate and select the most cost-effective pricing models such as on-demand, reserved, or savings plans based on your workload behavior and long-term requirements.",
+                    "choices": [
+                        {
+                            "id": "COST7_1",
+                            "title": "Have you evaluated the use of Reserved Instances?",
+                            "helpfulResource": {
+                                "displayText": "Analyze long-running MSK clusters for potential cost savings through Reserved Instance purchases ",
+                                "url": "https://aws.amazon.com/ec2/pricing/reserved-instances/ "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Develop an RI purchase plan based on usage analysis, compare 1-year and 3-year terms, and monitor RI utilization to ensure expected savings are realized. Adjust the strategy as workloads evolve to maintain optimal cost efficiency.",
+                                "url": "https://aws.amazon.com/ec2/pricing/reserved-instances/ "
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST7_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST8",
+                    "title": "Are you leveraging available cost-saving tools to identify optimization opportunities and reduce unnecessary spending?",
+                    "description": "Use automated cost-saving tools to gain insights into usage patterns and continuously drive efficient resource utilization.",
+                    "choices": [
+                        {
+                            "id": "COST8_1",
+                            "title": "Are you utilizing AWS Compute Optimizer?",
+                            "helpfulResource": {
+                                "displayText": "Use Compute Optimizer to analyze and optimize MSK cluster instance selections ",
+                                "url": "https://docs.aws.amazon.com/compute-optimizer/latest/ug/what-is-compute-optimizer.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable Compute Optimizer, apply relevant optimization suggestions, and track the results while documenting decisions for future reviews. This helps maintain continuous performance tuning and cost optimization across your MSK infrastructure.",
+                                "url": "https://docs.aws.amazon.com/compute-optimizer/latest/ug/what-is-compute-optimizer.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST8_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST9",
+                    "title": "Are you performing regular cost assessments to ensure your workloads remain optimized and free of unnecessary spend?",
+                    "description": "Conduct recurring cost reviews to identify inefficiencies, validate resource alignment with demand, and maintain ongoing cost optimization.",
+                    "choices": [
+                        {
+                            "id": "COST9_1",
+                            "title": "Do you conduct regular performance-to-cost analysis?",
+                            "helpfulResource": {
+                                "displayText": "Regularly evaluate the relationship between performance metrics and costs to ensure optimal resource allocation ",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters/ "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define performance metrics, implement cost tracking, and review the performance/cost ratio in scheduled meetings while documenting findings. Use these insights to adjust configurations or resource allocations for better efficiency.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters/ "
+                            }
+                        },
+                        {
+                            "id": "COST9_2",
+                            "title": "Do you periodically review and update cost optimization strategies?",
+                            "helpfulResource": {
+                                "displayText": "Update cost optimization strategies based on usage patterns and new features ",
+                                "url": "https://aws.amazon.com/blogs/architecture/cost-optimization-strategies-for-amazon-msk/ "
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review optimization outcomes every quarter, apply updated policies, adopt new AWS features, and document all strategy changes. This continuous improvement cycle strengthens performance, cost control, and operational maturity.",
+                                "url": "https://aws.amazon.com/blogs/architecture/cost-optimization-strategies-for-amazon-msk/ "
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST9_1 && COST9_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
