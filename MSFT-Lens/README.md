@@ -28,7 +28,7 @@ This custom lens provides a structured approach to evaluate Microsoft workloads 
 ### How to Import the Custom Lens
 
 1. **Download the Lens File**
-   - Download the `Microsoft_On_AWS_Lens.json` file from this repository
+   - Download the `microsoft-workloads-lens/microsoft-workloads-lens.json` file from the new repository: [sample-well-architected-custom-lens/microsoft-workloads-lens](https://github.com/aws-samples/sample-well-architected-custom-lens/blob/main/microsoft-workloads-lens/microsoft-workloads-lens.json)
 
 2. **Access AWS Well-Architected Tool**
    - Navigate to the [AWS Well-Architected Tool](https://console.aws.amazon.com/wellarchitected/) in your AWS Console
