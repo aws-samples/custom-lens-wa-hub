@@ -4,18 +4,14 @@ The AWS Well-Architected for Microsoft Workloads Lens offers comprehensive guida
 
 Migrating to the cloud is just the start of the journey for many customers that continue to realize the ongoing benefits of the cloud through progressive modernization of their applications, data, and infrastructure. We've been helping customers modernize their Windows workloads on AWS for over 16 years and have the broadest portfolio of services, programs, and expertise to speed up the transformation of the applications that power your business.
 
+Read more about it at [Microsoft Workloads Lens whitepaper](https://docs.aws.amazon.com/wellarchitected/latest/microsoft-workloads-lens/microsoft-workloads-lens.html)
+
 ## Overview
 
-This custom lens provides a structured approach to evaluate Microsoft workloads running on AWS across 8 key pillars/phases:
+This custom lens provides a structured approach to evaluate Microsoft workloads running on AWS across 6 key pillars, aligned with the AWS Well-Architected Framework. 
 
-1. **Assessment** - Evaluate your current Microsoft workload environment
-2. **Operational Excellence** - Optimize operations and monitoring
-3. **Security** - Implement security best practices for Microsoft workloads
-4. **Reliability** - Ensure high availability and disaster recovery
-5. **Performance Efficiency** - Optimize performance and resource utilization
-6. **Cost Optimization** - Manage and optimize costs effectively
-7. **Sustainability** - Implement sustainable practices
-8. **Modernization** - Plan and execute modernization strategies
+The AWS Well-Architected Microsoft Workloads Lens helps organizations understand and assess the advantages and challenges of decisions made while building Microsoft-based systems on AWS. By using this specialized lens, you will learn architectural best practices specifically tailored for designing and operating reliable, secure, efficient, and cost-effective Microsoft workloads in the cloud. It provides a systematic approach to consistently measure your Microsoft architectures against proven best practices and identify areas for improvement. This process involves constructive conversations about architectural decisions related to Microsoft technologies, rather than serving as an audit mechanism. AWS believes that well-architected workloads significantly increase the likelihood of business success. 
+
 
 ## Getting Started
 
@@ -57,7 +53,7 @@ For complete workload reviews and publishing the lens for broader use, refer to 
 
 ### Exploring the Lens Content
 After importing the lens, use the **Preview Experience** to:
-- Navigate through all 8 pillars systematically
+- Navigate through all 6 pillars systematically
 - Review questions and understand the guidance provided
 - Explore helpful resources and improvement plans for each question
 - Get familiar with the lens structure before formal assessments
@@ -65,8 +61,6 @@ After importing the lens, use the **Preview Experience** to:
 ![Preview Lens Interface](images/preview-interface.png)
 
 ### Key Areas to Focus On
-
-**Start with Assessment**: The Assessment pillar provides foundational questions about your current Microsoft workload environment.
 
 **Review Question Structure**: Each question includes multiple choice options, helpful resources, and improvement plans.
 
@@ -105,7 +99,7 @@ For conducting formal workload reviews, publishing the lens organization-wide, a
 ## Lens Structure
 
 This custom lens contains:
-- **8 Pillars** covering the complete Microsoft workload lifecycle
+- **6 Pillars** covering the complete Microsoft workload lifecycle
 - **50+ Questions** with detailed guidance
 - **Multiple Choice Options** for each question
 - **Helpful Resources** with links to AWS documentation
@@ -113,11 +107,10 @@ This custom lens contains:
 
 ## Best Practices
 
-1. **Start with Assessment**: Always begin with the Assessment pillar to establish baseline understanding
-2. **Involve Stakeholders**: Include application owners, security teams, and operations staff
-3. **Document Decisions**: Keep track of architectural decisions and rationale
-4. **Regular Reviews**: Schedule periodic reviews to ensure continuous improvement
-5. **Leverage AWS Support**: Engage with AWS Solutions Architects for complex scenarios
+1. **Involve Stakeholders**: Include application owners, security teams, and operations staff
+2. **Document Decisions**: Keep track of architectural decisions and rationale
+3. **Regular Reviews**: Schedule periodic reviews to ensure continuous improvement
+4. **Leverage AWS Support**: Engage with AWS Solutions Architects for complex scenarios
 
 ## Contributing
 
@@ -131,7 +124,9 @@ This custom lens contains:
 ### AWS Documentation
 * [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
 * [AWS Well-Architected Tool User Guide](https://docs.aws.amazon.com/wellarchitected/latest/userguide/)
-* [Announcing AWS Well-Architected Custom Lenses](https://aws.amazon.com/blogs/aws/well-architected-custom-lenses-internal-best-practices/)
+* [AWS Blog - Announcing AWS Well-Architected Custom Lenses](https://aws.amazon.com/blogs/aws/well-architected-custom-lenses-internal-best-practices/)
+* [Microsoft Workloads Lens - AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/microsoft-workloads-lens/microsoft-workloads-lens.html)
+* [AWS Blog - Introducing the AWS Well-Architected Microsoft Workloads Lens](https://aws.amazon.com/blogs/modernizing-with-aws/introducing-the-aws-well-architected-microsoft-workloads-lens/)
 
 ### Microsoft Workloads on AWS
 * [Modernize Windows Workloads with AWS](https://aws.amazon.com/windows/modernization/)
