@@ -4,7 +4,7 @@ The AWS Well-Architected for Microsoft Workloads Lens offers comprehensive guida
 
 Migrating to the cloud is just the start of the journey for many customers that continue to realize the ongoing benefits of the cloud through progressive modernization of their applications, data, and infrastructure. We've been helping customers modernize their Windows workloads on AWS for over 16 years and have the broadest portfolio of services, programs, and expertise to speed up the transformation of the applications that power your business.
 
-Read more about it at [Microsoft Workloads Lens whitepaper](https://docs.aws.amazon.com/wellarchitected/latest/microsoft-workloads-lens/microsoft-workloads-lens.html)
+Read more about it in the [Microsoft Workloads Lens whitepaper](https://docs.aws.amazon.com/wellarchitected/latest/microsoft-workloads-lens/microsoft-workloads-lens.html)
 
 ## Overview
 
