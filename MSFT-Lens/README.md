@@ -2,7 +2,7 @@
 
 The AWS Well-Architected for Microsoft Workloads Lens offers comprehensive guidance to make sure your migration and modernization strategies are designed in accordance with AWS best practices. It lets you bring your own best practices to complement the existing framework based on your industry, operational plans, and internal processes. Custom Lenses provide a consolidated view and a consistent way to measure and improve your workloads on AWS without relying on external spreadsheets or third-party systems.
 
-Migrating to the cloud is just the start of the journey for many customers that continue to realize the ongoing benefits of the cloud through progressive modernization of their applications, data, and infrastructure. We've been helping customers modernize their Windows workloads on AWS for over 16 years and have the broadest portfolio of services, programs, and expertise to speed up the transformation of the applications that power your business.
+Migrating to the cloud is just the start of the journey for many customers that continue to realize the ongoing benefits of the cloud through progressive modernization of their applications, data, and infrastructure. We've been helping customers modernize their Windows workloads on AWS for over 18 years and have the broadest portfolio of services, programs, and expertise to speed up the transformation of the applications that power your business.
 
 Read more about it in the [Microsoft Workloads Lens whitepaper](https://docs.aws.amazon.com/wellarchitected/latest/microsoft-workloads-lens/microsoft-workloads-lens.html)
 
@@ -100,7 +100,7 @@ For conducting formal workload reviews, publishing the lens organization-wide, a
 
 This custom lens contains:
 - **6 Pillars** covering the complete Microsoft workload lifecycle
-- **50+ Questions** with detailed guidance
+- **20+ Questions** with detailed guidance
 - **Multiple Choice Options** for each question
 - **Helpful Resources** with links to AWS documentation
 - **Improvement Plans** with actionable recommendations
