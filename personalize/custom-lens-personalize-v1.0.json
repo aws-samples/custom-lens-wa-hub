@@ -1,0 +1,578 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "Amazon Personalize Best Practice Lens",
+    "description": "Best practices for configuring Amazon Personalize",
+    "pillars": [
+        {
+            "id": "PERF",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "PERF1",
+                    "title": "How do you select recipes?",
+                    "description": "How do you select recipes?",
+                    "choices": [
+                        {
+                            "id": "PERF1_1",
+                            "title": "Select the right recipe for your use case.",
+                            "helpfulResource": {
+                                "displayText": "Amazon Personalize provides recipes for different use cases, as well as version 2 recipes for the most popular use cases. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/working-with-predefined-recipes.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review your use case and select the most suitable recipe. Use v2 recipes (User-Personalization-v2 and Personalized-Ranking-v2) for large catalogs and low latency.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/working-with-predefined-recipes.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF1_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF1_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+
+                {
+                    "id": "PERF2",
+                    "title": "How do you monitor and optimize model performance?",
+                    "description": "How do you monitor and optimize model performance?",
+                    "choices": [
+                        {
+                            "id": "PERF2_1",
+                            "title": "Track solution version metrics at a regular cadence",
+                            "helpfulResource": {
+                                "displayText": "Amazon Personalize generates performance metrics when you train a solution version. Use these metrics to evaluate the performance and monitor these over time.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/working-with-training-metrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the metrics relevant to your solution and monitor these on a weekly basis.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/working-with-training-metrics.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_2",
+                            "title": "Automatic retraining with fresh data",
+                            "helpfulResource": {
+                                "displayText": "Amazon Personalize allows you to configure automatic retraining. By default, this value is set to 7 days, but this can be configured. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/solution-config-auto-training.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable automatic retraining and set this value to 7 days. If the solution requires more frequent retraining, then reduce this value.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/solution-config-auto-training.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_3",
+                            "title": "Use event weighted configurations",
+                            "helpfulResource": {
+                                "displayText": "Amazon Personalize allows the configuration of different weights for different interaction event types. For example, you can give more weight to 'purchase' events than 'click' events. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/optimizing-solution-events-config.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Update your solution version to include event configuration and provide different weights for different event types. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/optimizing-solution-events-config.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_4",
+                            "title": "Objective optimization",
+                            "helpfulResource": {
+                                "displayText": "Amazon Personalize lets you train models to balance user relevance with custom business metrics like revenue or watch time, improving overall recommendation efficiency by prioritizing high-value outcomes without purely chasing clicks.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/optimizing-solution-for-objective.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Identify a data column that aligns with your business metric and add the optimizationObjective to your solution configuration. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/optimizing-solution-for-objective.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF2_1 && PERF2_2 && PERF2_3 && PERF2_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF2_1) || (!PERF2_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF3",
+                    "title": "Have you optimized your Amazon Personalize resources?",
+                    "description": "Have you optimized your resources?",
+                    "choices": [
+                        {
+                            "id": "PERF3_1",
+                            "title": "Right sizing minProvisionedTPS for real-time inference",
+                            "helpfulResource": {
+                                "displayText": "Real-time recommendations are measured using Transactions per second (TPS). The minimum TPS is 1, therefore a minimum of 3,600 recommendations can be generated per hour. TPS scales according to demand. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/campaigns.html#min-tps-auto-scaling"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Start with a low TPS and monitor using Amazon CloudWatch to determine optimal minimum TPS to ensure it is meeting demand without being overprovisioned. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/campaigns.html#min-tps-auto-scaling"
+                            }
+                        },
+                        {
+                            "id": "PERF3_2",
+                            "title": "Using batch inference for bulk, offline recommendations",
+                            "helpfulResource": {
+                                "displayText": "Batch inference can be used for large-scale recommnedations cost-effectively, avoiding quota exhausting and reliable processing for offline use cases. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/creating-batch-inference-job.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Determine if recommendations need to be generated in real-time, or if they can be offloaded to batch inference jobs.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/creating-batch-inference-job.html"
+                            }
+                        },
+                        {
+                            "id": "PERF3_3",
+                            "title": "Using filters/metadata sparingly to minimize latency",
+                            "helpfulResource": {
+                                "displayText": "Filtering and generating recommendations with metadata are powerful tools for post recommendation logic but can contribute to latency and cost. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/filter-expressions.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review your usecase and application logic and determine whether filtering and metadata fields are essential.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/recommendations.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF3_1 && PERF3_2 && PERF3_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF3_1) || (!PERF3_2) || (!PERF3_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        {
+            "id": "OPS",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "OPS1",
+                    "title": "How do you monitor your Amazon Personalize?",
+                    "description": "How do you monitor your Amazon Personalize?",
+                    "choices": [
+                        {
+                            "id": "OPS1_1",
+                            "title": "Monitoring Amazon Personalize with Amazon CloudWatch Metric",
+                            "helpfulResource": {
+                                "displayText": "CloudWatch metrics provide real-time visibility into system performance, helping you detect issues, set alarms, and maintain reliable operations.",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatch-Logs-Monitoring-CloudWatch-Metrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use the CloudWatch Logs metrics published in the AWS/Logs and AWS/Usage namespaces such as CallCount, ErrorCount, ThrottleCount, IncomingLogEvents, and ForwardedLogEvents to track log ingestion, delivery success, throttling, and API usage for operational visibility.",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatch-Logs-Monitoring-CloudWatch-Metrics.html"
+                            }
+                        },
+                        {
+                            "id": "OPS1_2",
+                            "title": "Logging Amazon Personalize API calls with AWS CloudTrail",
+                            "helpfulResource": {
+                                "displayText": "Amazon Personalize integrates with AWS CloudTrail to record API calls as audit events, enabling you to track who made what requests, from where, and when.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/logging-using-cloudtrail.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use CloudTrail to log and audit Personalize API activity; you should configure a trail with delivery to an S3 bucket and integrate it with your monitoring or SIEM workflows to enhance security visibility and compliance.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/logging-using-cloudtrail.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS1_1 && OPS1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS1_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS2",
+                    "title": "How do you manage your Amazon Personalize quotas?",
+                    "description": "How do you manage your Amazon Personalize quotas?",
+                    "choices": [
+                        {
+                            "id": "OPS2_1",
+                            "title": "Manage Amazon Personalize quota with AWS Service Quota",
+                            "helpfulResource": {
+                                "displayText": "AWS Service Quotas is a service that lets you view, manage, and request increases for limits (quotas) on AWS resources, such as API request rates, resource counts, or capacity, across AWS services.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/limits.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Track and manage Amazon Personalize service quotas using the AWS Service Quotas console to ensure you stay within default limits and understand which quotas can be adjusted. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/limits.html"
+                            }
+                        },
+                        {
+                            "id": "OPS2_2",
+                            "title": "Increase service limit if need",
+                            "helpfulResource": {
+                                "displayText": "Some Amazon Personalize service quotas are adjustable and can be reviewed in AWS Service Quotas, Amazon Personalize.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/limits.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Request a adjustable Amazon Personalize service quota increase through AWS Service Quotas when your workload requires higher limits.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/limits.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS2_1 && OPS2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS3",
+                    "title": "How do you measure the impact of Amazon Personalize recommendations?",
+                    "description": "How do you measure the impact of Amazon Personalize recommendations?",
+                    "choices": [
+                        {
+                            "id": "OPS3_1",
+                            "title": "Creating an Amazon Personalize metric attribution",
+                            "helpfulResource": {
+                                "displayText": "Define and create metric attributions in Amazon Personalize to track specified event metrics (like SUM or SAMPLECOUNT of interactions) and publish them to CloudWatch or S3 for analysis of recommendation performance.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/creating-metric-attribution.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Add clear guidance on best-practice metric definitions (useful business KPI examples) and include prebuilt templates or CLI snippets to help users quickly set up metric attributions. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/creating-metric-attribution.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_2",
+                            "title": "Perform A/B Testing with Amazon Personalize and CloudWatch Evidently",
+                            "helpfulResource": {
+                                "displayText": "Amazon CloudWatch Evidently is a feature that lets you run A/B tests and feature experiments by safely splitting user traffic, measuring outcomes with metrics, and comparing variants to determine which change performs better.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/ab-testing-evidently.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use CloudWatch Evidently to run controlled A/B experiments on Amazon Personalize recommendations by defining feature variations, splitting user traffic, and tracking outcome metrics to determine which recommendation strategy performs best.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/ab-testing-evidently.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS3_1 && OPS3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS3_1) || (!OPS3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        {
+            "id": "SEC",
+            "name": "Security",
+            "questions": [
+                {
+                    "id": "SEC1",
+                    "title": "How do you protect data in Amazon Personalize?",
+                    "description": "How do you protect data in Amazon Personalize?",
+                    "choices": [
+                        {
+                            "id": "SEC1_1",
+                            "title": "Encryption at rest",
+                            "helpfulResource": {
+                                "displayText": "Amazon Personalize encrypts all stored data at rest using AWS KMS managed keys. You can also provide your own KMS key (via its ARN) during resource creation, and Amazon Personalize will use it to encrypt all data in that dataset group.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/data-encryption.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You must grant Amazon Personalize and your Amazon Personalize IAM service role permission to use your key. For more information, see Giving Amazon Personalize permission to use your AWS KMS key.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/data-encryption.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_2",
+                            "title": "Encryption in transit",
+                            "helpfulResource": {
+                                "displayText": "Amazon Personalize uses TLS with AWS certificates to encrypt any data sent to other AWS services. Any communication with other AWS services happens over HTTPS, and Amazon Personalize endpoints support only secure connections over HTTPS.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/data-encryption.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon Personalize copies data out of your account and processes it in an internal AWS system. When processing data, Amazon Personalize encrypts data with either a Amazon Personalize AWS KMS key or any AWS KMS key you provide.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/data-encryption.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC1_1 && SEC1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC1_1) || (!SEC1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC2",
+                    "title": "How do you manage your identity and access in Amazon Personalize?",
+                    "description": "How do you manage your identity and access in Amazon Personalize?",
+                    "choices": [
+                        {
+                            "id": "SEC2_1",
+                            "title": "Understanding Amazon Personalize and IAM Integration",
+                            "helpfulResource": {
+                                "displayText": "AWS IAM features Amazon Personalize supports such as identity-based policies, policy actions, condition keys, ABAC, temporary credentials, and service roles and how they control access to Personalize resources.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/security_iam_service-with-iam.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Clarify best practices by adding concise examples for common IAM configurations and explicit guidance on securing Personalize service roles.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/security_iam_service-with-iam.html"
+                            }
+                        },
+                        {
+                            "id": "SEC2_2",
+                            "title": "Cross-Service Confused Deputy Prevention for Amazon Personalize",
+                            "helpfulResource": {
+                                "displayText": "The confused deputy problem occurs when a less-privileged entity tricks a more-privileged service into accessing resources it shouldn t; AWS mitigates this risk with service principal based protections.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/cross-service-confused-deputy-prevention.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use aws:SourceArn and aws:SourceAccount in resource and trust policies to restrict Amazon Personalize access and prevent the confused deputy problem.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/cross-service-confused-deputy-prevention.html"
+                            }
+                        },
+                        {
+                            "id": "SEC2_3",
+                            "title": "Apply least-privilege IAM identity-based policies for Amazon Personalize.",
+                            "helpfulResource": {
+                                "displayText": "By default, users and roles don't have permission to create or modify Amazon Personalize resources. To grant users permission to perform actions on the resources that they need, an IAM administrator can create IAM policies.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/security_iam_id-based-policy-examples.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For examples of creating IAM identity-based policies, see Create IAM policies (console) in the IAM User Guide.\n For Amazon Personalize actions, resources, and ARN formats, see the Service Authorization Reference.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/security_iam_id-based-policy-examples.html"
+                            }
+                        },
+                        {
+                            "id": "SEC2_4",
+                            "title": "Troubleshooting Amazon Personalize identity and access",
+                            "helpfulResource": {
+                                "displayText": "Identifying and resolving common identity and access management issues in Amazon Personalize, including IAM roles, policies, and KMS permissions that affect data import, training, and inference.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/security_iam_troubleshoot.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Standardize IAM role templates, validate permissions with automated preflight checks, and add CloudTrail-based diagnostics to quickly detect and remediate access misconfigurations.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/security_iam_troubleshoot.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC2_1 && SEC2_2 && SEC2_3 && SEC2_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC2_1) || (!SEC2_3) || (!SEC2_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC3",
+                    "title": "How do you prevent Amazon Personalize requests from going over the public internet?",
+                    "description": "How do you prevent Amazon Personalize requests from going over the public internet?",
+                    "choices": [
+                        {
+                            "id": "SEC3_1",
+                            "title": "Connect to Amazon Personalize with interface VPC endpoints (AWS PrivateLink)",
+                            "helpfulResource": {
+                                "displayText": "By using interface VPC endpoints (AWS PrivateLink), you can securely access Amazon Personalize from a private network without sending API requests over the public internet.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/vpc-interface-endpoints.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create an interface VPC endpoint for Amazon Personalize (e.g., com.amazonaws.<region>.personalize, personalize-events, and personalize-runtime) and enable private DNS so API calls resolve privately within your VPC. ",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/vpc-interface-endpoints.html"
+                            }
+                        },
+                        {
+                            "id": "SEC3_2",
+                            "title": "Enable and Monitor VPC Flow Logs for Network Traffic Visibility",
+                            "helpfulResource": {
+                                "displayText": "VPC Flow Logs capture IP traffic to and from VPC network interfaces and publish it to CloudWatch Logs, Amazon S3, or Amazon Data Firehose.",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Flow log subscriptions define the delivery path and permissions for sending network traffic logs to CloudWatch Logs, S3, or a delivery stream, where the records can then be viewed.",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC3_1 && SEC3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC3_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        {
+            "id": "COST",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "COST1",
+                    "title": "How do you choose the inference mode for Amazon Personalize?",
+                    "description": "How do you choose the inference mode for Amazon Personalize?",
+                    "choices": [
+                        {
+                            "id": "COST1_1",
+                            "title": "Creating a batch inference job",
+                            "helpfulResource": {
+                                "displayText": "Batch inference is a process where a model generates predictions or recommendations in bulk, offline, rather than responding to real-time requests, and stores the results (for example, in Amazon S3) for later use.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/creating-batch-inference-job.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set up batch inference jobs to generate recommendations or personalized rankings offline at scale, exporting results to Amazon S3 for downstream analysis or integration",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/creating-batch-inference-job.html"
+                            }
+                        },
+                        {
+                            "id": "COST1_2",
+                            "title": "Real-time Recommendations with auto scaling",
+                            "helpfulResource": {
+                                "displayText": "For real-time inference endpoints (campaigns and recommenders), the service automatically scales up to handle traffic spikes and scales back down to the configured minimum capacity when demand decreases.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/recommendations.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use the GetRecommendations and GetPersonalizedRanking APIs to retrieve real-time personalized recommendations and item rankings tailored to individual users.",
+                                "url": "https://docs.aws.amazon.com/personalize/latest/dg/recommendations.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST1_1 && COST1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST1_1) || (!COST1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST2",
+                    "title": "How do you design your cache for your recommendation workload?",
+                    "description": "How do you design your cache for your recommendation workload?",
+                    "choices": [
+                        {
+                            "id": "COST2_1",
+                            "title": "Add cache layer for your recommendation workload",
+                            "helpfulResource": {
+                                "displayText": "You do not need to draw a new series of recommendations every time a page is refreshed. Use clever caching strategies. Users will likely find it unpleasant if a large number of assets on a page change merely because users view details on an individual product or piece of content.",
+                                "url": "https://github.com/aws-samples/amazon-personalize-samples/blob/master/PersonalizeCheatSheet2.0.md"
+                            },
+                            "improvementPlan": {
+                                "displayText": "In addition new users will have very similar recommendations the first time they visit a page. Recommendations for each device type and other piece of contextual metadata and their unique combinations can be cached and shown to a new user at the start of a session. A personalized recommendation can then be drawn after some interactions are collected for the user.",
+                                "url": "https://github.com/aws-samples/amazon-personalize-samples/blob/master/PersonalizeCheatSheet2.0.md"
+                            }
+                        },
+                        {
+                            "id": "COST2_2",
+                            "title": "Design your cache strategy for your workload",
+                            "helpfulResource": {
+                                "displayText": "A good cache strategy for a recommendation workload is usually a tiered cache that avoids calling the recommender repeatedly for the same user/context while keeping results fresh enough.",
+                                "url": "https://github.com/aws-samples/amazon-personalize-samples/blob/master/PersonalizeCheatSheet2.0.md"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For a cache layer in AWS, use Amazon ElastiCache or Amazon DynamoDB to cache recommendation results, and refresh them using TTLs, key events (like user or inventory changes), or background updates to balance cost and freshness.",
+                                "url": "https://github.com/aws-samples/amazon-personalize-samples/blob/master/PersonalizeCheatSheet2.0.md"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST2_1 && COST2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST2_1) || (!COST2_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
