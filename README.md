@@ -47,7 +47,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [Federated Learning (Flower) on SageMaker AI](/SageMaker-Flower-Lens/)
 * [Apache Iceberg on Amazon S3](/Iceberg-S3-Lens)
 * [Managed Streaming for Apache Kafka](/Amazon-MSK-Lens)
-* [Personalize](/personalize)
+* [Personalize](/Personalize)
 
 ### Custom Lens for AWS Solutions
 * [Streaming Media Lens](/Streaming-Media-Lens/)
