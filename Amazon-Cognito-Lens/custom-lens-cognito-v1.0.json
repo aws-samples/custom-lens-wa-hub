@@ -1,0 +1,2637 @@
+{
+  "schemaVersion": "2021-11-01",
+  "name": "Amazon Cognito Best Practice Lens v1.0",
+  "description": "Best practices for designing, securing, and operating Amazon Cognito User Pools and Identity Pools across all five Well-Architected pillars.",
+  "pillars": [
+    {
+      "id": "CGNSEC",
+      "name": "Security",
+      "questions": [
+        {
+          "id": "CGNSEC1",
+          "title": "How do you enforce strong authentication for your users?",
+          "description": "Strong authentication mechanisms protect user accounts from unauthorized access. Multi-factor authentication (MFA), passwordless authentication, and strong password policies are essential security controls.",
+          "choices": [
+            {
+              "id": "CGNSEC1_1",
+              "title": "Enable MFA for all users or high-risk users",
+              "helpfulResource": {
+                "displayText": "MFA adds an extra layer of security by requiring users to provide a second form of authentication. Cognito supports SMS MFA, TOTP (software token) MFA, email MFA (requires Essentials tier or higher), and passkey/WebAuthn MFA. Consider mandatory MFA for sensitive applications or adaptive MFA based on risk assessment.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-mfa-sms-email-message.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure MFA settings in your User Pool. Evaluate upgrading to the Essentials tier to enable email MFA and passkey MFA. Consider mandatory MFA for sensitive applications or adaptive MFA based on risk assessment.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-mfa.html"
+              }
+            },
+            {
+              "id": "CGNSEC1_2",
+              "title": "Implement passwordless authentication options",
+              "helpfulResource": {
+                "displayText": "Cognito natively supports passkey/WebAuthn authentication (requires Essentials tier or higher), enabling biometric and security-key sign-in without passwords. Passkeys can be configured as a single authentication factor or as MFA with user verification. For other passwordless methods (email/SMS OTP, magic links), use choice-based authentication flows.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-authentication-flow-methods.html"
+              },
+              "improvementPlan": {
+                "displayText": "Enable passkey authentication in your User Pool by upgrading to the Essentials tier and configuring WebAuthnConfiguration. Set FactorConfiguration to MULTI_FACTOR_WITH_USER_VERIFICATION for passkey MFA, or SINGLE_FACTOR for passwordless first-factor sign-in. Ensure users have at least one fallback MFA method (SMS, TOTP, or email) to prevent account lockout.",
+                "url": "https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_WebAuthnConfigurationType.html"
+              }
+            },
+            {
+              "id": "CGNSEC1_3",
+              "title": "Configure strong password policies",
+              "helpfulResource": {
+                "displayText": "Password policies enforce minimum length, complexity requirements, and prevent common weak passwords. Cognito also supports password history (up to 24 previous passwords, requires Essentials tier), preventing users from reusing recent passwords.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-policies.html"
+              },
+              "improvementPlan": {
+                "displayText": "Set password minimum length to at least 12 characters and require uppercase, lowercase, numbers, and special characters. Enable password history to prevent reuse of recent passwords. Consider upgrading to the Essentials tier to access password history and other advanced password policy features.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/managing-users-passwords.html"
+              }
+            },
+            {
+              "id": "CGNSEC1_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "(CGNSEC1_1 || CGNSEC1_2) && CGNSEC1_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNSEC1_1 || CGNSEC1_2 || CGNSEC1_3",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNSEC2",
+          "title": "How do you use threat protection to defend against attacks?",
+          "description": "Cognito threat protection provides adaptive authentication, compromised credentials detection, IP address allowlists/denylists, and user activity log export to defend against sophisticated attacks.",
+          "choices": [
+            {
+              "id": "CGNSEC2_1",
+              "title": "Enable threat protection features",
+              "helpfulResource": {
+                "displayText": "Cognito Threat Protection provides adaptive authentication, compromised credentials detection, IP address allowlists/denylists, and user activity log export. These features are available on the Plus feature plan. Threat Protection starts in audit-only mode to monitor and assess risk before enabling automated responses.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-threat-protection.html"
+              },
+              "improvementPlan": {
+                "displayText": "Activate the Plus feature plan in your User Pool and enable Threat Protection. Start in audit-only mode to monitor risk assessments, then switch to full-function mode to enable automated responses. Configure threat protection at both user pool level and individual app client level as needed.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-threat-protection.html"
+              }
+            },
+            {
+              "id": "CGNSEC2_2",
+              "title": "Configure adaptive authentication based on risk level",
+              "helpfulResource": {
+                "displayText": "Adaptive authentication generates a risk score (High, Medium, Low, No Risk) for each sign-in attempt based on device and user factors. You can configure automatic responses per risk level: allow, require MFA, or block sign-in. Provide event feedback to improve the risk evaluation algorithm over time.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-adaptive-authentication.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure risk-based actions for each risk level: allow low-risk, require MFA for medium-risk, and block high-risk sign-ins. Start in audit-only mode, review risk assessments, then enable full-function enforcement. Use event feedback (AdminUpdateAuthEventFeedback) to train the risk model.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-adaptive-authentication.html"
+              }
+            },
+            {
+              "id": "CGNSEC2_3",
+              "title": "Monitor and respond to security events",
+              "helpfulResource": {
+                "displayText": "Export user authentication event logs with threat assessments, user information, and session metadata. Logs can be exported to CloudWatch Logs, Amazon S3, or Amazon Data Firehose for analysis. Use CloudWatch metrics published by adaptive authentication to monitor sign-in risk levels and failed challenges.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/exporting-quotas-and-usage.html"
+              },
+              "improvementPlan": {
+                "displayText": "Enable user activity log export to CloudWatch Logs, S3, or Data Firehose. Set up CloudWatch alarms on adaptive authentication metrics for high-risk sign-in attempts. Review exported logs regularly to identify patterns and provide event feedback to improve risk detection.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/exporting-quotas-and-usage.html"
+              }
+            },
+            {
+              "id": "CGNSEC2_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNSEC2_1 && CGNSEC2_2 && CGNSEC2_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNSEC2_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNSEC3",
+          "title": "How do you secure Identity Pool IAM roles with least privilege?",
+          "description": "Identity Pools provide temporary AWS credentials to access AWS resources. Properly configured IAM roles with least privilege principles prevent unauthorized access to your AWS resources.",
+          "choices": [
+            {
+              "id": "CGNSEC3_1",
+              "title": "Apply least privilege to IAM roles",
+              "helpfulResource": {
+                "displayText": "Grant only the minimum permissions required for authenticated and unauthenticated users. Use Cognito-specific IAM condition keys like cognito-identity.amazonaws.com:sub to scope access to per-user resources (e.g., S3 prefix ${cognito-identity.amazonaws.com:sub}/*), preventing users from accessing other users' data.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/iam-roles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Review and restrict IAM role policies attached to your Identity Pool. Use condition keys (cognito-identity.amazonaws.com:sub, cognito-identity.amazonaws.com:aud) to limit access to per-user resources. Regularly audit policies with IAM Access Analyzer.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/iam-roles.html"
+              }
+            },
+            {
+              "id": "CGNSEC3_2",
+              "title": "Use role-based access control with user attributes",
+              "helpfulResource": {
+                "displayText": "Map different IAM roles to users based on their attributes or groups (RBAC). For more granular control, use attribute-based access control (ABAC) by passing user attributes as principal tags via Identity Pool tag mappings to IAM session tags, enabling dynamic permissions without creating multiple roles.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/role-based-access-control.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure role mapping rules in your Identity Pool to assign IAM roles based on user claims or groups. For fine-grained access, enable principal tag mappings to pass user attributes as IAM session tags, then use aws:PrincipalTag conditions in IAM policies for attribute-based access control.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/role-based-access-control.html"
+              }
+            },
+            {
+              "id": "CGNSEC3_3",
+              "title": "Disable unauthenticated access if not required",
+              "helpfulResource": {
+                "displayText": "Unauthenticated identities can access AWS resources without signing in. Disable this feature if your application doesn't require it.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/identity-pools.html"
+              },
+              "improvementPlan": {
+                "displayText": "Review if unauthenticated access is necessary. If not, disable it in your Identity Pool settings. If unauthenticated access is required, apply a tightly scoped IAM policy that limits access to only the specific resources needed (e.g., read-only access to a single S3 bucket or specific API Gateway endpoints).",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/identity-pools.html"
+              }
+            },
+            {
+              "id": "CGNSEC3_4",
+              "title": "Restrict IAM role trust policies to your specific Identity Pool",
+              "helpfulResource": {
+                "displayText": "Identity Pool trust policies should use the cognito-identity.amazonaws.com:aud condition key to restrict role assumption to a specific identity pool ID. Without this condition, any identity pool in the account could assume the role, creating a cross-identity-pool privilege escalation vulnerability.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/iam-roles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Add a Condition block to all Identity Pool IAM role trust policies that checks cognito-identity.amazonaws.com:aud matches your specific identity pool ID. Also verify cognito-identity.amazonaws.com:amr matches the expected authentication state (authenticated or unauthenticated).",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/iam-roles.html"
+              }
+            },
+            {
+              "id": "CGNSEC3_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNSEC3_1 && CGNSEC3_2 && CGNSEC3_3 && CGNSEC3_4",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNSEC3_1 && CGNSEC3_4",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNSEC4",
+          "title": "How do you protect data at rest and in transit?",
+          "description": "Cognito automatically encrypts user data at rest using AWS-managed keys - no additional configuration is required. Your responsibility is to ensure data in transit is protected via TLS and that tokens are stored securely on client devices.",
+          "choices": [
+            {
+              "id": "CGNSEC4_1",
+              "title": "Enforce TLS for all connections",
+              "helpfulResource": {
+                "displayText": "Ensure all client connections to Cognito use TLS 1.2 or higher to protect data in transit.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/security-best-practices.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure your application to use TLS 1.2 or higher. Reject connections using older TLS versions.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/security-best-practices.html"
+              }
+            },
+            {
+              "id": "CGNSEC4_2",
+              "title": "Protect tokens and credentials in transit and storage",
+              "helpfulResource": {
+                "displayText": "Tokens should be transmitted over HTTPS and stored securely on client devices. Avoid storing tokens in browser localStorage due to XSS vulnerability risks.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use HTTPS for all API calls. Store tokens in secure storage: Keychain (iOS), Keystore (Android), or httpOnly secure cookies (web). Avoid localStorage - use Amplify SDK or similar libraries that handle secure token storage by default.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              }
+            },
+            {
+              "id": "CGNSEC4_3",
+              "title": "Use VPC interface endpoints to keep Cognito traffic private",
+              "helpfulResource": {
+                "displayText": "Amazon Cognito supports AWS PrivateLink for both User Pools and Identity Pools, allowing you to keep API traffic off the public internet. Important limitations: VPC endpoints do not support managed login, classic hosted UI, or M2M client credentials flows. User pools with domains assigned are incompatible with PrivateLink.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/vpc-interface-endpoints.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create VPC interface endpoints for cognito-idp (User Pools) and cognito-identity (Identity Pools). Use VPC endpoint policies to restrict which Cognito actions are allowed. For fully private deployments, configure resource control policies (RCPs) to deny Cognito actions except from your VPC. Note: remove user pool domains before enabling PrivateLink, as they are incompatible.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/vpc-interface-endpoints.html"
+              }
+            },
+            {
+              "id": "CGNSEC4_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNSEC4_1 && CGNSEC4_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNSEC4_1 || CGNSEC4_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNSEC5",
+          "title": "How do you manage token security and lifecycle?",
+          "description": "Proper token configuration, validation, and revocation mechanisms prevent unauthorized access and token abuse.",
+          "choices": [
+            {
+              "id": "CGNSEC5_1",
+              "title": "Configure appropriate token expiration times",
+              "helpfulResource": {
+                "displayText": "Set token TTLs based on security requirements. Access tokens, ID tokens, and refresh tokens each have independent expiration settings. Shorter access token lifetimes (5-60 minutes) reduce the exposure window. On the Essentials tier, access token customization allows adding custom claims without extending token lifetime.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Set access token expiration to 5-60 minutes. Configure ID token expiration independently based on session needs. Set refresh token expiration based on your security policy (hours to days). Use access token customization (Essentials tier) to embed custom claims rather than issuing long-lived tokens. For confidential (server-side) app clients, store client secrets in AWS Secrets Manager - never in frontend code or version control. For public clients (SPA, mobile), do not use a client secret; use PKCE instead.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              }
+            },
+            {
+              "id": "CGNSEC5_2",
+              "title": "Implement token validation in your application",
+              "helpfulResource": {
+                "displayText": "Always validate tokens on the backend to prevent tampering and ensure authenticity.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html"
+              },
+              "improvementPlan": {
+                "displayText": "Verify token signature, expiration, and claims. Use AWS SDKs or JWT libraries for validation.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html"
+              }
+            },
+            {
+              "id": "CGNSEC5_3",
+              "title": "Implement token revocation mechanisms",
+              "helpfulResource": {
+                "displayText": "Cognito provides RevokeToken API (revokes a specific refresh token) and GlobalSignOut / AdminUserGlobalSignOut (revokes all refresh tokens for a user). Revoked tokens are rejected by Cognito API endpoints but remain valid when verified locally using JWT libraries (signature + expiration only). Pair short access token TTLs with revocation for effective security.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/token-revocation.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use GlobalSignOut to revoke all tokens on security incidents or user-initiated sign-out. Use RevokeToken for granular refresh token revocation. Since revoked access/ID tokens still pass local JWT validation, keep their TTLs short (5-15 minutes). Optionally validate tokens against the /oauth2/userInfo endpoint or maintain a server-side token blocklist for immediate revocation enforcement.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/token-revocation.html"
+              }
+            },
+            {
+              "id": "CGNSEC5_4",
+              "title": "Use appropriate OAuth scopes",
+              "helpfulResource": {
+                "displayText": "Limit token permissions using OAuth scopes to implement least privilege access.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-define-resource-servers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Define custom scopes for your APIs. Request only necessary scopes in authentication flows.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-define-resource-servers.html"
+              }
+            },
+            {
+              "id": "CGNSEC5_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNSEC5_1 && CGNSEC5_2 && CGNSEC5_3 && CGNSEC5_4",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNSEC5_1 && CGNSEC5_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNSEC6",
+          "title": "How do you secure federated identity provider integration?",
+          "description": "When integrating with external identity providers (SAML, OIDC, social), proper configuration prevents security vulnerabilities.",
+          "choices": [
+            {
+              "id": "CGNSEC6_1",
+              "title": "Validate identity provider certificates and metadata",
+              "helpfulResource": {
+                "displayText": "Compromised or expired IdP certificates can allow attackers to forge SAML assertions or OIDC tokens, gaining unauthorized access to your application. Always use HTTPS for all metadata URLs and redirect URIs.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-saml-idp.html"
+              },
+              "improvementPlan": {
+                "displayText": "Regularly update SAML metadata before certificate expiration. Verify certificate validity and chain of trust. Use HTTPS for all metadata URLs and redirect URIs. Set calendar reminders for certificate rotation dates.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-saml-idp.html"
+              }
+            },
+            {
+              "id": "CGNSEC6_2",
+              "title": "Implement attribute mapping validation",
+              "helpfulResource": {
+                "displayText": "Attributes received from external identity providers may contain unexpected or malicious values that could lead to injection attacks or privilege escalation if used without validation. Regularly audit configured callback and sign-out URLs and remove stale entries.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-specifying-attribute-mapping.html"
+              },
+              "improvementPlan": {
+                "displayText": "Map only required attributes from IdP assertions. Validate attribute formats and values in a Pre Token Generation Lambda trigger. Implement input sanitization before using attributes in application logic or database queries. Regularly audit and remove unused callback URLs from app client configurations.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-specifying-attribute-mapping.html"
+              }
+            },
+            {
+              "id": "CGNSEC6_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNSEC6_1 && CGNSEC6_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNSEC6_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNSEC7",
+          "title": "How do you implement compliance and auditing requirements?",
+          "description": "Cognito is compliant with SOC, PCI, HIPAA, and other regulatory frameworks (AWS shared responsibility). Your responsibility is to maintain audit trails and implement user data rights (export, deletion) as required by regulations like GDPR.",
+          "choices": [
+            {
+              "id": "CGNSEC7_1",
+              "title": "Enable CloudTrail for API activity logging",
+              "helpfulResource": {
+                "displayText": "CloudTrail logs all Cognito API calls for security auditing and compliance.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/logging-using-cloudtrail.html"
+              },
+              "improvementPlan": {
+                "displayText": "Enable CloudTrail in all regions. Configure log file validation and encryption.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/logging-using-cloudtrail.html"
+              }
+            },
+            {
+              "id": "CGNSEC7_2",
+              "title": "Implement user data export and deletion",
+              "helpfulResource": {
+                "displayText": "Provide mechanisms for users to export and delete their data per GDPR or other privacy requirements. Use AdminGetUser to export user attributes and AdminDeleteUser or DeleteUser to remove accounts.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/how-to-manage-user-accounts.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement data export using AdminGetUser / ListUsers APIs. Use AdminDeleteUser for admin-initiated deletion or DeleteUser for self-service account deletion. Document data retention policies and ensure deletion covers all linked external provider profiles.",
+                "url": "https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminDeleteUser.html"
+              }
+            },
+            {
+              "id": "CGNSEC7_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNSEC7_1 && CGNSEC7_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNSEC7_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNSEC8",
+          "title": "How do you manage user groups and role-based access control?",
+          "description": "User groups enable fine-grained access control by mapping users to different IAM roles or application permissions.",
+          "choices": [
+            {
+              "id": "CGNSEC8_1",
+              "title": "Use groups for role-based access control",
+              "helpfulResource": {
+                "displayText": "Organize users into groups based on roles and permissions.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-user-groups.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create groups for different user roles. Assign users to appropriate groups. Use group claims in tokens.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-user-groups.html"
+              }
+            },
+            {
+              "id": "CGNSEC8_2",
+              "title": "Use group claims in tokens for application-layer RBAC",
+              "helpfulResource": {
+                "displayText": "Cognito includes a user's group memberships in the cognito:groups claim of ID and access tokens. Your application backend can read this claim to enforce role-based access control without additional API calls. This is distinct from Identity Pool IAM role mapping (covered in the Identity Pool security question).",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-user-groups.html"
+              },
+              "improvementPlan": {
+                "displayText": "Ensure your app client is configured to include group claims in tokens. In your application backend, validate the cognito:groups claim and enforce access control based on group membership. Define clear group naming conventions that map to application roles (e.g., admin, editor, viewer).",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-user-groups.html"
+              }
+            },
+            {
+              "id": "CGNSEC8_3",
+              "title": "Implement group precedence for overlapping memberships",
+              "helpfulResource": {
+                "displayText": "Define group precedence to determine which role applies when users belong to multiple groups.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-user-groups.html"
+              },
+              "improvementPlan": {
+                "displayText": "Set group precedence values. Document precedence logic. Test multi-group scenarios.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-user-groups.html"
+              }
+            },
+            {
+              "id": "CGNSEC8_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNSEC8_1 && CGNSEC8_2 && CGNSEC8_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNSEC8_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNSEC9",
+          "title": "How do you protect sensitive user attributes?",
+          "description": "User attributes may contain PII or sensitive data. Proper configuration controls who can read and write these attributes.",
+          "choices": [
+            {
+              "id": "CGNSEC9_1",
+              "title": "Configure attribute read/write permissions",
+              "helpfulResource": {
+                "displayText": "Without proper attribute permissions, users could read sensitive attributes (e.g., internal IDs, roles) or modify attributes they shouldn't control (e.g., email_verified, custom admin flags).",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-attributes.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure per-app-client attribute read/write permissions. Mark sensitive attributes as admin-read-only or admin-write-only. Disable write access for attributes that should only be set by backend systems. For custom attributes, set mutability based on requirements and restrict client-side write access to prevent privilege escalation.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-attributes.html"
+              }
+            },
+            {
+              "id": "CGNSEC9_2",
+              "title": "Minimize PII stored in Cognito",
+              "helpfulResource": {
+                "displayText": "Store only necessary PII in Cognito. Keep sensitive data in separate systems with additional controls.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/security-best-practices.html"
+              },
+              "improvementPlan": {
+                "displayText": "Review stored attributes. Move highly sensitive data to dedicated systems. Implement data minimization.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/security-best-practices.html"
+              }
+            },
+            {
+              "id": "CGNSEC9_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNSEC9_1 && CGNSEC9_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNSEC9_1 || CGNSEC9_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNSEC10",
+          "title": "How do you protect Cognito endpoints from abuse?",
+          "description": "Public-facing Cognito endpoints can be targets for abuse, DDoS, or credential stuffing attacks.",
+          "choices": [
+            {
+              "id": "CGNSEC10_1",
+              "title": "Associate AWS WAF web ACL with your user pool",
+              "helpfulResource": {
+                "displayText": "Cognito natively supports AWS WAF integration - associate a web ACL directly with your user pool to inspect managed login and public API requests. WAF rules can match on session data, IP addresses, browser agents, and API operations. Available in all feature plans. Use WAF CAPTCHA action and Bot Control managed rule group to prevent automated sign-up and credential stuffing.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-waf.html"
+              },
+              "improvementPlan": {
+                "displayText": "Associate a WAF web ACL with your user pool via the Security > AWS WAF tab in the console. Start with Count mode to assess traffic patterns, then switch to Block. Configure rate-based rules, geo-blocking, and IP reputation lists. Add WAF CAPTCHA action to rules targeting sign-up and sign-in endpoints. Enable the Bot Control managed rule group for automated bot detection. Monitor WAF metrics and logs to tune rules. As an additional defense layer, consider implementing rate limiting at the API Gateway or application level before requests reach Cognito.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-waf.html"
+              }
+            },
+            {
+              "id": "CGNSEC10_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNSEC10_1",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNSEC11",
+          "title": "How do you secure Lambda triggers?",
+          "description": "Lambda triggers extend Cognito functionality but introduce potential security risks if not properly secured. If your workload does not use Lambda triggers, mark this question as not applicable in the Well-Architected Tool.",
+          "choices": [
+            {
+              "id": "CGNSEC11_1",
+              "title": "Apply least privilege to Lambda execution roles",
+              "helpfulResource": {
+                "displayText": "Grant Lambda functions only the permissions they need to perform their tasks.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html"
+              },
+              "improvementPlan": {
+                "displayText": "Review Lambda IAM roles. Remove unnecessary permissions. Use resource-specific policies.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html"
+              }
+            },
+            {
+              "id": "CGNSEC11_2",
+              "title": "Validate and sanitize trigger inputs",
+              "helpfulResource": {
+                "displayText": "Always validate data received from Cognito triggers to prevent injection attacks.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement input validation. Sanitize user-provided data. Use parameterized queries for databases.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html"
+              }
+            },
+            {
+              "id": "CGNSEC11_3",
+              "title": "Secure secrets and credentials in Lambda",
+              "helpfulResource": {
+                "displayText": "Use AWS Secrets Manager or Parameter Store for sensitive data, never hardcode credentials.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html"
+              },
+              "improvementPlan": {
+                "displayText": "Store secrets in Secrets Manager. Use environment variables for configuration. Enable encryption.",
+                "url": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html"
+              }
+            },
+            {
+              "id": "CGNSEC11_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNSEC11_1 && CGNSEC11_2 && CGNSEC11_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNSEC11_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CGNREL",
+      "name": "Reliability",
+      "questions": [
+        {
+          "id": "CGNREL1",
+          "title": "How do you design for multi-region resilience?",
+          "description": "Cognito User Pools are regional resources. For applications requiring high availability across regions, you need a strategy to handle regional failures.",
+          "choices": [
+            {
+              "id": "CGNREL1_1",
+              "title": "Document multi-region failover strategy",
+              "helpfulResource": {
+                "displayText": "Cognito user pools are regional resources with no native cross-region replication. Plan how your application will handle regional unavailability: options include maintaining separate user pools per region with data synchronization, or using a single-region pool with application-level failover. Use Route 53 health checks and failover routing for DNS-level resilience.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/multi-tenant-application-best-practices.html"
+              },
+              "improvementPlan": {
+                "displayText": "Document your multi-region strategy: single pool with app failover, or multi-pool with data sync. Create runbooks for regional failover scenarios. Use Route 53 failover routing and health checks. Define RTO/RPO targets for authentication availability.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/plan-for-disaster-recovery-dr.html"
+              }
+            },
+            {
+              "id": "CGNREL1_2",
+              "title": "Implement user data export and backup",
+              "helpfulResource": {
+                "displayText": "Regularly export user data using ListUsers and AdminGetUser APIs to enable recovery or migration to another region. Note: passwords cannot be exported - users will need to reset passwords after migration to a new user pool.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/how-to-manage-user-accounts.html"
+              },
+              "improvementPlan": {
+                "displayText": "Build automated user data export using ListUsers API on a schedule. Store exports in S3 with cross-region replication. Use the CSV import tool to restore users in a standby region. Plan for password reset flow since passwords cannot be exported.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-using-import-tool.html"
+              }
+            },
+            {
+              "id": "CGNREL1_3",
+              "title": "Test failover procedures regularly",
+              "helpfulResource": {
+                "displayText": "Validate that your failover strategy works through regular testing and disaster recovery drills.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/test-reliability.html"
+              },
+              "improvementPlan": {
+                "displayText": "Conduct game days to test regional failover scenarios and validate recovery time objectives (RTO).",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/test-reliability.html"
+              }
+            },
+            {
+              "id": "CGNREL1_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNREL1_1 && CGNREL1_2 && CGNREL1_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNREL1_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNREL2",
+          "title": "How do you monitor service quotas, handle throttling, and design for limits?",
+          "description": "Cognito has service quotas for API operations. Exceeding these quotas can cause throttling and impact application availability.",
+          "choices": [
+            {
+              "id": "CGNREL2_1",
+              "title": "Monitor service quotas and request increases proactively",
+              "helpfulResource": {
+                "displayText": "Track your usage against Cognito service quotas and request increases before reaching limits.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/limits.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use Service Quotas console to monitor Cognito quotas. Set CloudWatch alarms at 80% of quota thresholds.",
+                "url": "https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html"
+              }
+            },
+            {
+              "id": "CGNREL2_2",
+              "title": "Implement exponential backoff and retry logic",
+              "helpfulResource": {
+                "displayText": "Handle throttling errors gracefully with exponential backoff to avoid overwhelming the service.",
+                "url": "https://docs.aws.amazon.com/general/latest/gr/api-retries.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement exponential backoff in your application code. Use AWS SDK built-in retry mechanisms.",
+                "url": "https://docs.aws.amazon.com/general/latest/gr/api-retries.html"
+              }
+            },
+            {
+              "id": "CGNREL2_3",
+              "title": "Optimize API call patterns and design for quota limits",
+              "helpfulResource": {
+                "displayText": "Reduce unnecessary API calls through caching and efficient application design. Cache tokens appropriately to avoid redundant authentication requests. Batch operations where possible. Design your application architecture to operate within Cognito service limits.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Cache tokens and avoid polling APIs unnecessarily. Batch operations where possible. Review Cognito service quotas and design your architecture to stay within limits. Use token caching to reduce InitiateAuth and GetUser call frequency.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              }
+            },
+            {
+              "id": "CGNREL2_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNREL2_1 && CGNREL2_2 && CGNREL2_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNREL2_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNREL3",
+          "title": "How do you ensure Lambda trigger reliability and resilience?",
+          "description": "Lambda triggers extend Cognito functionality but can introduce failure points. Proper error handling, monitoring, idempotency, and concurrency management ensure triggers don't impact authentication flows. If your workload does not use Lambda triggers, mark this question as not applicable in the Well-Architected Tool.",
+          "choices": [
+            {
+              "id": "CGNREL3_1",
+              "title": "Implement proper error handling in Lambda functions",
+              "helpfulResource": {
+                "displayText": "Handle errors gracefully and return appropriate responses to Cognito to avoid blocking user operations.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use try-catch blocks in Lambda code. Return proper error responses. Avoid throwing unhandled exceptions.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html"
+              }
+            },
+            {
+              "id": "CGNREL3_2",
+              "title": "Configure appropriate timeouts and retries",
+              "helpfulResource": {
+                "displayText": "Set Lambda timeout values that balance responsiveness with operation completion. Cognito invokes Lambda triggers synchronously - if the function times out or fails, the authentication operation fails. Note: DLQs do not apply to synchronous invocations.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/invocation-retries.html"
+              },
+              "improvementPlan": {
+                "displayText": "Set Lambda timeout to 5 seconds or less for synchronous Cognito triggers. Minimize cold start impact by using provisioned concurrency for critical auth flows. Log failed invocations to CloudWatch for post-hoc analysis since DLQs are not available for sync triggers.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/invocation-retries.html"
+              }
+            },
+            {
+              "id": "CGNREL3_3",
+              "title": "Monitor Lambda trigger performance and errors",
+              "helpfulResource": {
+                "displayText": "Track Lambda execution metrics, errors, and duration to identify issues before they impact users.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create CloudWatch dashboards for Lambda trigger metrics. Set alarms for error rates and duration.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics.html"
+              }
+            },
+            {
+              "id": "CGNREL3_4",
+              "title": "Implement idempotency in triggers",
+              "helpfulResource": {
+                "displayText": "Ensure triggers can be safely retried without causing duplicate operations or data corruption.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use idempotency keys. Check for existing records before creating. Handle duplicate invocations.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html"
+              }
+            },
+            {
+              "id": "CGNREL3_5",
+              "title": "Set appropriate Lambda concurrency limits",
+              "helpfulResource": {
+                "displayText": "Configure reserved concurrency to prevent Lambda from consuming all account concurrency.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html"
+              },
+              "improvementPlan": {
+                "displayText": "Set reserved concurrency for critical triggers. Monitor concurrent executions. Adjust based on load.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html"
+              }
+            },
+            {
+              "id": "CGNREL3_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNREL3_1 && CGNREL3_2 && CGNREL3_3 && CGNREL3_4 && CGNREL3_5",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNREL3_1 && CGNREL3_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNREL4",
+          "title": "How do you design account recovery flows for reliability?",
+          "description": "Reliable account recovery mechanisms ensure users can regain access while maintaining security.",
+          "choices": [
+            {
+              "id": "CGNREL4_1",
+              "title": "Configure self-service account recovery with multiple channels",
+              "helpfulResource": {
+                "displayText": "Enable self-service password reset with both email and SMS recovery channels so users can recover accounts even if one delivery method fails. Note: Cognito requires the password reset delivery channel to differ from the MFA channel - plan your verification and MFA configuration together. Note: Cognito may require that the password reset delivery channel differs from the MFA channel. Verify this constraint against your specific feature plan (Lite, Essentials, Plus) and Cognito configuration, as behavior may vary.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-email-phone-verification.html"
+              },
+              "improvementPlan": {
+                "displayText": "Enable both email and phone verification in your user pool. Configure forgot password flow with multiple recovery options. Ensure the recovery channel differs from the MFA channel. Customize email/SMS templates for clarity. Set appropriate code expiration times (default 1 hour).",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-email-phone-verification.html"
+              }
+            },
+            {
+              "id": "CGNREL4_2",
+              "title": "Monitor and alert on recovery failures",
+              "helpfulResource": {
+                "displayText": "Track failed recovery attempts to identify issues and potential abuse.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/exporting-quotas-and-usage.html"
+              },
+              "improvementPlan": {
+                "displayText": "Log recovery events to CloudWatch. Set alarms for high failure rates. Investigate patterns.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/exporting-quotas-and-usage.html"
+              }
+            },
+            {
+              "id": "CGNREL4_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNREL4_1 && CGNREL4_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNREL4_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNREL5",
+          "title": "How do you handle dependency failures?",
+          "description": "Cognito depends on external services like email/SMS providers and federated IdPs. Graceful handling of failures maintains availability.",
+          "choices": [
+            {
+              "id": "CGNREL5_1",
+              "title": "Implement fallback mechanisms for email/SMS",
+              "helpfulResource": {
+                "displayText": "Configure backup email/SMS providers or custom senders to handle delivery failures.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-email.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use SES for email with fallback regions. Configure custom SMS sender Lambda for provider failover.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-custom-sender-triggers.html"
+              }
+            },
+            {
+              "id": "CGNREL5_2",
+              "title": "Monitor external dependency health",
+              "helpfulResource": {
+                "displayText": "Track availability and performance of external dependencies to detect issues early.",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use CloudWatch Synthetics to monitor IdP endpoints. Set up health checks for email/SMS delivery.",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries.html"
+              }
+            },
+            {
+              "id": "CGNREL5_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNREL5_1 && CGNREL5_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNREL5_1 || CGNREL5_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNREL6",
+          "title": "How do you implement graceful degradation?",
+          "description": "When Cognito or dependencies experience issues, graceful degradation maintains partial functionality.",
+          "choices": [
+            {
+              "id": "CGNREL6_1",
+              "title": "Cache tokens and provide degraded functionality during outages",
+              "helpfulResource": {
+                "displayText": "Allow applications to function with cached tokens when Cognito is temporarily unavailable. Define degraded mode behavior (e.g., read-only access, cached data) and communicate service status to users. Implement feature flags to control degraded functionality.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement token caching with validation. Define acceptable offline duration and degraded mode behavior. Handle token refresh failures gracefully. Use feature flags to disable features that require live Cognito access during outages.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              }
+            },
+            {
+              "id": "CGNREL6_2",
+              "title": "Implement circuit breaker patterns",
+              "helpfulResource": {
+                "displayText": "Prevent cascading failures by detecting and isolating failing components.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_withstand_component_failures_implement_circuit_breaker.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement circuit breakers for Cognito API calls. Define failure thresholds and recovery timeouts.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_withstand_component_failures_implement_circuit_breaker.html"
+              }
+            },
+            {
+              "id": "CGNREL6_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNREL6_1 && CGNREL6_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNREL6_1 || CGNREL6_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNREL7",
+          "title": "How do you test reliability of authentication flows?",
+          "description": "Regular testing validates that authentication systems can handle failures and recover gracefully.",
+          "choices": [
+            {
+              "id": "CGNREL7_1",
+              "title": "Conduct chaos engineering experiments",
+              "helpfulResource": {
+                "displayText": "Simulate failures to validate system resilience and recovery procedures.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/test-reliability.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use AWS FIS to simulate Lambda trigger failures and network disruptions (FIS cannot directly target Cognito itself). Test scenarios: Lambda timeout/error during auth, IdP endpoint unreachable, SMS/email delivery failure. Validate that your circuit breakers and graceful degradation work as designed.",
+                "url": "https://docs.aws.amazon.com/fis/latest/userguide/what-is.html"
+              }
+            },
+            {
+              "id": "CGNREL7_2",
+              "title": "Perform load testing",
+              "helpfulResource": {
+                "displayText": "Validate your system can handle expected and peak authentication loads. Important: load testing against Cognito will consume service quotas - request quota increases before testing to avoid throttling that masks real performance issues.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/test-reliability.html"
+              },
+              "improvementPlan": {
+                "displayText": "Request Cognito quota increases before load testing. Test sign-up and sign-in at expected peak rates. Validate token refresh under load. Monitor throttling metrics during tests to identify bottlenecks.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/test-reliability.html"
+              }
+            },
+            {
+              "id": "CGNREL7_3",
+              "title": "Test disaster recovery procedures",
+              "helpfulResource": {
+                "displayText": "Regularly validate backup, restore, and failover procedures work as expected.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/test-reliability.html"
+              },
+              "improvementPlan": {
+                "displayText": "Test user data export and import. Validate multi-region failover. Document recovery time.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/test-reliability.html"
+              }
+            },
+            {
+              "id": "CGNREL7_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNREL7_1 && CGNREL7_2 && CGNREL7_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNREL7_1 || CGNREL7_2 || CGNREL7_3",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNREL8",
+          "title": "How do you monitor Cognito service health and performance?",
+          "description": "Comprehensive monitoring enables early detection of issues and supports troubleshooting.",
+          "choices": [
+            {
+              "id": "CGNREL8_1",
+              "title": "Monitor key CloudWatch metrics",
+              "helpfulResource": {
+                "displayText": "Cognito publishes metrics to CloudWatch under the AWS/Cognito namespace: SignInSuccesses, SignInThrottles, SignUpSuccesses, TokenRefreshSuccesses, FederationSuccesses, and threat protection metrics (compromised credential risk, account takeover risk). Metrics are available per user pool and per app client.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/metrics-for-cognito-user-pools.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create CloudWatch dashboards for sign-in success/failure rates, throttle counts, and token refresh metrics. Set baseline thresholds from normal traffic patterns. Use Service Quotas console to monitor quota utilization alongside CloudWatch metrics.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/tracking-quotas-and-usage-in-cloud-watch-and-service-quotas.html"
+              }
+            },
+            {
+              "id": "CGNREL8_2",
+              "title": "Set up proactive alerting",
+              "helpfulResource": {
+                "displayText": "Configure alarms for anomalies and threshold breaches to enable quick response.",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create alarms for high failure rates, quota approaching, and Lambda errors. Use SNS for notifications.",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html"
+              }
+            },
+            {
+              "id": "CGNREL8_3",
+              "title": "Implement end-to-end monitoring",
+              "helpfulResource": {
+                "displayText": "Monitor complete authentication flows from user perspective to detect issues.",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use CloudWatch Synthetics canaries to test authentication flows. Monitor from multiple regions.",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries.html"
+              }
+            },
+            {
+              "id": "CGNREL8_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNREL8_1 && CGNREL8_2 && CGNREL8_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNREL8_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CGNOPS",
+      "name": "Operational Excellence",
+      "questions": [
+        {
+          "id": "CGNOPS1",
+          "title": "How do you manage Cognito resources as Infrastructure as Code?",
+          "description": "Managing Cognito resources as code enables version control, repeatability, and consistent deployments across environments.",
+          "choices": [
+            {
+              "id": "CGNOPS1_1",
+              "title": "Use IaC to document and recreate Cognito configurations",
+              "helpfulResource": {
+                "displayText": "Define User Pools, Identity Pools, and related resources as code for documentation, environment consistency, and disaster recovery. Critical warning: some User Pool properties (e.g., sign-in attributes, username case sensitivity, schema attributes) are immutable after creation. Changing these in IaC templates triggers resource replacement - deleting and recreating the user pool and losing all user data.",
+                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_Cognito.html"
+              },
+              "improvementPlan": {
+                "displayText": "Capture your Cognito configuration in IaC (CloudFormation, CDK, or Terraform) primarily as a source of truth and DR blueprint. Use RemovalPolicy.RETAIN (CDK) or DeletionPolicy: Retain (CloudFormation) to prevent accidental deletion. Always review changesets before applying - look for Replacement on UserPool resources.",
+                "url": "https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cognito-readme.html"
+              }
+            },
+            {
+              "id": "CGNOPS1_2",
+              "title": "Version control all Cognito configurations",
+              "helpfulResource": {
+                "displayText": "Store IaC templates in version control systems to track changes and enable rollback capabilities.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use Git for version control. Implement code review processes for Cognito configuration changes.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS1_3",
+              "title": "Protect against accidental User Pool replacement",
+              "helpfulResource": {
+                "displayText": "IaC changes to immutable User Pool properties trigger replacement, which deletes all user data. This risk is unique to Cognito - unlike most AWS resources, replacement means permanent, unrecoverable loss of your entire user directory.",
+                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/protect-stack-resources.html"
+              },
+              "improvementPlan": {
+                "displayText": "Set RemovalPolicy.RETAIN in CDK or DeletionPolicy/UpdateReplacePolicy: Retain in CloudFormation for all User Pool resources. Add CloudFormation stack policies to deny replacement of User Pool resources. Require manual changeset review before any User Pool stack update. Use CI/CD pipeline gates that block auto-apply when Replacement is detected in the changeset.",
+                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/protect-stack-resources.html"
+              }
+            },
+            {
+              "id": "CGNOPS1_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNOPS1_1 && CGNOPS1_2 && CGNOPS1_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNOPS1_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNOPS2",
+          "title": "How do you monitor and log Cognito events?",
+          "description": "Comprehensive monitoring and logging enable quick identification and resolution of issues, and provide audit trails for security and compliance.",
+          "choices": [
+            {
+              "id": "CGNOPS2_1",
+              "title": "Enable CloudWatch Logs for User Pool events",
+              "helpfulResource": {
+                "displayText": "Cognito supports two log types: userNotification (email/SMS delivery errors, all plans) and userAuthEvents (authentication activity with threat assessments, requires Plus plan + threat protection). Logs can be exported to CloudWatch Logs, Amazon S3, or Amazon Data Firehose.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/exporting-quotas-and-usage.html"
+              },
+              "improvementPlan": {
+                "displayText": "Enable userNotification logs for delivery error monitoring. For authentication activity logging, activate the Plus plan and enable threat protection to export userAuthEvents. Set appropriate log retention periods based on compliance requirements.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/exporting-quotas-and-usage.html"
+              }
+            },
+            {
+              "id": "CGNOPS2_2",
+              "title": "Enable CloudTrail for API activity logging",
+              "helpfulResource": {
+                "displayText": "Track all Cognito API calls for security auditing and compliance requirements.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/logging-using-cloudtrail.html"
+              },
+              "improvementPlan": {
+                "displayText": "Ensure CloudTrail is enabled in all regions where you use Cognito. Configure log file validation and encryption.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/logging-using-cloudtrail.html"
+              }
+            },
+            {
+              "id": "CGNOPS2_3",
+              "title": "Create CloudWatch dashboards and alarms",
+              "helpfulResource": {
+                "displayText": "Visualize key metrics and set up proactive alerting for operational issues.",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Dashboards.html"
+              },
+              "improvementPlan": {
+                "displayText": "Build dashboards showing authentication success/failure rates, MFA usage, and Lambda trigger performance. Set alarms for anomalies.",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Dashboards.html"
+              }
+            },
+            {
+              "id": "CGNOPS2_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNOPS2_1 && CGNOPS2_2 && CGNOPS2_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNOPS2_1 || CGNOPS2_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNOPS3",
+          "title": "How do you plan and execute user migration?",
+          "description": "User migration from existing identity systems to Cognito requires careful planning to minimize disruption and ensure data integrity. If your workload uses a new user pool with no migration needed, mark this question as not applicable in the Well-Architected Tool.",
+          "choices": [
+            {
+              "id": "CGNOPS3_1",
+              "title": "Use migrate user Lambda trigger for seamless migration",
+              "helpfulResource": {
+                "displayText": "Implement just-in-time migration where users are migrated when they first sign in, avoiding bulk migration downtime.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-migrate-user.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement migrate user trigger to look up users in existing system and create them in Cognito on first login.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-migrate-user.html"
+              }
+            },
+            {
+              "id": "CGNOPS3_2",
+              "title": "Perform bulk import for pre-migration",
+              "helpfulResource": {
+                "displayText": "Use Cognito bulk import feature to migrate users in batches before cutover. Important: imported users are set to RESET_REQUIRED status - they must reset their password on first sign-in because passwords cannot be imported. Plan your user communication accordingly.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-using-import-tool.html"
+              },
+              "improvementPlan": {
+                "displayText": "Prepare CSV files with user data. Use Cognito import tool to bulk import users. Test with small batches first.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-using-import-tool.html"
+              }
+            },
+            {
+              "id": "CGNOPS3_3",
+              "title": "Test migration process in non-production environment",
+              "helpfulResource": {
+                "displayText": "Validate migration procedures with production-like data before executing in production.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/test-and-validate-changes.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create test User Pool. Migrate subset of users. Validate authentication flows and user attributes.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/test-and-validate-changes.html"
+              }
+            },
+            {
+              "id": "CGNOPS3_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "(CGNOPS3_1 || CGNOPS3_2) && CGNOPS3_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNOPS3_1 || CGNOPS3_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNOPS4",
+          "title": "How do you set up alerting and notifications?",
+          "description": "Proactive alerting enables quick response to operational issues and security events.",
+          "choices": [
+            {
+              "id": "CGNOPS4_1",
+              "title": "Use EventBridge for event-driven automation",
+              "helpfulResource": {
+                "displayText": "Cognito does not natively emit EventBridge events. Use CloudTrail + EventBridge rules to react to Cognito API calls (e.g., CreateUserPool, AdminCreateUser), or CloudWatch Alarms + SNS for metric-based alerts (throttling, sign-in failures). SNS topics route alerts to email, Slack, PagerDuty, or Lambda for automated remediation.",
+                "url": "https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create EventBridge rules matching Cognito CloudTrail events for automation. Use CloudWatch Alarms with SNS actions for metric-based alerts. Configure SNS topics with appropriate subscriptions (email, SMS, Lambda) for different alert severities.",
+                "url": "https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html"
+              }
+            },
+            {
+              "id": "CGNOPS4_2",
+              "title": "Implement escalation procedures",
+              "helpfulResource": {
+                "displayText": "Define escalation paths for different severity levels to ensure timely response.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Document escalation procedures. Configure multi-tier alerting. Test escalation paths regularly.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS4_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNOPS4_1 && CGNOPS4_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNOPS4_1 || CGNOPS4_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNOPS5",
+          "title": "How do you manage Lambda triggers operationally?",
+          "description": "Operational management of Lambda triggers ensures they remain reliable and maintainable. If your workload does not use Lambda triggers, mark this question as not applicable in the Well-Architected Tool.",
+          "choices": [
+            {
+              "id": "CGNOPS5_1",
+              "title": "Use Lambda aliases for trigger management",
+              "helpfulResource": {
+                "displayText": "Cognito Lambda trigger configuration supports unqualified ARNs (pointing to $LATEST) and alias ARNs, but does not support qualified ARNs with explicit version numbers. Use aliases (e.g., LIVE, STAGING) to decouple trigger configuration from deployments, enabling safe rollouts by pointing the alias to a new version without modifying the user pool.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-working-with-lambda-triggers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure Cognito triggers to use Lambda aliases instead of $LATEST. Use alias routing to shift traffic gradually when deploying new trigger versions. Maintain separate aliases for production and testing environments.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html"
+              }
+            },
+            {
+              "id": "CGNOPS5_2",
+              "title": "Monitor Lambda trigger performance",
+              "helpfulResource": {
+                "displayText": "Track execution time, errors, and throttling to identify issues.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create CloudWatch dashboards for Lambda metrics. Set alarms for errors and duration. Monitor cold starts.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics.html"
+              }
+            },
+            {
+              "id": "CGNOPS5_3",
+              "title": "Implement Lambda trigger testing",
+              "helpfulResource": {
+                "displayText": "Test triggers in isolation and as part of authentication flows.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/testing-functions.html"
+              },
+              "improvementPlan": {
+                "displayText": "Write unit tests for Lambda code. Test with sample Cognito events. Implement integration tests.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/testing-functions.html"
+              }
+            },
+            {
+              "id": "CGNOPS5_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNOPS5_1 && CGNOPS5_2 && CGNOPS5_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNOPS5_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNOPS6",
+          "title": "How do you manage change and configuration drift?",
+          "description": "Preventing configuration drift ensures consistency and reduces operational issues.",
+          "choices": [
+            {
+              "id": "CGNOPS6_1",
+              "title": "Detect configuration drift",
+              "helpfulResource": {
+                "displayText": "Regularly compare actual configuration against IaC templates to identify drift.",
+                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use CloudFormation drift detection. Schedule regular drift checks. Alert on detected drift.",
+                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html"
+              }
+            },
+            {
+              "id": "CGNOPS6_2",
+              "title": "Prevent manual changes",
+              "helpfulResource": {
+                "displayText": "Manual console changes bypass version control, code review, and CI/CD validation, creating configuration drift that is difficult to detect and can cause outages.",
+                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use IAM policies or SCPs to restrict direct Cognito console modifications in production. Require all changes through IaC pipelines. Use CloudTrail to audit any manual changes that bypass the pipeline.",
+                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html"
+              }
+            },
+            {
+              "id": "CGNOPS6_3",
+              "title": "Document all changes",
+              "helpfulResource": {
+                "displayText": "Maintain change logs and link changes to tickets for traceability.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use git commit messages. Link to tickets. Maintain CHANGELOG. Review changes in retrospectives.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS6_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNOPS6_1 && CGNOPS6_2 && CGNOPS6_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNOPS6_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNOPS7",
+          "title": "How do you maintain operational documentation?",
+          "description": "Comprehensive documentation enables effective operations and knowledge transfer.",
+          "choices": [
+            {
+              "id": "CGNOPS7_1",
+              "title": "Maintain runbooks for common operations",
+              "helpfulResource": {
+                "displayText": "Document procedures for common tasks like user migration, troubleshooting, and recovery.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create runbooks for user operations, incident response, and maintenance. Keep documentation updated.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS7_2",
+              "title": "Document architecture and design decisions",
+              "helpfulResource": {
+                "displayText": "Maintain architecture diagrams and ADRs to explain system design.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create architecture diagrams. Document design decisions. Explain trade-offs and alternatives.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS7_3",
+              "title": "Keep documentation in version control",
+              "helpfulResource": {
+                "displayText": "Store documentation as code to track changes and enable collaboration.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use markdown in git. Review documentation in PRs. Automate documentation generation where possible.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS7_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNOPS7_1 && CGNOPS7_2 && CGNOPS7_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNOPS7_1 || CGNOPS7_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNOPS8",
+          "title": "How do you implement testing strategies?",
+          "description": "Comprehensive testing validates functionality and prevents regressions.",
+          "choices": [
+            {
+              "id": "CGNOPS8_1",
+              "title": "Implement unit and functional tests for authentication flows",
+              "helpfulResource": {
+                "displayText": "Test authentication flow logic including sign-up, sign-in, MFA, password reset, and token validation. If using Lambda triggers, test function logic in isolation with mock Cognito event payloads.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/testing-functions.html"
+              },
+              "improvementPlan": {
+                "displayText": "Write unit tests for custom authentication logic and Lambda triggers. Use Cognito event payload samples from docs to create realistic test fixtures. Test edge cases: expired tokens, invalid inputs, concurrent sign-ins.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/testing-functions.html"
+              }
+            },
+            {
+              "id": "CGNOPS8_2",
+              "title": "Perform integration testing",
+              "helpfulResource": {
+                "displayText": "Test complete authentication flows including Cognito and Lambda triggers.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Test sign-up, sign-in, and recovery flows. Validate token generation. Test federated authentication.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS8_3",
+              "title": "Conduct load and performance testing",
+              "helpfulResource": {
+                "displayText": "Validate system performance under expected and peak loads.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Test authentication at scale. Measure latency under load. Identify bottlenecks.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS8_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNOPS8_1 && CGNOPS8_2 && CGNOPS8_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNOPS8_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNOPS9",
+          "title": "How do you manage multiple environments?",
+          "description": "Separate environments enable safe testing and gradual rollout of changes.",
+          "choices": [
+            {
+              "id": "CGNOPS9_1",
+              "title": "Maintain separate User Pools per environment",
+              "helpfulResource": {
+                "displayText": "Use dedicated User Pools for dev, staging, and production to isolate changes.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-getting-started-step-through-settings.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create User Pools for each environment. Use naming conventions. Manage with IaC.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-getting-started-step-through-settings.html"
+              }
+            },
+            {
+              "id": "CGNOPS9_2",
+              "title": "Ensure environment parity",
+              "helpfulResource": {
+                "displayText": "Keep configurations consistent across environments to prevent environment-specific issues. Important: user pool immutable properties (sign-in attributes, username case sensitivity) must match production from creation - they cannot be changed later.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use same IaC templates. Parameterize environment-specific values. Test in production-like environments.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS9_3",
+              "title": "Implement environment promotion process",
+              "helpfulResource": {
+                "displayText": "Define clear process for promoting changes from dev to production.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Document promotion criteria. Require approvals. Automate promotion where possible.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS9_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNOPS9_1 && CGNOPS9_2 && CGNOPS9_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNOPS9_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNOPS10",
+          "title": "How do you handle Cognito service updates?",
+          "description": "AWS regularly updates Cognito with new features and deprecations. Staying current ensures security and access to new capabilities.",
+          "choices": [
+            {
+              "id": "CGNOPS10_1",
+              "title": "Monitor AWS announcements",
+              "helpfulResource": {
+                "displayText": "Stay informed about new features, deprecations, and security updates.",
+                "url": "https://aws.amazon.com/about-aws/whats-new/"
+              },
+              "improvementPlan": {
+                "displayText": "Subscribe to AWS What's New. Follow Cognito blog. Review release notes regularly.",
+                "url": "https://aws.amazon.com/about-aws/whats-new/"
+              }
+            },
+            {
+              "id": "CGNOPS10_2",
+              "title": "Plan for feature adoption",
+              "helpfulResource": {
+                "displayText": "Evaluate new features and plan adoption based on business value.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html"
+              },
+              "improvementPlan": {
+                "displayText": "Review new features quarterly. Assess applicability. Create adoption roadmap.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html"
+              }
+            },
+            {
+              "id": "CGNOPS10_3",
+              "title": "Migrate from deprecated features",
+              "helpfulResource": {
+                "displayText": "Managed Login is the recommended experience for new implementations, offering enhanced customization and features like passkey support that are not available in the classic hosted UI. Plan to adopt Managed Login for new user pools and evaluate migration for existing ones.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html"
+              },
+              "improvementPlan": {
+                "displayText": "Evaluate Managed Login for new user pools. For existing pools using the classic hosted UI, plan migration to Managed Login to access enhanced branding and authentication features. Test thoroughly before cutover, as some customization approaches differ between the two.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html"
+              }
+            },
+            {
+              "id": "CGNOPS10_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNOPS10_1 && CGNOPS10_2 && CGNOPS10_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNOPS10_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNOPS11",
+          "title": "How do you perform incident response and post-mortems?",
+          "description": "Authentication incidents (credential stuffing, Lambda trigger failures, misconfigured token TTLs) directly impact user access. Your team - not AWS - is responsible for detecting, responding to, and learning from incidents in your Cognito configuration and integration layer.",
+          "choices": [
+            {
+              "id": "CGNOPS11_1",
+              "title": "Define incident response procedures",
+              "helpfulResource": {
+                "displayText": "Document procedures for authentication-specific incidents. Examples: (1) Credential stuffing attack - who enables WAF block rules and reviews threat protection logs? (2) Lambda trigger failure causing all sign-ins to fail - who rolls back the trigger and communicates to users? (3) Accidental token TTL change to 1 minute - who detects the mass session drops and reverts the config?",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create runbooks for common Cognito incidents: credential stuffing response (WAF rules + threat protection review), Lambda trigger rollback (alias repoint), quota exhaustion (emergency increase request), and misconfiguration recovery (CloudFormation rollback with changeset review). Define on-call rotation and escalation paths.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS11_2",
+              "title": "Conduct blameless post-mortems",
+              "helpfulResource": {
+                "displayText": "Analyze incidents to identify root causes in your configuration and integration. Examples: (1) Sign-in failures spiked 10x - root cause was a pre-authentication Lambda deploying untested code to $LATEST. (2) Users locked out after MFA change - root cause was enabling mandatory MFA without migration plan for existing users. (3) 30% of sign-ups failing - root cause was SES sending quota exceeded in the region.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "After each incident, document: timeline, impact (users affected, duration), root cause, and what in your configuration or process allowed it to happen. Focus on systemic fixes, not individual blame.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS11_3",
+              "title": "Track and implement improvements",
+              "helpfulResource": {
+                "displayText": "Follow through on post-mortem action items to prevent recurrence. Examples: (1) After Lambda trigger incident → switch from $LATEST to alias with traffic shifting. (2) After quota exhaustion → add CloudWatch alarm at 80% of quota threshold. (3) After misconfiguration → add CloudFormation stack policy preventing user pool replacement.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Assign owners and deadlines to every post-mortem action item. Track completion in your project management tool. Review open items in operational reviews to ensure they don't stall.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNOPS11_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNOPS11_1 && CGNOPS11_2 && CGNOPS11_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNOPS11_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CGNPERF",
+      "name": "Performance Efficiency",
+      "questions": [
+        {
+          "id": "CGNPERF1",
+          "title": "How do you optimize region selection for latency?",
+          "description": "Choosing the right AWS region for your Cognito User Pool minimizes authentication latency for your users.",
+          "choices": [
+            {
+              "id": "CGNPERF1_1",
+              "title": "Deploy User Pools in regions closest to users",
+              "helpfulResource": {
+                "displayText": "Select regions based on user geographic distribution to minimize network latency.",
+                "url": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+              },
+              "improvementPlan": {
+                "displayText": "Analyze user locations. Deploy User Pools in regions with lowest latency to majority of users.",
+                "url": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+              }
+            },
+            {
+              "id": "CGNPERF1_2",
+              "title": "Monitor authentication latency metrics",
+              "helpfulResource": {
+                "displayText": "Track end-to-end authentication latency to identify performance bottlenecks.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-viewing-advanced-security-app.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement client-side monitoring to measure authentication flow duration. Use CloudWatch RUM for real user monitoring.",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM.html"
+              }
+            },
+            {
+              "id": "CGNPERF1_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNPERF1_1 && CGNPERF1_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNPERF1_1 || CGNPERF1_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNPERF2",
+          "title": "How do you manage token caching and lifecycle?",
+          "description": "Proper token management reduces authentication overhead and improves application performance while maintaining security.",
+          "choices": [
+            {
+              "id": "CGNPERF2_1",
+              "title": "Configure appropriate token expiration times",
+              "helpfulResource": {
+                "displayText": "Balance security and performance by setting token TTLs based on your security requirements and user experience goals.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Set access token expiration to 5-60 minutes. Use refresh tokens (valid up to 10 years) to obtain new access tokens without re-authentication.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              }
+            },
+            {
+              "id": "CGNPERF2_2",
+              "title": "Implement client-side token caching",
+              "helpfulResource": {
+                "displayText": "Cache tokens securely on the client to avoid unnecessary authentication requests.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-caching-tokens.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use secure storage mechanisms (Keychain, Keystore) for mobile apps. Use httpOnly cookies or secure storage for web apps.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-caching-tokens.html"
+              }
+            },
+            {
+              "id": "CGNPERF2_3",
+              "title": "Use refresh tokens efficiently",
+              "helpfulResource": {
+                "displayText": "Implement automatic token refresh before expiration to maintain seamless user experience.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement token refresh logic that triggers before access token expiration. Handle refresh token rotation securely.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              }
+            },
+            {
+              "id": "CGNPERF2_4",
+              "title": "Use API Gateway as a token caching proxy",
+              "helpfulResource": {
+                "displayText": "Use Amazon API Gateway to cache access tokens and reduce requests to Cognito token endpoints, especially for machine-to-machine (M2M) workloads.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-caching-tokens.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create a REST API in API Gateway that proxies token requests to Cognito. Enable API caching with the OAuth scopes and Authorization header as cache key. Route client token requests through the API Gateway endpoint instead of directly to Cognito.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-caching-tokens.html"
+              }
+            },
+            {
+              "id": "CGNPERF2_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNPERF2_1 && CGNPERF2_2 && CGNPERF2_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNPERF2_2 || CGNPERF2_3",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNPERF3",
+          "title": "How do you optimize Lambda trigger performance?",
+          "description": "Lambda triggers extend Cognito functionality but can add latency. Optimizing trigger performance ensures responsive authentication flows. If your workload does not use Lambda triggers, mark this question as not applicable in the Well-Architected Tool.",
+          "choices": [
+            {
+              "id": "CGNPERF3_1",
+              "title": "Minimize Lambda cold start impact",
+              "helpfulResource": {
+                "displayText": "Use provisioned concurrency or keep functions warm for frequently used triggers.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/provisioned-concurrency.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure provisioned concurrency for critical triggers. Use appropriate runtime (Node.js, Python) for faster cold starts.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/provisioned-concurrency.html"
+              }
+            },
+            {
+              "id": "CGNPERF3_2",
+              "title": "Optimize Lambda function code and dependencies",
+              "helpfulResource": {
+                "displayText": "Minimize function package size and execution time to reduce latency.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html"
+              },
+              "improvementPlan": {
+                "displayText": "Remove unused dependencies. Use Lambda layers for shared code. Optimize database connections with connection pooling.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html"
+              }
+            },
+            {
+              "id": "CGNPERF3_3",
+              "title": "Right-size Lambda memory allocation",
+              "helpfulResource": {
+                "displayText": "Allocate appropriate memory to balance cost and performance. More memory also provides more CPU.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/configuration-memory.html"
+              },
+              "improvementPlan": {
+                "displayText": "Test different memory configurations. Use Lambda Power Tuning tool to find optimal settings.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/operatorguide/profile-functions.html"
+              }
+            },
+            {
+              "id": "CGNPERF3_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNPERF3_1 && CGNPERF3_2 && CGNPERF3_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNPERF3_1 || CGNPERF3_2 || CGNPERF3_3",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNPERF4",
+          "title": "How do you design efficient custom authentication flows?",
+          "description": "Custom authentication flows add flexibility but can impact performance if not optimized.",
+          "choices": [
+            {
+              "id": "CGNPERF4_1",
+              "title": "Minimize authentication challenge steps",
+              "helpfulResource": {
+                "displayText": "Reduce the number of challenge-response cycles to decrease latency.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-challenge.html"
+              },
+              "improvementPlan": {
+                "displayText": "Design flows with minimal steps. Combine validations where possible. Cache challenge data.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-challenge.html"
+              }
+            },
+            {
+              "id": "CGNPERF4_2",
+              "title": "Optimize Lambda trigger execution time",
+              "helpfulResource": {
+                "displayText": "Fast Lambda execution reduces overall authentication latency.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html"
+              },
+              "improvementPlan": {
+                "displayText": "Optimize Lambda code. Use connection pooling. Minimize external API calls.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html"
+              }
+            },
+            {
+              "id": "CGNPERF4_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNPERF4_1 && CGNPERF4_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNPERF4_1 || CGNPERF4_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNPERF5",
+          "title": "How do you optimize API usage and large-scale operations?",
+          "description": "Efficient API usage reduces latency, avoids throttling, and improves application responsiveness for both routine and bulk operations. If your workload does not use Cognito API with AWS SDK, mark this question as not applicable in the Well-Architected Tool.",
+          "choices": [
+            {
+              "id": "CGNPERF5_1",
+              "title": "Use batch and bulk import operations",
+              "helpfulResource": {
+                "displayText": "Use bulk import for large-scale user creation and batch API calls to reduce round trips and improve throughput.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-using-import-tool.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use the CSV bulk import feature for user migrations. Group related API operations to minimize individual calls.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-using-import-tool.html"
+              }
+            },
+            {
+              "id": "CGNPERF5_2",
+              "title": "Implement rate limiting with exponential backoff",
+              "helpfulResource": {
+                "displayText": "Distribute operations over time and implement retry logic to avoid API throttling.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/quotas.html"
+              },
+              "improvementPlan": {
+                "displayText": "Implement exponential backoff with jitter for retries. Distribute bulk operations over time. Monitor API throttling metrics in CloudWatch.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/quotas.html"
+              }
+            },
+            {
+              "id": "CGNPERF5_3",
+              "title": "Use pagination efficiently",
+              "helpfulResource": {
+                "displayText": "Implement efficient pagination for list operations to avoid loading unnecessary data.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/how-to-manage-user-accounts.html#cognito-user-pools-searching-for-users-using-listusers-api"
+              },
+              "improvementPlan": {
+                "displayText": "Use appropriate page sizes. Implement cursor-based pagination. Cache results when appropriate.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/how-to-manage-user-accounts.html#cognito-user-pools-searching-for-users-using-listusers-api"
+              }
+            },
+            {
+              "id": "CGNPERF5_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNPERF5_1 && CGNPERF5_2 && CGNPERF5_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNPERF5_1 || CGNPERF5_2 || CGNPERF5_3",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNPERF6",
+          "title": "How do you monitor and benchmark authentication performance?",
+          "description": "Performance monitoring identifies bottlenecks and validates optimization efforts.",
+          "choices": [
+            {
+              "id": "CGNPERF6_1",
+              "title": "Track end-to-end authentication latency",
+              "helpfulResource": {
+                "displayText": "Measure complete authentication flows from user perspective.",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM.html"
+              },
+              "improvementPlan": {
+                "displayText": "Use CloudWatch RUM for real user monitoring. Track p50, p95, p99 latencies. Set performance budgets.",
+                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM.html"
+              }
+            },
+            {
+              "id": "CGNPERF6_2",
+              "title": "Establish performance baselines",
+              "helpfulResource": {
+                "displayText": "Define acceptable performance thresholds and monitor against them.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/performance-efficiency-pillar/design-principles.html"
+              },
+              "improvementPlan": {
+                "displayText": "Measure baseline performance. Set SLOs. Alert on degradation. Review regularly.",
+                "url": "https://docs.aws.amazon.com/wellarchitected/latest/performance-efficiency-pillar/design-principles.html"
+              }
+            },
+            {
+              "id": "CGNPERF6_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNPERF6_1 && CGNPERF6_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNPERF6_1 || CGNPERF6_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CGNCOST",
+      "name": "Cost Optimization",
+      "questions": [
+        {
+          "id": "CGNCOST1",
+          "title": "How do you monitor and forecast Cognito costs?",
+          "description": "Understanding Cognito's pricing dimensions - MAUs, feature plans, M2M token requests, and dependent service usage - helps avoid billing surprises.",
+          "choices": [
+            {
+              "id": "CGNCOST1_1",
+              "title": "Track MAU metrics and usage patterns",
+              "helpfulResource": {
+                "displayText": "Monitor active user counts and understand which operations trigger MAU billing. Review the Utilization metric in the Service Quotas console for API request rates.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/tracking-cost.html"
+              },
+              "improvementPlan": {
+                "displayText": "Monitor MAU counts in AWS Billing console. Understand which API operations activate users and contribute to MAU billing. Estimate MAU impact before high-volume events like product launches.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/tracking-cost.html"
+              }
+            },
+            {
+              "id": "CGNCOST1_2",
+              "title": "Implement cost allocation tags",
+              "helpfulResource": {
+                "displayText": "Tag Cognito resources to track costs by application, environment, or team using AWS Cost Explorer.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-cost-allocation-tagging.html"
+              },
+              "improvementPlan": {
+                "displayText": "Apply consistent tags to User Pools and related resources. Use Cost Explorer with tags to analyze spending patterns and allocate costs to appropriate teams.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-cost-allocation-tagging.html"
+              }
+            },
+            {
+              "id": "CGNCOST1_3",
+              "title": "Monitor API quota utilization to anticipate additional capacity costs",
+              "helpfulResource": {
+                "displayText": "Track API request rate utilization in the Service Quotas console. Purchased quota capacity above default limits incurs additional costs.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/tracking-quotas-and-usage-in-cloud-watch-and-service-quotas.html"
+              },
+              "improvementPlan": {
+                "displayText": "Review quota utilization metrics in the Service Quotas console and CloudWatch. Set alarms on throttle count metrics to detect when you are approaching limits. Evaluate whether application optimization can reduce request volume before purchasing additional quota capacity.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/tracking-quotas-and-usage-in-cloud-watch-and-service-quotas.html"
+              }
+            },
+            {
+              "id": "CGNCOST1_4",
+              "title": "Avoid activating inactive users unintentionally",
+              "helpfulResource": {
+                "displayText": "Use ListUsers instead of AdminGetUser to query user attributes. AdminGetUser marks a user as active and contributes to MAU billing, while ListUsers does not.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/tracking-cost.html"
+              },
+              "improvementPlan": {
+                "displayText": "Audit your application code for AdminGetUser calls and replace with ListUsers where possible. Avoid performing high-volume administrative operations that activate inactive users.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/tracking-cost.html"
+              }
+            },
+            {
+              "id": "CGNCOST1_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNCOST1_1 && CGNCOST1_2 && CGNCOST1_3 && CGNCOST1_4",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNCOST1_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNCOST2",
+          "title": "How do you choose the right feature plan?",
+          "description": "Amazon Cognito offers three pricing tiers - Lite, Essentials, and Plus - each with different per-MAU costs and capabilities. Choosing the appropriate plan per user pool directly impacts cost.",
+          "choices": [
+            {
+              "id": "CGNCOST2_1",
+              "title": "Evaluate feature plan requirements per user pool",
+              "helpfulResource": {
+                "displayText": "Different user pools can use different feature plans. Assess whether each user pool needs Plus (threat protection), Essentials (passwordless, managed login), or Lite (basic auth).",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-sign-in-feature-plans.html"
+              },
+              "improvementPlan": {
+                "displayText": "Inventory all user pools and their required features. Map each pool to the lowest-cost plan that meets its requirements. Use Lite for basic use cases, Essentials for modern auth features, and Plus only when threat protection is needed.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-sign-in-feature-plans.html"
+              }
+            },
+            {
+              "id": "CGNCOST2_2",
+              "title": "Separate user pools by security tier when cost-effective",
+              "helpfulResource": {
+                "displayText": "Since feature plans apply at the user pool level, separating users with different security needs into different pools can reduce costs.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-sign-in-feature-plans.html"
+              },
+              "improvementPlan": {
+                "displayText": "Identify user populations with different security requirements. Consider using separate user pools with different feature plans rather than applying Plus tier to all users. Evaluate the operational overhead of managing multiple pools against cost savings.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-sign-in-feature-plans.html"
+              }
+            },
+            {
+              "id": "CGNCOST2_3",
+              "title": "Review feature plan periodically as requirements change",
+              "helpfulResource": {
+                "displayText": "Feature plans can be switched at any time. Regularly review whether the current plan still matches your needs and budget.",
+                "url": "https://aws.amazon.com/cognito/pricing/"
+              },
+              "improvementPlan": {
+                "displayText": "Schedule periodic reviews of feature plan usage. Check if Plus-tier threat protection features are actively used and providing value. Downgrade pools that no longer need advanced features.",
+                "url": "https://aws.amazon.com/cognito/pricing/"
+              }
+            },
+            {
+              "id": "CGNCOST2_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNCOST2_1 && CGNCOST2_2 && CGNCOST2_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNCOST2_1",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNCOST3",
+          "title": "How do you optimize SMS and email delivery costs?",
+          "description": "SMS and email messages for MFA, verification, and password recovery are billed through Amazon SNS and Amazon SES respectively. These costs can be significant for high-volume applications.",
+          "choices": [
+            {
+              "id": "CGNCOST3_1",
+              "title": "Use Amazon SES for email delivery",
+              "helpfulResource": {
+                "displayText": "Amazon SES is more cost-effective than the default Cognito email sender for high-volume applications and provides higher sending limits.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-email.html"
+              },
+              "improvementPlan": {
+                "displayText": "Configure Amazon SES as the email sender for your user pool. This provides higher daily sending limits and lower per-message costs compared to the default Cognito email.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-email.html"
+              }
+            },
+            {
+              "id": "CGNCOST3_2",
+              "title": "Minimize SMS usage where possible",
+              "helpfulResource": {
+                "displayText": "SMS costs vary by destination country and can be significant. Use email-based or app-based MFA as lower-cost alternatives.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-mfa-sms-text-message.html"
+              },
+              "improvementPlan": {
+                "displayText": "Prefer TOTP authenticator apps or email OTP over SMS for MFA. Reserve SMS for users who cannot use other methods. Monitor SMS spending through Amazon SNS.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-mfa-sms-text-message.html"
+              }
+            },
+            {
+              "id": "CGNCOST3_3",
+              "title": "Use custom sender Lambda triggers for cost optimization",
+              "helpfulResource": {
+                "displayText": "Custom sender Lambda triggers allow routing messages through alternative providers that may be more cost-effective for your use case.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-custom-sender-triggers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Evaluate whether third-party SMS or email providers offer better rates for your message volume and destination countries. Implement custom sender Lambda triggers to route through these providers.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-custom-sender-triggers.html"
+              }
+            },
+            {
+              "id": "CGNCOST3_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNCOST3_1 && CGNCOST3_2 && CGNCOST3_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNCOST3_1 || CGNCOST3_2 || CGNCOST3_3",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNCOST4",
+          "title": "How do you optimize Lambda trigger costs?",
+          "description": "Lambda trigger costs are based on invocations and execution time. Optimization reduces costs without sacrificing functionality. If your workload does not use Lambda triggers, mark this question as not applicable in the Well-Architected Tool.",
+          "choices": [
+            {
+              "id": "CGNCOST4_1",
+              "title": "Optimize Lambda execution time",
+              "helpfulResource": {
+                "displayText": "Reduce execution duration to lower compute costs. Minimize external API calls and optimize code paths.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html"
+              },
+              "improvementPlan": {
+                "displayText": "Profile Lambda trigger execution. Remove unnecessary dependencies and optimize code. Use connection pooling for database access.",
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html"
+              }
+            },
+            {
+              "id": "CGNCOST4_2",
+              "title": "Reduce unnecessary Lambda invocations",
+              "helpfulResource": {
+                "displayText": "Design authentication flows to minimize the number of Lambda trigger invocations per user action.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-working-with-lambda-triggers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Review which triggers are assigned and whether all are necessary. Implement early returns in Lambda functions when no action is needed. Consider consolidating logic across triggers where possible.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-working-with-lambda-triggers.html"
+              }
+            },
+            {
+              "id": "CGNCOST4_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNCOST4_1 && CGNCOST4_2",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNCOST4_1 || CGNCOST4_2",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNCOST5",
+          "title": "How do you optimize M2M authorization costs?",
+          "description": "Machine-to-machine (M2M) authorization using client credentials grants is billed based on token request volume. Optimizing token handling directly reduces costs. If your workload does not use M2M authorization, mark this question as not applicable in the Well-Architected Tool.",
+          "choices": [
+            {
+              "id": "CGNCOST5_1",
+              "title": "Cache M2M access tokens with API Gateway",
+              "helpfulResource": {
+                "displayText": "Use Amazon API Gateway as a caching proxy for M2M token requests to reduce the number of requests to Cognito token endpoints.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-caching-tokens.html"
+              },
+              "improvementPlan": {
+                "displayText": "Create a REST API in API Gateway that proxies token requests to Cognito. Enable API caching with OAuth scopes and Authorization header as cache key. Route M2M token requests through the API Gateway endpoint.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-caching-tokens.html"
+              }
+            },
+            {
+              "id": "CGNCOST5_2",
+              "title": "Configure appropriate token expiration for M2M clients",
+              "helpfulResource": {
+                "displayText": "Longer access token lifetimes reduce the frequency of token requests. Balance token duration with your security requirements.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              },
+              "improvementPlan": {
+                "displayText": "Evaluate the security needs of each M2M app client and set access token expiration accordingly. Longer-lived tokens work well for trusted, long-running services. Refresh tokens at approximately 75% of the token lifetime.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html"
+              }
+            },
+            {
+              "id": "CGNCOST5_3",
+              "title": "Monitor M2M token request volume",
+              "helpfulResource": {
+                "displayText": "Track client credentials grant requests to identify high-volume app clients and optimization opportunities.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/tracking-cost.html"
+              },
+              "improvementPlan": {
+                "displayText": "Send CloudTrail events to CloudWatch Logs and query for Token_POST events with client_credentials grant type. Identify app clients with excessive token requests. Use Service Quotas console to monitor utilization.",
+                "url": "https://docs.aws.amazon.com/cognito/latest/developerguide/tracking-cost.html"
+              }
+            },
+            {
+              "id": "CGNCOST5_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNCOST5_1 && CGNCOST5_2 && CGNCOST5_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNCOST5_3",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        },
+        {
+          "id": "CGNCOST6",
+          "title": "How do you leverage free tier and understand pricing dimensions?",
+          "description": "Understanding Cognito's free tier limits and pricing dimensions across User Pools and Identity Pools helps avoid unexpected costs and optimize spending.",
+          "choices": [
+            {
+              "id": "CGNCOST6_1",
+              "title": "Understand and leverage the free tier",
+              "helpfulResource": {
+                "displayText": "Cognito Essentials and Lite offer a perpetual free tier: 10,000 MAUs for direct/social sign-in and 50 MAUs for SAML/OIDC federation per account. The Plus tier has no free tier. The free tier does not expire after the 12-month AWS Free Tier period. Identity Pools usage (authenticating users and generating unique identifiers) is always free.",
+                "url": "https://aws.amazon.com/cognito/pricing/"
+              },
+              "improvementPlan": {
+                "displayText": "Verify your user pools are on Essentials or Lite to benefit from the free tier. For development and testing environments with low user counts, the free tier may cover all costs. Monitor MAU counts to stay within free tier limits where possible.",
+                "url": "https://aws.amazon.com/cognito/pricing/"
+              }
+            },
+            {
+              "id": "CGNCOST6_2",
+              "title": "Account for SAML/OIDC federation pricing differences",
+              "helpfulResource": {
+                "displayText": "Users who sign in through SAML 2.0 or OIDC identity providers have a separate free tier (50 MAUs vs 10,000 for direct sign-in) and may have different per-MAU pricing. Plan federation costs separately from direct authentication costs.",
+                "url": "https://aws.amazon.com/cognito/pricing/"
+              },
+              "improvementPlan": {
+                "displayText": "Separate your MAU forecasts by authentication method: direct/social vs SAML/OIDC federation. The 50 MAU free tier for federated users is significantly lower than the 10,000 MAU free tier for direct sign-in. Factor this into cost projections for enterprise federation use cases.",
+                "url": "https://aws.amazon.com/cognito/pricing/"
+              }
+            },
+            {
+              "id": "CGNCOST6_3",
+              "title": "Understand Identity Pool pricing model",
+              "helpfulResource": {
+                "displayText": "Amazon Cognito Identity Pools usage for authenticating users and generating unique identifiers is provided at no additional charge. Costs are incurred at the User Pool level (MAU-based) and through downstream AWS services accessed via Identity Pool credentials (e.g., S3, DynamoDB).",
+                "url": "https://aws.amazon.com/cognito/pricing/"
+              },
+              "improvementPlan": {
+                "displayText": "When estimating Cognito costs, focus on User Pool MAU pricing and downstream service usage. Identity Pool credential vending itself is free. Monitor the AWS services accessed through Identity Pool credentials, as those services have their own pricing.",
+                "url": "https://aws.amazon.com/cognito/pricing/"
+              }
+            },
+            {
+              "id": "CGNCOST6_no",
+              "title": "None of these",
+              "helpfulResource": {
+                "displayText": "Choose this if your workload does not follow these best practices."
+              }
+            }
+          ],
+          "riskRules": [
+            {
+              "condition": "CGNCOST6_1 && CGNCOST6_2 && CGNCOST6_3",
+              "risk": "NO_RISK"
+            },
+            {
+              "condition": "CGNCOST6_1 || CGNCOST6_2 || CGNCOST6_3",
+              "risk": "MEDIUM_RISK"
+            },
+            {
+              "condition": "default",
+              "risk": "HIGH_RISK"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
