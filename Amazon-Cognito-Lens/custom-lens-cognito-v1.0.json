@@ -1,6 +1,6 @@
 {
   "schemaVersion": "2021-11-01",
-  "name": "Amazon Cognito Best Practice Lens v1.1",
+  "name": "Amazon Cognito Best Practice Lens v1.0",
   "description": "Best practices for designing, securing, and operating Amazon Cognito User Pools and Identity Pools across all five Well-Architected pillars.",
   "pillars": [
     {
