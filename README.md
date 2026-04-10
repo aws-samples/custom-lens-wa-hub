@@ -48,6 +48,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [Apache Iceberg on Amazon S3](/Iceberg-S3-Lens)
 * [Managed Streaming for Apache Kafka](/Amazon-MSK-Lens)
 * [Personalize](/Personalize)
+* [Cognito](/Amazon-Cognito-Lens)
 
 ### Custom Lens for AWS Solutions
 * [Streaming Media Lens](/Streaming-Media-Lens/)
