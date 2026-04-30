@@ -56,6 +56,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [Intelligent Document Processing Lens](/IDP-custom-lens/)
 * [AWS Passport Lens](/AWS-Passport/)
 * [SaaS Business Lens](/SaaS-Business-Lens)
+* [SaaS Anywhere Lens](/SaaS-Anywhere-Lens)
 * [Microsoft on AWS Lens](/MSFT-Lens)
 
 ## :bookmark: Whitepaper
