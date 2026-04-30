@@ -1,0 +1,1114 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "SaaS Anywhere Custom Lens",
+    "description": "Best practices for managing your managed or SaaS solution in remote environment",
+    "pillars": [
+        {
+            "id": "operationalExcellence",
+            "name": "Opeational Excellence",
+            "questions": [
+                {
+                    "id": "OPS1",
+                    "title": "How are the remote components managed?",
+                    "description": "In a typical SaaS scenario, SaaS provider has the full control of the environment.  However, in SaaS Anywhere, the remote account is owned by other parties. We suggest the remote accounts should be dedicated to the SaaS workloads in order to have separate billing and governance rules for the SaaS provider solution. ",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "OPS1_1",
+                            "title": "Manage remote accounts through a separate and dedicated account management service e.g. AWS Organizations.",
+                            "helpfulResource": {
+                                "displayText": "Having the remote accounts separately managed and isolated in the remote client's organisation can keep the billing, control and governance independent.  Applying organisation management feature to manage multiple remote accounts is helpful to centrally control and apply guardrails standard across all remote accounts.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/multiple-organizations.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Manage the remote account in a separate account management service so that you can have a separate proper set of governance and control rules for the SaaS solution.  The billing of the SaaS solution will be also consolidated separately.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/multiple-organizations.html"
+                            }
+                        },
+                        {
+                            "id": "OPS1_2",
+                            "title": "Dedicate remote accounts for the SaaS solution",
+                            "helpfulResource": {
+                                "displayText": "The remote accounts should be dedicated to the SaaS solution.  If mixing with other workloads which are not managed by the SaaS provider, it is a challenge to SaaS provider to ensure the separation of security, availability, reliability and billing of the SaaS solution.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-tenant-isolation-strategies/implementing-silo-isolation.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Move the tenant to a silo tenant in accounts which SaaS provider has full control whenever possible. Try to understand the requirements of the SaaS consumers and discuss the solution in the provider's managed accounts. It will reduce a lot of complexity and support challenges.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-tenant-isolation-strategies/implementing-silo-isolation.html"
+                            }
+                        },
+                        {
+                            "id": "OPS1_3",
+                            "title": "Define a clear service SLA of the remote components with different account conditions.",
+                            "helpfulResource": {
+                                "displayText": "The remote accounts should be dedicated to the SaaS solution.  If mixing with other workloads which are not managed by the SaaS provider, it is a challenge to SaaS provider to ensure the separation of security, availability, reliability and billing of the SaaS solution.",
+                                "url": "https://aws.amazon.com/blogs/apn/importance-of-service-level-agreement-for-saas-providers/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define a different SLA of the remote components to cater the account environmental differences.",
+                                "url": "https://aws.amazon.com/blogs/apn/importance-of-service-level-agreement-for-saas-providers/"
+                            }
+                        },
+                        {
+                            "id": "OPS1_no",
+                            "title": "None of these",
+                            "helpfulResource": {
+                                "displayText": "Applying organisation management feature to manage multiple remote accounts is helpful to centrally control and apply guardrails standard across all remote accounts."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS1_1 && OPS1_2 && OPS1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS1_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                
+                {
+                    "id": "OPS2",
+                    "title": "How do your team and client's team detect and respond to incident in the remote account?",
+                    "description": "Both SaaS provider and the remote account owner should collaborate and share the responsibility of the remote account.  SaaS provider should provide a clear RACI matrix on incident response and well communicate with the remote account owner. ",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "OPS2_1",
+                            "title": "Define a clear RACI matrix for cloud operations in remote accounts",
+                            "helpfulResource": {
+                                "displayText": "RACI stands for Responsible, Accountable, Consulted, and Informed. RACI matrix plays an important element in cloud operating model, especially in the self-hosted solution in your client's preferred environment.",
+                                "url": "https://builder.aws.com/content/31VefASWb7CXdTHUpNB43K8cW5Z/saas-anywhere-when-traditional-saas-deployment-models-hit-their-limits"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define a clear RACI matrix of cloud operations with the SaaS consumers",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/create-a-raci-or-rasci-matrix-for-a-cloud-operating-model.html#create-a-raci-or-rasci-matrix-for-a-cloud-operating-model-summary"
+                            }
+                        },
+                        {
+                            "id": "OPS2_2",
+                            "title": "Establish agreements with SaaS consumer on engaging and getting support from the cloud service provider.",
+                            "helpfulResource": {
+                                "displayText": "Clearly define the engagement model with the cloud service provider, e.g. raising support case, receiving root cause analysis (RCA) report, and make sure the required agreement with your client is in-place, so that your organization will be able to provide a holistic and complete root cause analysis to your client."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define a process with SaaS consumers of integration of cloud service provider's RCA and SaaS solution RCA"
+                            }
+                        },
+                        {
+                            "id": "OPS2_3",
+                            "title": "Able to create a representative environment for issue replication",
+                            "helpfulResource": {
+                                "displayText": "When troubleshooting issue in the remote account, mean time to resolve can be reduced if you are able to create a representative environment for issue replication due to the limited access to the remote accounts."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Build a representative remote account production like staging environment.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/choosing-git-branch-approach/staging-environment.html"
+                            }
+                        },
+                        {
+                            "id": "OPS2_4",
+                            "title": "Integrate cloud service provider support case management with preferred collaboration channels, e.g. email or instant messaging",
+                            "helpfulResource": {
+                                "displayText": "Integrate support management with a preferred channels like Slack or Microsoft Teams can help collaboration on the support case."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Integrate support management with a preferred channel for troubleshooting collaboration with remote account owner.",
+                                "url": "https://repost.aws/articles/AR6xb6Am-xRmehDWfuYHYwWA/getting-started-with-aws-support-app-in-slack-10-questions-and-answers"
+                            }
+                        },
+                        {
+                            "id": "OPS2_no",
+                            "title": "None of these",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS2_1 && OPS2_2 && OPS2_3 && OPS2_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS2_1) || (!OPS2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS3",
+                    "title": "How do you monitor infrastructure and healthiness of the remote application or data plane in the remote accounts?",
+                    "description": "It is important to have health status and observability data feeding back to control plane which is sited in SaaS provider controlled accounts, so that SaaS provider can respond in time if there is any health event in the remote account.",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "OPS3_1",
+                            "title": "Collect observability data from remote plane to a central control plane.",
+                            "helpfulResource": {
+                                "displayText": "It is important to have a full understanding of the healthiness and business metrics of the remote components in order to provide SaaS solution service commitments and help making business decision."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement an observability framework feeding the observability data to control plane.",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Unified-Cross-Account.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_2",
+                            "title": "Feed health events to the SaaS provider's control plane.",
+                            "helpfulResource": {
+                                "displayText": "SaaS provider should be fully aware of the health events in the remote environment, so that they can proactively respond to the events properly. For example, if there is any operational event from cloud service provider, SaaS provider is notified and takes actions on time."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement a framework feeding health events to control plane.",
+                                "url": "https://docs.aws.amazon.com/health/latest/ug/cloudwatch-events-health.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_3",
+                            "title": "Deploy a quota monitoring solution in remote accounts to notify SaaS providers when usage reaches defined thresholds.",
+                            "helpfulResource": {
+                                "displayText": "Service quotas utilization should be sent to a SaaS provider controlled account in order to proactively take appropriate actions when service quotas reach threshold."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Monitor required service quotas and alert SaaS provider when reaching the threshold.",
+                                "url": "https://docs.aws.amazon.com/servicequotas/latest/userguide/automatic-management.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_4",
+                            "title": "Set alternative operational contact in the remote accounts to loop in SaaS provider.",
+                            "helpfulResource": {
+                                "displayText": "SaaS provider should be notified for any health and operational notifications from the cloud service provider in order to take action in time."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Properly configure alternative contacts for the remote account",
+                                "url": "https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact-alternate.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_no",
+                            "title": "None of these",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS3_1 && OPS3_2 && OPS3_3 && OPS3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS3_1) || (!OPS3_2) || (!OPS3_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS4",
+                    "title": "How do you manage onboarding in consumer account?",
+                    "description": "This can be challenging when onboarding a customer where application plane or data plane need to deploy remotely because the account ownership is not under SaaS provider control. The account may mix with other workloads which is not required by SaaS solution, which will impact the security, reliability and performance of the SaaS solution.",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere: When Traditional SaaS Deployment Models Hit Their Limits",
+                        "url": "https://builder.aws.com/content/31VefASWb7CXdTHUpNB43K8cW5Z/saas-anywhere-when-traditional-saas-deployment-models-hit-their-limits"
+                    },
+                    "choices": [
+                        {
+                            "id": "OPS4_1",
+                            "title": "Fully automate account validation procedure and onboarding",
+                            "helpfulResource": {
+                                "displayText": "SaaS provider has a mechanism to automatically validate the remote account is clean and no unexpected configurations which will impact the SaaS solution security , reliability and performance.",
+                                "url": "https://builder.aws.com/content/31VefASWb7CXdTHUpNB43K8cW5Z/saas-anywhere-when-traditional-saas-deployment-models-hit-their-limits"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Automate the account validation and the onboarding process.",
+                                "url": "https://aws.amazon.com/blogs/containers/saas-deployment-architectures-with-amazon-eks/"
+                            }
+                        },
+                        {
+                            "id": "OPS4_2",
+                            "title": "Define a clear account and permission pre-requisite",
+                            "helpfulResource": {
+                                "displayText": "A clear account and permission pre-requisite can reduce onboarding friction in the remote account.  After fulfilling the pre-requisites, the onboarding process should be fully automated.",
+                                "url": "https://builder.aws.com/content/31VefASWb7CXdTHUpNB43K8cW5Z/saas-anywhere-when-traditional-saas-deployment-models-hit-their-limits"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Build a clear account and permission pre-requisite",
+                                "url": "https://aws.amazon.com/blogs/containers/saas-deployment-architectures-with-amazon-eks/"
+                            }
+                        },
+                        {
+                            "id": "OPS4_no",
+                            "title": "None of these",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS4_1 && OPS4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS4_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS5",
+                    "title": "How do you perform daily operational activities in the remote account?",
+                    "description": "Daily operational activities include solution upgrades, patching, receiving operational notification from the cloud service provider, raising support cases when needed.",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "OPS5_1",
+                            "title": "Able to access of remote accounts to create support cases and track their status",
+                            "helpfulResource": {
+                                "displayText": "A support permission of remote account is important for SaaS provider to get support from cloud service provider. Otherwise, SaaS providers will require SaaS consumers to help raising support case to the cloud service provider."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create a role for daily support case management in remote account.",
+                                "url": "https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact-alternate.html"
+                            }
+                        },
+                        
+                        {
+                            "id": "OPS5_2",
+                            "title": "Subscribe remote accounts to support tiers matching or exceeding the SaaS provider's required level.",
+                            "helpfulResource": {
+                                "displayText": "If remote accounts are subscribed to lower support tier, the support case response time and capabilities will be different. It is important to highlight the implications to SaaS consumers if lower tier subscription is required."
+                            },
+                            "improvementPlan": {
+                                "displayText": "To provide the best support experience for your SaaS service, you should require your customer to have at least the same Cloud Service Provider support level of SaaS provider."
+                            }
+                        },
+                        {
+                            "id": "OPS5_3",
+                            "title": "Agree maintenance windows with SaaS consumers to address the dependent services and SaaS solution maintenance schedules.",
+                            "helpfulResource": {
+                                "displayText": "A maintenance window is important for operational activities e.g. service version upgrade, security patch. SaaS provider should communicate with SaaS consumers to agree a proper maintenance window in order to keep remote accounts at the best state."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consent with SaaS consumer with the suitable maintenance window for regular updates in order to provide the latest security patches and features."
+                            }
+                        },
+                        {
+                            "id": "OPS5_no",
+                            "title": "None of these",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS5_1 && OPS5_2 && OPS5_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS5_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "Security",
+            "name": "Security",
+            "questions": [
+                {
+                    "id": "SEC1",
+                    "title": "How do you manage the security responsibility in the remote account?",
+                    "description": "The SaaS provider and consumer should have a well defined security shared responsibility model aligned.  As the remote accounts are owned by the SaaS consumer in most of the cases, SaaS consumer should take care of the account level security , whereas SaaS provider should take care of the workload level security.There should be governance and control rules in place to govern the boundary of both SaaS provider and consumer to avoid unexpected change from either side.",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "SEC1_1",
+                            "title": "Define clear security responsibilities between SaaS providers and consumers.",
+                            "helpfulResource": {
+                                "displayText": "A clear shared responsibliity model should be clealy defined how SaaS provider and consumer collaborate the security responsibilty in the remote accounts. For example, SaaS consumer is responsible for account level security if they own the accounts; SaaS provider is responsible for the workload security. ",
+                                "url": "https://aws.amazon.com/compliance/shared-responsibility-model/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define clear roles and responsibilities for both parties during security incidents to ensure coordinated and effective responses"
+                            }
+                        },
+                        {
+                            "id": "SEC1_2",
+                            "title": "Configure security contacts in remote accounts to notify both SaaS providers and consumers of security communications.",
+                            "helpfulResource": {
+                                "displayText": "When a security communication is required from the cloud service provider, both SaaS provider and consumer should receive the communication for collaboration.",
+                                "url": "https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact-alternate.html#manage-acct-update-contact-alternate-edit"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Assign security contact using Infrastructure as Code",
+                                "url": "https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact-alternate.html#manage-acct-update-contact-alternate-orgs"
+                            }
+                        },
+                        {
+                            "id": "SEC1_3",
+                            "title": "Configure governance and control rules in remote accounts",
+                            "helpfulResource": {
+                                "displayText": "A proper set of governance and control rules should be configured in the remote accounts to ensure security boundary matching both SaaS provider and consumer expectation",
+                                "url": "https://cloudsecurityalliance.org/artifacts/ccm-video-series-grc-governance-risk-management-and-compliance"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define and configure governance and control rules to guardrail all parties activities.",
+                                "url": "https://cloudsecurityalliance.org/artifacts/ccm-video-series-grc-governance-risk-management-and-compliance"
+                            }
+                        },
+                        {
+                            "id": "SEC1_no",
+                            "title": "None of the above",
+                            "helpfulResource": {
+                                "displayText": "NONE"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC1_1 && SEC1_2 && SEC1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC1_1) || (!SEC1_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC2",
+                    "title": "How do you secure the data in the remote accounts?",
+                    "description": "The data in the remote accounts could be confidential data of SaaS consumer. SaaS provider should not be able to access those data. In this case, the data should be encrypted by a SaaS consumer managed key so that SaaS provider has no way to decrypt the data. Same for the data provided by SaaS provider.",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "SEC2_1",
+                            "title": "Encrypt SaaS consumer data using consumer-managed encryption keys from SaaS consumer",
+                            "helpfulResource": {
+                                "displayText": "Confidential SaaS consumer data stored in remote accounts should be protected using consumer-managed encryption keys. This approach ensures that even the SaaS provider cannot decrypt the consumer's sensitive information.",
+                                "url": "https://aws.amazon.com/blogs/industries/recommended-patterns-for-onboarding-saas-applications-part-1/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement encyption to protect SaaS consumer data by their own keys",
+                                "url": "https://aws.amazon.com/blogs/industries/recommended-patterns-for-onboarding-saas-applications-part-1/"
+                            }
+                        },
+                        {
+                            "id": "SEC2_2",
+                            "title": "Encrypt SaaS provider data using consumer-manager encryption keys from SaaS provider",
+                            "helpfulResource": {
+                                "displayText": "Sensitive SaaS provider data housed in remote accounts should be secured using provider-managed encryption keys. This strategy prevents even the SaaS consumer from decrypting the provider's confidential information.",
+                                "url": "https://aws.amazon.com/blogs/industries/recommended-patterns-for-onboarding-saas-applications-part-1/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement encyption to protect SaaS provider data by provider's managed keys",
+                                "url": "https://aws.amazon.com/blogs/industries/recommended-patterns-for-onboarding-saas-applications-part-1/"
+                            }
+                        },
+                        {
+                            "id": "SEC2_no",
+                            "title": "None of the above",
+                            "helpfulResource": {
+                                "displayText": "NONE"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC2_1 && SEC2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC2_1) || (!SEC2_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC3",
+                    "title": "How do you respond to and investigate security incidents in remote accounts?",
+                    "description": "When there is a security incident in the remote accounts, both SaaS provider and consumer should collaborate to respond and investigate the incidents so that they can take appropriate action in the earliest time. The model should be aligned with both provider and consumer to ensure they have the required permissions and logs for investigation during the event.",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "SEC3_1",
+                            "title": "Grant SaaS providers permission to investigate security trail logs in consumer-owned remote accounts.",
+                            "helpfulResource": {
+                                "displayText": "When the remote accounts are owned by SaaS consumer, SaaS consumer should grant SaaS provider permission to access the security trail logs for any investigation.",
+                                "url": "https://docs.aws.amazon.com/security-ir/latest/userguide/security-incident-response-guide.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Consider automated compliance checks to verify logging configurations meet agreed-upon security monitoring requirements.",
+                                "url": "https://aws.amazon.com/blogs/aws/new-aws-security-incident-response-helps-organizations-respond-to-and-recover-from-security-events/"
+                            }
+                        },
+                        {
+                            "id": "SEC3_2",
+                            "title": "Create copies of security trail logs for SaaS provider investigations when direct access is not permitted",
+                            "helpfulResource": {
+                                "displayText": "When SaaS provider is not granted with security trail log access in the remote account directly, there should be a mechanism for SaaS provider to get a copy of security trail logs for investigation.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/patch-management-hybrid-cloud/welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Maintain an audit trail of all log access activities and regularly review access patterns to ensure alignment with security objectives.",
+                                "url": "https://aws.amazon.com/blogs/aws/new-aws-security-incident-response-helps-organizations-respond-to-and-recover-from-security-events/"
+                            }
+                        },
+                        {
+                            "id": "SEC3_3",
+                            "title": "Implement automated detection mechanisms in remote accounts",
+                            "helpfulResource": {
+                                "displayText": "Auto detection mechanism in place in the remote accounts can help to reduce mean time to detection of security events. SaaS provider and SaaS consumer should be both notified when any security event is detected.",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The detection system should include clear incident categorization, severity levels, and notification rules. Define notification thresholds to prevent alert fatigue while ensuring critical security events receive immediate attention.",
+                                "url": "https://aws.amazon.com/blogs/aws/new-aws-security-incident-response-helps-organizations-respond-to-and-recover-from-security-events/"
+                            }
+                        },
+                        {
+                            "id": "SEC3_4",
+                            "title": "Implement automated remediation mechanisms in remote accounts",
+                            "helpfulResource": {
+                                "displayText": "Auto remediation mechanism in place in the remote accounts can help to reduce mean time to resolve of security events so that the remote accounts resume to a secure state as soon as possible.",
+                                "url": "https://aws.amazon.com/solutions/implementations/aws-security-hub-automated-response-and-remediation/ "
+                            },
+                            "improvementPlan": {
+                                "displayText": "The automated remediation systems should include capabilities to automatically contain threats, revert unauthorized changes, and restore secure configurations. Configure remediation workflows with appropriate approvals and documentation requirements.",
+                                "url": "https://aws.amazon.com/blogs/mt/automate-vulnerability-management-and-remediation-in-aws-using-amazon-inspector-and-aws-systems-manager-part-1/"
+                            }
+                        },
+                        {
+                            "id": "SEC3_no",
+                            "title": "None of the above",
+                            "helpfulResource": {
+                                "displayText": "NONE"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC3_1 && SEC3_2 && SEC3_3 && SEC3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC3_1) && (!SEC3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC4",
+                    "title": "How do you secure cross-account communication and deployment between control and application / data planes?",
+                    "description": "When an application deployment or upgrade is required, how do they ensure the deployment are triggered by authorized source? In addition, is the remote environment retriscted any untrusted access to avoid unathorized deployment is done?",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "SEC4_1",
+                            "title": "Allow deployments only from authorized source accounts",
+                            "helpfulResource": {
+                                "displayText": "When a SaaS solution deployment is required, remote accounts should be restricted to only accept the deployment from a trusted source account to minimise attack surface.",
+                                "url": "https://aws.amazon.com/blogs/containers/saas-deployment-architectures-with-amazon-eks/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish policy to allow deployment from trusted provider sources.",
+                                "url": "https://aws.amazon.com/blogs/containers/saas-deployment-architectures-with-amazon-eks/"
+                            }
+                        },
+                        {
+                            "id": "SEC4_2",
+                            "title": "Use private connection for secure cross-plane communications",
+                            "helpfulResource": {
+                                "displayText": "Whenever possible, use a private connection like VPC endpoints or VPC peering for cross-plane communications instead of going through the internet.",
+                                "url": "https://aws.amazon.com/blogs/industries/recommended-patterns-for-onboarding-saas-applications-part-1/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish secure private connection for cross-plane communications",
+                                "url": "https://aws.amazon.com/blogs/industries/recommended-patterns-for-onboarding-saas-applications-part-1/"
+                            }
+                        },
+                        {
+                            "id": "SEC4_no",
+                            "title": "None of the above",
+                            "helpfulResource": {
+                                "displayText": "NONE"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC4_1 && SEC4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC4_1) || (!SEC4_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC5",
+                    "title": "How do your organization gain access to the remote accounts?",
+                    "description": "Under SaaS Anywhere scenario, SaaS provider should be granted sufficient permission boundary to performa operational activities in remote accounts like deployment, health checking, troubleshooting. We suggest SaaS provider defines a clear permission boundary, so that remote account owner can delegate the identity management to SaaS provider with permission boundary.  ",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "SEC5_1",
+                            "title": "Create sufficient permission boundary of the remote account to your organization to perform operational activities.",
+                            "helpfulResource": {
+                                "displayText": "SaaS providers require enough permission of the remote account in order to provide daily operational activities, e.g. application deployment and maintenance, service version upgrade",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#bp-permissions-boundaries"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement permission boundary in the remote account and delegate the permission management to SaaS provider",
+                                "url": "https://aws.amazon.com/blogs/security/delegate-permission-management-to-developers-using-iam-permissions-boundaries/"
+                            }
+                        },
+                        {
+                            "id": "SEC5_2",
+                            "title": "Implement break glass access when performing critical activities in remote accounts.",
+                            "helpfulResource": {
+                                "displayText": "Break-glass access is important to governance critical activities performed in the remote account.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/devops-guidance/ag.sad.5-implement-break-glass-procedures.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement break-glass procedure in the remote accounts",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/devops-guidance/ag.sad.5-implement-break-glass-procedures.html"
+                            }
+                        },
+                        {
+                            "id": "SEC5_no",
+                            "title": "None of these",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC5_1 && SEC5_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC5_1) || (!SEC5_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "Reliability",
+            "name": "Realiability",
+            "questions": [
+                {
+                    "id": "REL1",
+                    "title": "How do you handle recovery of control plane without impacting application / data planes?",
+                    "description": "a DR plan should be in place to align with RPO and RTO requirements in case of service outage event, also the SaaS provider should have a regular DR testing in the remote environment to make sure the DR plan works properly in the remote environment.",
+                    "helpfulResource": {
+                        "displayText": "Quantify the impact of disruption of remote workload",
+                        "url": "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/business-continuity-plan-bcp.html#recovery-objectives-rto-and-rpo"
+                    },
+                    "choices": [
+                        {
+                            "id": "REL1_1",
+                            "title": "Test cross-plane reconnection regularly",
+                            "helpfulResource": {
+                                "displayText": "SaaS provider should regularly test the remote planes reconnections to local control plane after a DR scenario.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/resilience-lifecycle-framework/stage-3.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish formal testing cadence\n\nDocument recovery metrics against business continuity requirements\n\nMaintain a knowledge repository of test outcomes to drive continuous improvement",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/resilience-lifecycle-framework/stage-3.html"
+                            }
+                        },
+                        {
+                            "id": "REL1_2",
+                            "title": "Document recovery priorities",
+                            "helpfulResource": {
+                                "displayText": "SaaS provider should document the recovery priorities for control plane, local application / data planes, and the remote application / data planes across tenants. The higher priority tenant will resume service earlier in the case of DR.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/resilience-lifecycle-framework/stage-3.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define recovery priority based on the components criticalities and dependencies.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/resilience-lifecycle-framework/stage-3.html"
+                            }
+                        },
+                        {
+                            "id": "REL1_no",
+                            "title": "NONE",
+                            "helpfulResource": {
+                                "displayText": "NONE"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL1_1 && REL1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL2",
+                    "title": "How do you ensure reliable communication between control and application / data planes?",
+                    "description": "SaaS provider should have mechanism to test the reliability of the remote workloads. For example, adopting chaos engineering, having a well defined playbooks for the remote environments.",
+                    "helpfulResource": {
+                        "displayText": "Testing disaster recovery",
+                        "url": "https://docs.aws.amazon.com/wellarchitected/latest/change-enablement-in-the-cloud/change-enablement-cloud.html#automation-of-change-models"
+                    },
+                    "choices": [
+                        {
+                            "id": "REL2_1",
+                            "title": "Implement retry mechanism for cross-plane communications.",
+                            "helpfulResource": {
+                                "displayText": "The remote plane should have a retry mechanism to connect to the local control plane when there is connection error.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/retry-backoff.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement retry mechanism for cross-plane communications.  Buffer and aggregate the cross-plane data during the connection event, send back to the central control plane when connection resumes",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/retry-backoff.html"
+                            }
+                        },
+                        {
+                            "id": "REL2_2",
+                            "title": "Set up a secondary connection path",
+                            "helpfulResource": {
+                                "displayText": "A redundant connectivity path should be set up for resiliency as the cross-plane communication is crucial. ",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/data-residency-hybrid-cloud-services-lens/drhcops03-bp03.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Setup a secondary connection path when the primary connection path is faulty.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/data-residency-hybrid-cloud-services-lens/drhcops03-bp03.html"
+                            }
+                        },
+                        {
+                            "id": "REL2_no",
+                            "title": "NONE",
+                            "helpfulResource": {
+                                "displayText": "NONE"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL2_1 && REL2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "Performance",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "PERF1",
+                    "title": "How do you select compute resources for the remote workload?",
+                    "description": "The best scenario of the compute resources in the remote environment should be consistent with the well tested set of compute options. In case of some regions availabilty or compliance requirements which SaaS provider cannot use the same set of compute options in the remote environment, they should choose the options similar to the default set as many as possible. They should also test enough to benchmark the difference between the remote compute options and the default.",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "PERF1_1",
+                            "title": "Match compute options between SaaS provider local workloads and remote deployments",
+                            "helpfulResource": {
+                                "displayText": "Whenever possible, keep the same compute options as the SaaS provider well-tested workload can avoid unexpected behaviour in the remote application or data plane."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Whever possible, keep the same compute options as the SaaS provider well-tested workload."
+                            }
+                        },
+                        {
+                            "id": "PERF1_2",
+                            "title": "Test performance of alternative compute options in SaaS provider-controlled test accounts.",
+                            "helpfulResource": {
+                                "displayText": "Load test your workload to verify the selected compute options can handle remote production load and identify any performance bottleneck.",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/load-testing/welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Load test with the selected compute options",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/load-testing/tools.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_no",
+                            "title": "If similar compute options are selected, test the performance in a SaaS Provider controlled account.",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF1_1 && PERF1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF2",
+                    "title": "How do you manage resource scaling in the remote accounts?",
+                    "description": "It is important to scale in time if there is scaling need in the remote account. SaaS solution should have an effective scaling mechanism in the remote account. Besides using pure resource utilizations in remote account for scaling, the remote resources will also need to be scaled based on the control plane metrics in the SaaS provider account.",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "PERF2_1",
+                            "title": "Monitor resource limits or service quotas in the remote accounts",
+                            "helpfulResource": {
+                                "displayText": "The control plane should also monitor thre resource limits in the remote accounts, so that SaaS provider can increase limit before scaling if necessary."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure alerts to monitor service quotas in the remote account",
+                                "url": "https://docs.aws.amazon.com/servicequotas/latest/userguide/configure-cloudwatch.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF2_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "costOptimization",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "COST1",
+                    "title": "How do you monitor the cost and usage in the remote accounts?",
+                    "description": "SaaS provider should have a mechanism to visualize the cost of usage data in the remote accounts, so that they can identify any cost optimisation opportunities. Budget and cost abnomaly detection should also be configured in the remote accounts so that the stakeholders of the remote accounts are alerted and take appropriate actions.",
+                    "helpfulResource": {
+                        "displayText": "SaaS providers will need to proactively monitor the cost and usage in the remote account, to identify unexpected or anomalous cloud spend before receiving a monthly bill.",
+                        "url": "https://aws.amazon.com/solutions/guidance/cloud-financial-management-on-aws/"
+                    },
+                    "choices": [
+                        {
+                            "id": "COST1_1",
+                            "title": "Configure budgets and alerts in remote accounts with notifications to preferred channels.",
+                            "helpfulResource": {
+                                "displayText": "You should set up centralized budgeting and cost monitors in the payer account of the remote accounts, alert back to the SaaS providers to take immediate response.",
+                                "url": "https://aws.amazon.com/solutions/guidance/cloud-financial-management-on-aws/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set up budget in the remote accounts and integrate with preferred channel for effective response.",
+                                "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/sns-alert-chime.html"
+                            }
+                        },
+                        {
+                            "id": "COST1_2",
+                            "title": "Deploy a central dashboard in SaaS provider-controlled accounts to monitor cost and usage across local and remote accounts.",
+                            "helpfulResource": {
+                                "displayText": "With a centralized dashboard, you can visualise the cost in all local and remote accounts in one place, you can co-relate the cost and aggregate the cost in the dashboard for insights.",
+                                "url": "https://aws.amazon.com/solutions/guidance/cloud-financial-management-on-aws/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set up a centralized dashboard to visualise all costs in local and remote accounts, e.g. CID.",
+                                "url": "https://www.wellarchitectedlabs.com/cloud-intelligence-dashboards/"
+                            }
+                        },
+                        {
+                            "id": "COST1_no",
+                            "title": "None of these",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST1_1 && COST1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST2",
+                    "title": "How do you explore savings opporunities in the remote accounts?",
+                    "description": "SaaS provider should review the remote workloads and explore any savings opportunities in the remote environments. If SaaS provider is only allowed to access the remote environments in critical events, the optimisations opportunities data and recommendations should be fed to the control plane for SaaS provider to have regular review. SaaS consumer and provider should align with the process of purchasing plans (e.g. SP / RI) given that the SaaS provider has limited access to the remote environment.",
+                    "choices": [
+                        {
+                            "id": "COST2_1",
+                            "title": "Deploy right-sizing tools in remote accounts and stream data to SaaS provider-controlled accounts for optimization insights.",
+                            "helpfulResource": {
+                                "displayText": "If SaaS provider is responsible for part of the account infrastructure cost, SaaS provider will need cost insights in the remote account in order to make a correct cost decision. SaaS provider can have its own right sizing tool deployed in the remote account, or use native cloud service provider tool for regular review.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/cost-optimization-right-sizing/identifying-opportunities-to-right-size.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement a right-sizing tool to feed data to SaaS provider controlled account for right-sizing insights.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/cost-optimization-right-sizing/identifying-opportunities-to-right-size.html"
+                            }
+                        },
+                        {
+                            "id": "COST2_2",
+                            "title": "Decide savings options strategy by remote account owner",
+                            "helpfulResource": {
+                                "displayText": "Cloud service provider will have a list of savings opportunities recommendations available. Remote account owner should regular review the recommendations and take appropriate actions to optimise the remote accounts workloads.  Consult SaaS provider when workload information is helpful for savings options decisions."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define clear RACI for remote account owner and SaaS consumer for savings options ownership."
+                            }
+                        },
+                        {
+                            "id": "COST2_no",
+                            "title": "None of these",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST2_1 || COST2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST3",
+                    "title": "How do you optimise the data transfer cost between control plane and remote application plane?",
+                    "description": "Data transfer cost between local and remote planes can be significant.  Careful design and evaluate the data transfer across planes can help to control and manage the tenant cost.  If the data transfer cost is based on tenant consumption, SaaS provider should consider to correlate their service pricing with the underlaying cross-plane data transfer cost consumption.",
+                    "helpfulResource": {
+                        "displayText": "SaaS providers will need to proactively monitor the cost and usage in the remote account, to identify unexpected or anomalous cloud spend before receiving a monthly bill.",
+                        "url": "https://aws.amazon.com/solutions/guidance/cloud-financial-management-on-aws/"
+                    },
+                    "choices": [
+                        {
+                            "id": "COST3_1",
+                            "title": "Optimise all data transferred across local and remote planes",
+                            "helpfulResource": {
+                                "displayText": "Optimising the cross plane data transfer can help to control the tenant expenditure."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Analyse and optimise the cross-planes data.  Only transfer essential data and compress data during transit when applicable",
+                                "url": "https://aws.amazon.com/blogs/architecture/overview-of-data-transfer-costs-for-common-architectures/"
+                            }
+                        },
+                        {
+                            "id": "COST3_2",
+                            "title": "Document the usage of data transferred across local and remote planes",
+                            "helpfulResource": {
+                                "displayText": "Documenting the usage of cross plane data transfer will help future review and optimisation when new feature is available."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Document the usage of cross-plane data transfer.  Regular review and optimise the data transfer options to maximise the revenue.",
+                                "url": "https://aws.amazon.com/blogs/architecture/overview-of-data-transfer-costs-for-common-architectures/"
+                            }
+                        },
+                        {
+                            "id": "COST3_3",
+                            "title": "Correlate SaaS service pricing to the underlying cost of data transfer across local and remote planes",
+                            "helpfulResource": {
+                                "displayText": "Data transfer across local and remote planes can be a significant tenant cost in SaaS Anywhere model.  If the cross plane data transfer cost correlates to the tenant consumption, the design of SaaS service pricing model should take this factor into consideration in order to sustain the business."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Collaborate to the product team to correlate the underlying data transfer cost to the service pricing.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/expenditure-awareness.html"
+                            }
+                        },
+                        {
+                            "id": "COST3_no",
+                            "title": "None of these",
+                            "helpfulResource": {
+                                "displayText": "-"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST3_1 && COST3_2 && COST3_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST3_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "sustainability",
+            "name": "Sustainability",
+            "questions": [
+                {
+                    "id": "SUS1",
+                    "title": "How do you select the most sustainable Regions in your area?",
+                    "description": "SaaS consumer may have their own requirements to host resources in a specific region where giving a higher carbon emission. We recommend SaaS provider to discuss with the SaaS consumer to minimise the resources hosting in higher carbon emission region, while hosting the resources in lower carbin emission region as many as possible. Also, SaaS provider should regularly review with the SaaS consumer the carbon footprint to identify improvement opportunities.",
+                    "helpfulResource": {
+                        "displayText": "SaaS Anywhere Blog Post",
+                        "url": "https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/"
+                    },
+                    "choices": [
+                        {
+                            "id": "SUS1_1",
+                            "title": "Deploy resources in low-emission regions whenever possible.",
+                            "helpfulResource": {
+                                "displayText": "Except the resources are required to be deployed in a specific region by requirements e.g. regulatory, all other resources deploying in low carbon emission region will help to maintain an acceptable carbon emission footprint of the SaaS solution."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review carbon emission footprint report and identify potential resources to deploy in a low carbon emission regions.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/sustainability-pillar/sus_sus_region_a2.html"
+                            }
+                        },
+                        {
+                            "id": "SUS1_2",
+                            "title": "Review carbon footprint regularly with SaaS consumers to identify sustainability improvements.",
+                            "helpfulResource": {
+                                "displayText": "A regular carbon footprint review with SaaS consumer may help to identify potential resources which can be run in a low carbon emission regions."
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define a carbon footprint review process with SaaS consumer and explore opportunities to run resources in low carbon footprint region.",
+                                "url": "https://docs.aws.amazon.com/wellarchitected/latest/sustainability-pillar/sus_sus_region_a2.html"
+                            }
+                        },
+                        {
+                            "id": "SUS1_3",
+                            "title": "Deploy a central sustainability metrics dashboard in SaaS provider-controlled accounts.",
+                            "helpfulResource": {
+                                "displayText": "Collect sustainability proxy metrics from remote accounts and visualise in a centralised dashboard in SaaS provider account. This dashboard helps SaaS provider look for opportunities to reduce a sustainability impact by making changes to their infrastructure.",
+                                "url": "https://cid.workshops.aws.dev/demo?dashboard=sustainability-proxy-metrics"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy a centralized sustainability proxy metrics dashabord",
+                                "url": "https://catalog.workshops.aws/well-architected-sustainability/en-US/5-process-and-culture/cur-reports-as-efficiency-reports"
+                            }
+                        },
+                        {
+                            "id": "SUS1_no",
+                            "title": "None of these",
+                            "helpfulResource": {
+                                "displayText": "Choose this if your workload does not follow these best practices."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SUS1_1 && SUS1_2 && SUS1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
