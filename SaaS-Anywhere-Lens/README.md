@@ -20,7 +20,7 @@ This is a custom lens for [AWS Well-Architected Tool](https://aws.amazon.com/wel
 Key references:
 - [Patterns for Deploying SaaS in Remote Environments](https://aws.amazon.com/blogs/apn/patterns-for-deploying-saas-in-remote-environments/)
 - [SaaS Anywhere: When Traditional SaaS Deployment Models Hit Their Limits](https://builder.aws.com/content/31VefASWb7CXdTHUpNB43K8cW5Z/saas-anywhere-when-traditional-saas-deployment-models-hit-their-limits)
-- [SaaS Tenant Isolation Strategies](https://docs.aws.amazon.com/whitepapers/latest/saas-tenant-isolation-strategies/implementing-silo-isolation.html)
+
 
 
 ## Upload the JSON file
