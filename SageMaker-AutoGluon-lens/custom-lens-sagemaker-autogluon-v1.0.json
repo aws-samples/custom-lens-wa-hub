@@ -1,0 +1,790 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "AutoGluon on SageMaker AI Best Practice Lens",
+    "description": "Best practices for configuring AutoGluon on SageMaker AI",
+    "pillars": [
+        {
+            "id": "PERF",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "PERF1",
+                    "title": "Is the model robust across different demand patterns?",
+                    "description": "Tests model consistency across different demand patterns",
+                    "choices": [
+                        {
+                            "id": "PERF1_1",
+                            "title": "Segment SKUs into demand type with Glue",
+                            "helpfulResource": {
+                                "displayText": "Classify SKUs into demand types using data pipelines to enable targeted modeling and evaluation",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/author-job-glue.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Glue to compute demand features, assign segments, store results for downstream model training pipelines",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/author-job-glue.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_2",
+                            "title": "Evaluate metrics per segment with AutoGluon metrics",
+                            "helpfulResource": {
+                                "displayText": "Evaluate model performance per segment using AutoGluon metrics, not overall averages",
+                                "url": "https://auto.gluon.ai/dev/tutorials/timeseries/forecasting-metrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AutoGluon predictions, compute segment WAPE RMSE, retrain underperforming segments",
+                                "url": "https://auto.gluon.ai/dev/tutorials/timeseries/forecasting-metrics.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_3",
+                            "title": "Track high-value SKUs separately",
+                            "helpfulResource": {
+                                "displayText": "Track model performance for high-value SKUs separately using SageMaker Experiments",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/experiments.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon SageMaker Experiments to log and monitor metrics for high-value SKU subsets",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/experiments.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF1_1 && PERF1_2 && PERF1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF1_1) || (!PERF1_2) || (!PERF1_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF2",
+                    "title": "Is AutoGluon ensemble worth the cost?",
+                    "description": "Evaluates ensemble accuracy gain versus training and inference cost",
+                    "choices": [
+                        {
+                            "id": "PERF2_1",
+                            "title": "Compare single vs ensemble with leaderboard",
+                            "helpfulResource": {
+                                "displayText": "Compare Chronos 2 single model against ensemble performance using leaderboard metrics",
+                                "url": "https://auto.gluon.ai/stable/api/autogluon.timeseries.TimeSeriesPredictor.leaderboard.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AutoGluon leaderboard to compare accuracy and cost, choose best trade-off model",
+                                "url": "https://auto.gluon.ai/stable/api/autogluon.timeseries.TimeSeriesPredictor.leaderboard.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_2",
+                            "title": "Measure training &amp; inference cost with leaderboard",
+                            "helpfulResource": {
+                                "displayText": "Evaluate training and inference costs to understand resource usage and efficiency",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/monitoring-cloudwatch.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon SageMaker metrics and CloudWatch to monitor, optimize, and reduce costs",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/monitoring-cloudwatch.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_3",
+                            "title": "Apply ensemble selectively",
+                            "helpfulResource": {
+                                "displayText": "Use ensemble models only where they significantly improve accuracy",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/build-and-manage-steps.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AutoGluon leaderboard to apply ensembles only to high-value or complex segments",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/build-and-manage-steps.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF2_1 && PERF2_2 && PERF2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF3",
+                    "title": "Can the model capture promotions and spikes?",
+                    "description": "Assesses ability to model promotions and demand spikes",
+                    "choices": [
+                        {
+                            "id": "PERF3_1",
+                            "title": "Add promotion/event features",
+                            "helpfulResource": {
+                                "displayText": "Incorporate promotion and event signals as time-varying covariates for forecasting",
+                                "url": "https://auto.gluon.ai/stable/tutorials/timeseries/forecasting-indepth.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AutoGluon known covariates to pass aligned event features into models",
+                                "url": "https://auto.gluon.ai/stable/tutorials/timeseries/forecasting-indepth.html"
+                            }
+                        },
+                        {
+                            "id": "PERF3_2",
+                            "title": "Create lagged promotion features with Glue ETL",
+                            "helpfulResource": {
+                                "displayText": "Generate lagged promotion features to capture delayed effects of promotions on demand",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/author-job-glue.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Glue ETL jobs to create lag features and join with time-series data",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/author-job-glue.html"
+                            }
+                        },
+                        {
+                            "id": "PERF3_3",
+                            "title": "Evaluate promotion-period error with StepFunction",
+                            "helpfulResource": {
+                                "displayText": "Evaluate model accuracy specifically during promotion periods using orchestrated workflow steps",
+                                "url": "https://docs.aws.amazon.com/step-functions/latest/dg/workflow-studio.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Step Functions to orchestrate evaluation tasks and compute promotion-period metrics automatically",
+                                "url": "https://docs.aws.amazon.com/step-functions/latest/dg/workflow-studio.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF3_1 && PERF3_2 && PERF3_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF3_1) || (!PERF3_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF4",
+                    "title": "Is forecast horizon aligned?",
+                    "description": "Forecast horizon matches business decision timeframes",
+                    "choices": [
+                        {
+                            "id": "PERF4_1",
+                            "title": "Evaluate multiple horizons with prediction length",
+                            "helpfulResource": {
+                                "displayText": "Evaluate model performance across different forecast horizons using varying prediction lengths",
+                                "url": "https://auto.gluon.ai/stable/tutorials/timeseries/forecasting-indepth.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AutoGluon prediction_length to train and compare horizon-specific model accuracy",
+                                "url": "https://auto.gluon.ai/stable/tutorials/timeseries/forecasting-indepth.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_2",
+                            "title": "Use horizon-specific features",
+                            "helpfulResource": {
+                                "displayText": "Use different feature sets for different forecast horizons",
+                                "url": "https://auto.gluon.ai/stable/tutorials/timeseries/forecasting-indepth.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AutoGluon prediction_length with horizon-specific covariates for separate short- and long-term models.",
+                                "url": "https://auto.gluon.ai/stable/tutorials/timeseries/forecasting-indepth.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF4_1 && PERF4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF4_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF5",
+                    "title": "Are long-tail SKUs under-modeled?",
+                    "description": "Checks if low-volume SKUs are poorly predicted",
+                    "choices": [
+                        {
+                            "id": "PERF5_1",
+                            "title": "Evaluate low-volume SKUs",
+                            "helpfulResource": {
+                                "displayText": "Evaluate model performance specifically for low-volume or long-tail SKUs",
+                                "url": "https://auto.gluon.ai/stable/tutorials/timeseries/forecasting-indepth.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AutoGluon predictions to compute metrics for low-volume SKUs and retrain models",
+                                "url": "https://auto.gluon.ai/stable/tutorials/timeseries/forecasting-indepth.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_2",
+                            "title": "Use group-level and mapping to SKU-level",
+                            "helpfulResource": {
+                                "displayText": "Use group-level forecasts when SKU-level predictions are unreliable",
+                                "url": "https://auto.gluon.ai/stable/tutorials/timeseries/forecasting-indepth.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Train category-level models in AutoGluon and  mapping to SKU-level",
+                                "url": "https://auto.gluon.ai/stable/tutorials/timeseries/forecasting-indepth.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF5_1 && PERF5_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF5_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "OPS",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "OPS1",
+                    "title": "How you collect and monitoring metric and log for your model training and inference?",
+                    "description": "You can monitor your model training and inference with SageMaker AI and Cloud Watch native integration",
+                    "choices": [
+                        {
+                            "id": "OPS1_1",
+                            "title": "Metrics for monitoring Amazon SageMaker AI with Amazon CloudWatch",
+                            "helpfulResource": {
+                                "displayText": "You can access historical information and gain a better perspective on how your web application or service is performing.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/monitoring-cloudwatch.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can monitor Amazon SageMaker AI using Amazon CloudWatch, which collects raw data and processes it into readable, near real-time metrics.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/monitoring-cloudwatch.html"
+                            }
+                        },
+                        {
+                            "id": "OPS1_2",
+                            "title": "Log groups and streams that Amazon SageMaker AI sends to Amazon CloudWatch Logs",
+                            "helpfulResource": {
+                                "displayText": "You can debug your training job and model inference with CloudWatch Log",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/logging-cloudwatch.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "By default, log data is stored in CloudWatch Logs indefinitely. You can configure how long to store log data in a log group.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/logging-cloudwatch.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS1_1 && OPS1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS1_1) || (!OPS1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS2",
+                    "title": "How do you design your MLOps process to support your model training and inference?",
+                    "description": "Ensures automated retraining, data validation, performance tracking, and safe model promotion or rollback",
+                    "choices": [
+                        {
+                            "id": "OPS2_1",
+                            "title": "Build end-to-end pipeline with StepFunction",
+                            "helpfulResource": {
+                                "displayText": "Orchestrate end-to-end ML workflow from data processing to deployment using workflow automation",
+                                "url": "https://docs.aws.amazon.com/step-functions/latest/dg/workflow-studio.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Step Functions to orchestrate ETL training evaluation and deployment steps reliably",
+                                "url": "https://docs.aws.amazon.com/step-functions/latest/dg/workflow-studio.html"
+                            }
+                        },
+                        {
+                            "id": "OPS2_2",
+                            "title": "Schedule retraining with EventBridge",
+                            "helpfulResource": {
+                                "displayText": "Automate model retraining on a defined schedule based on time or events",
+                                "url": "https://docs.aws.amazon.com/eventbridge/latest/userguide/using-eventbridge-scheduler.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon EventBridge to trigger retraining pipelines on schedules or data-driven events",
+                                "url": "https://docs.aws.amazon.com/eventbridge/latest/userguide/using-eventbridge-scheduler.html"
+                            }
+                        },
+                        {
+                            "id": "OPS2_3",
+                            "title": "Fallback to previous model with sagemaker deployment",
+                            "helpfulResource": {
+                                "displayText": "Handle training failures by reverting to previous model or notifying stakeholders",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/deployment-guardrails-configuration.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use SageMaker deployment guardrails with CloudWatch alarms to auto-rollback unhealthy model deployments.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/deployment-guardrails-configuration.html"
+                            }
+                        },
+                        {
+                            "id": "OPS2_4",
+                            "title": "Validate data freshness and quality",
+                            "helpfulResource": {
+                                "displayText": "Ensure input data is fresh, complete, and accurate before model training",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/glue-data-quality.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Glue Data Quality rules to validate freshness, completeness, and trigger alerts",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/glue-data-quality.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS2_1 && OPS2_2 && OPS2_3 && OPS2_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS2_1) || (!OPS2_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "Security",
+            "name": "SEC",
+            "questions": [
+                {
+                    "id": "SEC1",
+                    "title": "How do you protect sensitive demand forecasting data?",
+                    "description": "Protects sales, inventory, pricing, and forecast data from leakage",
+                    "choices": [
+                        {
+                            "id": "SEC1_1",
+                            "title": "Encrypt training data with AWS KMS",
+                            "helpfulResource": {
+                                "displayText": "Protect historical sales and feature datasets at rest",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon S3 encryption with AWS KMS keys",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_2",
+                            "title": "Encrypt forecast outputs in Amazon S3",
+                            "helpfulResource": {
+                                "displayText": "Protect future demand and inventory planning signals",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Store forecast outputs in encrypted S3 buckets",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC1_1 && SEC1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC1_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC2",
+                    "title": "How do you control access to training data?",
+                    "description": "Ensures only authorized users and jobs access training datasets",
+                    "choices": [
+                        {
+                            "id": "SEC2_1",
+                            "title": "Apply least privilege with AWS IAM",
+                            "helpfulResource": {
+                                "displayText": "Limit SageMaker jobs to required data only",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use SageMaker execution roles with scoped S3 access",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html"
+                            }
+                        },
+                        {
+                            "id": "SEC2_2",
+                            "title": "Restrict data by business unit with Lake Formation",
+                            "helpfulResource": {
+                                "displayText": "Prevent unauthorized cross-team demand data access",
+                                "url": "https://docs.aws.amazon.com/lake-formation/latest/dg/register-data-lake.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use IAM policies or Lake Formation permissions by domain",
+                                "url": "https://docs.aws.amazon.com/lake-formation/latest/dg/register-data-lake.html"
+                            }
+                        },
+                        {
+                            "id": "SEC2_3",
+                            "title": "Separate development and production access with AWS account",
+                            "helpfulResource": {
+                                "displayText": "Prevent developers from over-accessing production data",
+                                "url": "https://docs.aws.amazon.com/accounts/latest/reference/accounts-welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use separate IAM roles for development and production",
+                                "url": "https://docs.aws.amazon.com/accounts/latest/reference/accounts-welcome.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC2_1 && SEC2_2 && SEC2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC2_1) || (!SEC2_2) || (!SEC2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC3",
+                    "title": "How do you protect forecast outputs?",
+                    "description": "Prevents leakage of future demand, revenue, or inventory plans",
+                    "choices": [
+                        {
+                            "id": "SEC3_1",
+                            "title": "Restrict forecast visibility with AWS IAM",
+                            "helpfulResource": {
+                                "displayText": "Limit who can view future demand predictions",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_s3_rw-bucket.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Store forecasts in team-specific S3 prefixes",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_s3_rw-bucket.html"
+                            }
+                        },
+                        {
+                            "id": "SEC3_2",
+                            "title": "Control downstream access with Amazon S3 Bucket",
+                            "helpfulResource": {
+                                "displayText": "Prevent unauthorized systems from consuming forecast outputs",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/security_iam_service-with-iam.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use IAM roles for each downstream application",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/security_iam_service-with-iam.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC3_1 && SEC3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC3_1) || (!SEC3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC4",
+                    "title": "How do you secure model artifacts?",
+                    "description": "Protects trained forecasting models from unauthorized access or misuse",
+                    "choices": [
+                        {
+                            "id": "SEC4_1",
+                            "title": "Version model artifacts with Amazon S3",
+                            "helpfulResource": {
+                                "displayText": "Prevent unauthorized overwrite or replacement",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Store AutoGluon artifacts in versioned S3 buckets",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html"
+                            }
+                        },
+                        {
+                            "id": "SEC4_2",
+                            "title": "Restrict model access with SageMaker Model Registry",
+                            "helpfulResource": {
+                                "displayText": "Prevent unauthorized downloads or deployment",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-registry-version.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use IAM and SageMaker Model Registry",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-registry-version.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC4_1 && SEC4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC4_1) || (!SEC4_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC5",
+                    "title": "How do you support security audits?",
+                    "description": "Makes data, model, and deployment actions traceable",
+                    "choices": [
+                        {
+                            "id": "SEC5_1",
+                            "title": "Track data versions with Amazon S3 version",
+                            "helpfulResource": {
+                                "displayText": "Know which data trained each model",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use S3 versioning or immutable snapshots",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html"
+                            }
+                        },
+                        {
+                            "id": "SEC5_2",
+                            "title": "Track model evidence with Amazon S3",
+                            "helpfulResource": {
+                                "displayText": "Preserve model configs and selection history",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/deploy-model.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Save AutoGluon leaderboard and config to S3",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/deploy-model.html"
+                            }
+                        },
+                        {
+                            "id": "SEC5_3",
+                            "title": "Log access and changes with CloudTrail",
+                            "helpfulResource": {
+                                "displayText": "Track who accessed or changed resources",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/logging-using-cloudtrail.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use CloudTrail and S3 access logs",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/logging-using-cloudtrail.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC5_1 && SEC5_2 && SEC5_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC5_1) || (!SEC5_2) || (!SEC5_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "COST",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "COST1",
+                    "title": "Have you considered EC2 Spot Instances for model training, and what are your concerns about interruptions?",
+                    "description": "Utilize EC2 Spot Instances for training models to reduce costs.",
+                    "choices": [
+                        {
+                            "id": "COST1_1",
+                            "title": "Consider Spot instance for your Federated Learning Training job",
+                            "helpfulResource": {
+                                "displayText": "Managed spot training can optimize the cost of training models up to 90% over on-demand instances. SageMaker AI manages the Spot interruptions on your behalf.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-managed-spot-training.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon SageMaker AI makes it easy to train machine learning models using managed Amazon EC2 Spot instances.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-managed-spot-training.html"
+                            }
+                        },
+                        {
+                            "id": "COST1_2",
+                            "title": "Handle your training job interruption with checkpoint",
+                            "helpfulResource": {
+                                "displayText": "Checkpoints are snapshots of the model and can be configured by the callback functions of ML frameworks.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-checkpoints.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use checkpoints in Amazon SageMaker AI to save the state of machine learning (ML) models during training.",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-checkpoints.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST1_1 && COST1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST1_1) || (!COST1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST2",
+                    "title": "Do you fully understand the pricing model for Amazon SageMaker AI?",
+                    "description": "SageMaker pricing depends on instance type, training time, inference, storage, and services.",
+                    "choices": [
+                        {
+                            "id": "COST2_1",
+                            "title": "Understand the SageMaker AI pricing model",
+                            "helpfulResource": {
+                                "displayText": "SageMaker AI have different pricing strategy for different feature you engage in model training and inference.",
+                                "url": "https://aws.amazon.com/sagemaker/pricing/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "SageMaker AI pricing page provide more information. ",
+                                "url": "https://aws.amazon.com/sagemaker/pricing/"
+                            }
+                        },
+                        {
+                            "id": "COST2_2",
+                            "title": "Consider SageMaker Saving Plans for your model training and inference",
+                            "helpfulResource": {
+                                "displayText": "These plans automatically apply to the usage of eligible to SageMaker training and real-time infernece",
+                                "url": "https://aws.amazon.com/savingsplans/ml-pricing/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Amazon SageMaker Savings Plans provide the most flexibility and help to reduce your costs by up to 64%.",
+                                "url": "https://aws.amazon.com/savingsplans/ml-pricing/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST2_1 && COST2_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST3",
+                    "title": "Is your model inference in right resource and deployment option?",
+                    "description": "Checks if inference uses appropriate resources and deployment for performance, scalability, and cost",
+                    "choices": [
+                        {
+                            "id": "COST3_1",
+                            "title": "Model deployment options in Amazon SageMaker AI",
+                            "helpfulResource": {
+                                "displayText": "Choose appropriate SageMaker deployment option for model inference performance, scalability, and cost",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/how-it-works-deployment.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon SageMaker endpoints, batch transform, or async inference based on workload needs",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/how-it-works-deployment.html"
+                            }
+                        },
+                        {
+                            "id": "COST3_2",
+                            "title": "Use Amazon SageMaker Inference Recommender for instance selection",
+                            "helpfulResource": {
+                                "displayText": "Evaluate optimal instance types and configurations for model inference performance and cost",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/inference-recommender.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon SageMaker Inference Recommender to test workloads and select best instance configurations",
+                                "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/inference-recommender.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST3_1 && COST3_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST3_1) || (!COST3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
