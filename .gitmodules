@@ -1,4 +1,0 @@
-[submodule "SAP-Lens"]
-	path = SAP-Lens
-	url = https://github.com/aws-samples/aws-sap-lens-well-architected
-	branch = main
