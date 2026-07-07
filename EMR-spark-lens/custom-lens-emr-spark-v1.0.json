@@ -1,0 +1,1884 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "Spark on EMR Best Practice Lens",
+    "description": "Best practices for configuring Spark on EMR",
+    "pillars": [
+        {
+            "id": "PERF",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "PERF1",
+                    "title": "Do konw how file formats, file size, file layout and compression effect your job performance?",
+                    "description": "To reduce the amount of data loaded into your job when reading from Amazon S3, you need to consider FileSize, Compression, FileFormat and FileLayout (Partitions) for your dataset.",
+                    "choices": [
+                        {
+                            "id": "PERF1_1",
+                            "title": "Choose the suitable file format for your Spark on EMR job",
+                            "helpfulResource": {
+                                "displayText": "Use columnar formats such as Apache Parquet or Apache ORC. Columnar formats allow Spark to skip blocks of data for columns not referenced in your query, significantly reducing I/O.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Adopt Parquet or ORC as the default output format for ETL jobs on EMR to benefit from columnar pruning and predicate pushdown.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_2",
+                            "title": "Choose the suitable file size for your Spark on EMR job",
+                            "helpfulResource": {
+                                "displayText": "A large number of small files degrades performance due to excessive S3 API calls and task scheduling overhead. Keep input and output files in a moderate size range (e.g. 128MB-512MB).",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-to-scale-apache-spark-jobs-and-partition-data-with-aws-glue/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use coalesce() or repartition() to control output file count and size. Consider using s3-dist-cp or EMR S3 committers to consolidate small files.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-s3-optimized-committer.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_3",
+                            "title": "Choose the suitable compression for your Spark on EMR job",
+                            "helpfulResource": {
+                                "displayText": "Understand the difference between splittable (bzip2 LZO Snappy with Parquet/ORC) and non-splittable (gzip) compression. Non-splittable formats prevent parallel processing of a single file.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-to-scale-apache-spark-jobs-and-partition-data-with-aws-glue/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Snappy compression with Parquet/ORC for a good balance of compression ratio and splittability. Avoid gzip for large files that need parallel processing.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-to-scale-apache-spark-jobs-and-partition-data-with-aws-glue/"
+                            }
+                        },
+                        {
+                            "id": "PERF1_4",
+                            "title": "Choose the suitable file layout and partitioning strategy",
+                            "helpfulResource": {
+                                "displayText": "Partition your data using Hive-style naming conventions (s3://bucket/column1=value1/column2=value2) to enable partition pruning and reduce data scanned.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-file-systems.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Design partition keys based on common query patterns. Use date-based partitioning for time-series data and avoid high-cardinality partition keys.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-file-systems.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_5",
+                            "title": "Configure Spark parameters for data formats and compression on EMR",
+                            "helpfulResource": {
+                                "displayText": "EMR Spark jobs can be configured with spark.sql.parquet.compression.codec spark.hadoop.mapreduce.output.fileoutputformat.compress and other parameters to control format and compression behavior.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set appropriate Spark configuration parameters in EMR cluster configuration or spark-defaults.conf to optimize I/O for your workload.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF1_1 && PERF1_2 && PERF1_3 && PERF1_4 && PERF1_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF1_1) || (!PERF1_2) || (!PERF1_3) || (!PERF1_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF2",
+                    "title": "How do you determine compute unit for your EMR Job?",
+                    "description": "How do you determine compute unit for your EMR Job?",
+                    "choices": [
+                        {
+                            "id": "PERF2_1",
+                            "title": "Benchmark using TPC-DS or custom datasets on EMR",
+                            "helpfulResource": {
+                                "displayText": "Generate TPC-DS compliant datasets or use representative production data samples to benchmark different instance types and cluster configurations on EMR.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Run benchmark workloads on different EMR instance families (memory-optimized vs compute-optimized) to identify the best price-performance ratio for your workload.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_2",
+                            "title": "Debug demanding stages and straggler tasks",
+                            "helpfulResource": {
+                                "displayText": "A straggler task takes much longer than other tasks in a stage causing the entire stage to wait. Use Spark UI to identify stages with high task duration variance.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Spark UI Stages tab to compare task durations within a stage. Enable spark.speculation to automatically re-launch straggler tasks on other executors.",
+                                "url": "https://spark.apache.org/docs/latest/configuration.html#speculation"
+                            }
+                        },
+                        {
+                            "id": "PERF2_3",
+                            "title": "Use Spark UI and YARN metrics to profile job resource usage",
+                            "helpfulResource": {
+                                "displayText": "Spark UI provides DAG visualization executor metrics and stage-level I/O statistics. YARN ResourceManager shows cluster-wide resource allocation and utilization.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-web-interfaces.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Monitor executor memory and CPU utilization through Spark UI Executors tab and YARN metrics to identify over-provisioned or under-provisioned clusters.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-web-interfaces.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_4",
+                            "title": "Right-size EMR instances based on workload characteristics",
+                            "helpfulResource": {
+                                "displayText": "Choose instance types based on whether your workload is CPU-bound memory-bound or I/O-bound. Memory-intensive jobs (large joins shuffles) benefit from r-series instances while compute-intensive jobs benefit from c-series.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-supported-instance-types.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Analyze Spark UI metrics for GC time shuffle spill and peak memory to determine if your workload needs more memory or more CPU cores.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-supported-instance-types.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_5",
+                            "title": "Enable EMR Managed Scaling for dynamic capacity",
+                            "helpfulResource": {
+                                "displayText": "EMR Managed Scaling automatically resizes your cluster by adding or removing instances based on workload demand using YARN metrics.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-managed-scaling.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable Managed Scaling with appropriate minimum and maximum units. Use On-Demand for core nodes and Spot for task nodes to optimize cost.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-managed-scaling.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF2_1 && PERF2_2 && PERF2_3 && PERF2_4 && PERF2_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF2_2) || (!PERF2_3) || (!PERF2_4) || (!PERF2_5)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF3",
+                    "title": "How do you organize or partition your data in your data lake for Spark on EMR Jobs friendly?",
+                    "description": "How do you organize or partition your data in your data lake for Spark on EMR Jobs friendly?",
+                    "choices": [
+                        {
+                            "id": "PERF3_1",
+                            "title": "Structure data partitions to match query patterns",
+                            "helpfulResource": {
+                                "displayText": "Identify your ETL job query patterns and partition data so that Spark can prune irrelevant partitions. Common strategies include partitioning by date region or business entity.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Align S3 partition keys with the most common filter predicates in your Spark jobs to maximize partition pruning benefits.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            }
+                        },
+                        {
+                            "id": "PERF3_2",
+                            "title": "Manage partition metadata performance in Glue Data Catalog",
+                            "helpfulResource": {
+                                "displayText": "As tables grow to hundreds of thousands of partitions the GetPartitions API latency increases. Partition indexes in Glue Data Catalog accelerate partition filtering.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/partition-indexes.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create partition indexes on frequently filtered partition keys in the Glue Data Catalog to reduce metadata retrieval latency for large tables.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/partition-indexes.html"
+                            }
+                        },
+                        {
+                            "id": "PERF3_3",
+                            "title": "Avoid excessive S3 partitions",
+                            "helpfulResource": {
+                                "displayText": "Too many partitions cause increased metadata retrieval latency and proliferation of small files requiring excessive S3 List/Get/Head API calls.",
+                                "url": "https://aws.amazon.com/blogs/big-data/get-started-managing-partitions-for-amazon-s3-tables-backed-by-the-aws-glue-data-catalog/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Avoid partitioning on high-cardinality columns. Consider using open table formats (Iceberg/Hudi) with hidden partitioning to manage partition granularity automatically.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-iceberg.html"
+                            }
+                        },
+                        {
+                            "id": "PERF3_4",
+                            "title": "Use predicate pushdown for JDBC and database sources",
+                            "helpfulResource": {
+                                "displayText": "When reading from JDBC sources use predicate pushdown to push WHERE clauses to the database and reduce the volume of data transferred to Spark.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure Spark JDBC options (fetchsize predicates partitionColumn lowerBound upperBound numPartitions) to parallelize reads and push filters to the source database.",
+                                "url": "https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF3_1 && PERF3_2 && PERF3_3 && PERF3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF3_1) || (!PERF3_2) || (!PERF3_3) || (!PERF3_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF4",
+                    "title": "Do you know how to parallelize tasks based on your parition?",
+                    "description": "It is important to parallelize tasks for data loads and transformations",
+                    "choices": [
+                        {
+                            "id": "PERF4_1",
+                            "title": "Monitor job parallelism",
+                            "helpfulResource": {
+                                "displayText": "Monitor executor and task counts through Spark UI and YARN ResourceManager to ensure your cluster resources are fully utilized.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-web-interfaces.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Spark UI Stages tab to check active vs total tasks. If active tasks are consistently less than available cores your job is under-parallelized.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-web-interfaces.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_2",
+                            "title": "Parallelize data loads from S3",
+                            "helpfulResource": {
+                                "displayText": "The number of Spark tasks when reading from S3 depends on file count and size. Too few partitions under-utilizes the cluster while too many creates scheduling overhead.",
+                                "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.repartition.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use repartition(N) after reading to match parallelism to your cluster size. Target 2-4 partitions per available core.",
+                                "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.repartition.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_3",
+                            "title": "Parallelize data loads from JDBC sources",
+                            "helpfulResource": {
+                                "displayText": "JDBC reads are single-threaded by default. Use Spark JDBC partitioning options to parallelize reads across multiple connections.",
+                                "url": "https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set partitionColumn lowerBound upperBound and numPartitions in Spark JDBC options to split the query across multiple parallel tasks.",
+                                "url": "https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_4",
+                            "title": "Parallelize data loads from DynamoDB",
+                            "helpfulResource": {
+                                "displayText": "When reading from DynamoDB control parallelism by configuring the number of splits and read throughput to avoid throttling while maximizing scan speed.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/EMR_Hive_Commands.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set dynamodb.throughput.read.percent and mapred.min.split.size to control DynamoDB read parallelism from EMR.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/EMR_Hive_Commands.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_5",
+                            "title": "Parallelize data loads from Kinesis Data Streams",
+                            "helpfulResource": {
+                                "displayText": "When using Spark Structured Streaming on EMR with Kinesis the parallelism equals the number of Kinesis shards.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-streaming.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Scale Kinesis shard count to match desired parallelism. Use Enhanced Fan-Out for dedicated throughput per consumer.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-streaming.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_6",
+                            "title": "Control parallelism after data load with repartition and shuffle partitions",
+                            "helpfulResource": {
+                                "displayText": "After loading data use repartition() to redistribute data or set spark.sql.shuffle.partitions to control parallelism during shuffle operations like joins and aggregations.",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set spark.sql.shuffle.partitions based on data volume and cluster size. Default 200 is often too low for large datasets or too high for small ones.",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_7",
+                            "title": "Monitor data scan volume",
+                            "helpfulResource": {
+                                "displayText": "Monitor input data scan size through Spark UI SQL tab and stage input metrics to ensure partition pruning and predicate pushdown are working effectively.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-web-interfaces.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Compare input bytes read vs total dataset size to verify that partition pruning is reducing data scanned. Investigate if scan size is unexpectedly large.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-web-interfaces.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF4_1 && PERF4_2 && PERF4_3 && PERF4_4 && PERF4_5 && PERF4_6 && PERF4_7",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF4_1) || (!PERF4_2) || (!PERF4_3) || (!PERF4_4) || (!PERF4_5) || (!PERF4_6) || (!PERF4_7)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF5",
+                    "title": "How do you identified and improve your slow running job?",
+                    "description": "How do you identified and improve your slow running job?",
+                    "choices": [
+                        {
+                            "id": "PERF5_1",
+                            "title": "Identify slow stages in Spark History Server",
+                            "helpfulResource": {
+                                "displayText": "Compare stage durations and metrics between slow and fast runs. Check Input Output Shuffle Read and Shuffle Write for each stage to identify the bottleneck type.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-history.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use the persistent Spark History Server on EMR or cluster spark history server can to compare stage metrics across runs and pinpoint which stages regressed.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-history.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_2",
+                            "title": "Identify overly large DAGs",
+                            "helpfulResource": {
+                                "displayText": "Iterative algorithms that create DataFrames on each iteration can cause the DAG to grow unboundedly leading to driver OOM and executor disk errors.",
+                                "url": "https://spark.apache.org/docs/latest/rdd-programming-guide.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use checkpoint() or persist() to truncate the DAG lineage in iterative algorithms. Monitor driver memory usage for signs of DAG growth.",
+                                "url": "https://spark.apache.org/docs/latest/rdd-programming-guide.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_3",
+                            "title": "Identify resource waiting and scheduling delays",
+                            "helpfulResource": {
+                                "displayText": "Jobs may appear slow because tasks are waiting for YARN to allocate containers rather than actual computation being slow.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-managed-scaling.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Check YARN ResourceManager for pending containers. If tasks are queuing enable Managed Scaling or increase cluster size.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-managed-scaling.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_4",
+                            "title": "Use Spark DataFrame API over RDD API",
+                            "helpfulResource": {
+                                "displayText": "Spark DataFrame API leverages the Catalyst optimizer for query plan optimization and Tungsten for memory management providing significantly better performance than RDD API.",
+                                "url": "https://spark.apache.org/docs/latest/sql-programming-guide.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Migrate RDD-based code to DataFrame/Dataset API to benefit from Catalyst optimizer and whole-stage code generation.",
+                                "url": "https://spark.apache.org/docs/latest/sql-programming-guide.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_5",
+                            "title": "Identify and optimize data skew",
+                            "helpfulResource": {
+                                "displayText": "Data skew causes a few tasks to process disproportionately more data than others leading to long tail latency. Enable Adaptive Query Execution (AQE) to handle skew automatically.",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable spark.sql.adaptive.enabled and spark.sql.adaptive.skewJoin.enabled to let Spark automatically detect and split skewed partitions during sort-merge joins.",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_6",
+                            "title": "Optimize shuffles and reduce unnecessary data movement",
+                            "helpfulResource": {
+                                "displayText": "Shuffle is one of the most expensive operations in Spark. Excessive shuffles from joins aggregations and repartitions degrade performance significantly.",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use broadcast joins for small tables. Bucket tables on join keys. Pre-partition DataFrames before joins. Cache intermediate results. Avoid unnecessary collect() actions. You can also eanble Spark AQE as well.",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_7",
+                            "title": "Minimize query planning overhead",
+                            "helpfulResource": {
+                                "displayText": "For complex queries with many joins or unions the Catalyst optimizer planning phase can become a bottleneck consuming significant driver CPU time.",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Monitor driver CPU usage and Spark UI SQL tab planning time. Break complex queries into smaller stages or disable unnecessary optimizer rules if planning time is excessive.",
+                                "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_8",
+                            "title": "Optimize User Defined Functions",
+                            "helpfulResource": {
+                                "displayText": "Python UDFs serialize data between JVM and Python processes causing significant overhead. Prefer built-in Spark SQL functions or Pandas UDFs over row-at-a-time Python UDFs.",
+                                "url": "https://spark.apache.org/docs/latest/api/python/user_guide/sql/arrow_pandas.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Replace Python UDFs with built-in Spark SQL functions where possible. When UDFs are necessary use Pandas UDFs (vectorized UDFs) or write UDFs in Scala/Java.",
+                                "url": "https://spark.apache.org/docs/latest/api/python/user_guide/sql/arrow_pandas.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_9",
+                            "title": "Keep EMR and Spark versions up to date",
+                            "helpfulResource": {
+                                "displayText": "Newer EMR releases include optimized Spark runtimes with performance improvements. EMR runtime for Spark provides up to 3.5x performance improvement over open-source Spark.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Upgrade to the latest EMR release to benefit from EMR runtime optimizations including Bloom filter joins dynamic partition pruning and optimized S3 access.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF5_1 && PERF5_2 && PERF5_3 && PERF5_4 && PERF5_5 && PERF5_6 && PERF5_7 && PERF5_8 && PERF5_9",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF5_1) || (!PERF5_2) || (!PERF5_3) || (!PERF5_5) || (!PERF5_6) || (!PERF5_7) || (!PERF5_8) || (!PERF5_9)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "OPS",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "OPS1",
+                    "title": "How do you monitor ETL jobs in Spark on EMR?",
+                    "description": "Monitoring EMR clusters and Spark jobs is essential for operational visibility. This includes tracking cluster state changes, job execution status, resource utilization, and audit trails for governance and compliance.",
+                    "choices": [
+                        {
+                            "id": "OPS1_1",
+                            "title": "Enable AWS tags on EMR clusters",
+                            "helpfulResource": {
+                                "displayText": "To manage your EMR resources effectively, you can assign tags to clusters, instance fleets. Each tag is a key-value pair that you define to organize resources by team, environment, or cost center.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-tags.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define a consistent tagging strategy across all EMR clusters. Include tags for environment, team, cost center, and application name to enable cost allocation and resource tracking.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-tags.html"
+                            }
+                        },
+                        {
+                            "id": "OPS1_2",
+                            "title": "Automate EMR job event responses with Amazon EventBridge",
+                            "helpfulResource": {
+                                "displayText": "Amazon EventBridge allows you to react to EMR cluster state changes, step failures, and auto-scaling events in near real time. Rules can trigger Lambda functions, SNS notifications, or Step Functions workflows to automate incident response.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-manage-cloudwatch-events.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define EventBridge rules for critical EMR events such as cluster termination, step failure, or node unhealthy states. Automated responses reduce mean time to recovery (MTTR) and remove the need for manual monitoring.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-manage-cloudwatch-events.html"
+                            }
+                        },
+                        {
+                            "id": "OPS1_3",
+                            "title": "Log Spark on EMR API calls with AWS CloudTrail",
+                            "helpfulResource": {
+                                "displayText": "Amazon EMR is integrated with AWS CloudTrail, which records all API calls made by users, roles, or AWS services against EMR resources. This provides a complete audit trail for governance, compliance, and operational troubleshooting.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/logging-using-cloudtrail.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable CloudTrail logging for all EMR API calls. Use S3 access logs to audit data access patterns from EMR jobs. Combine CloudTrail with S3 access logs for comprehensive audit coverage.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/logging-using-cloudtrail.html"
+                            }
+                        },
+                        {
+                            "id": "OPS1_4",
+                            "title": "Enable EMR cluster logging to Amazon S3",
+                            "helpfulResource": {
+                                "displayText": "Configure your EMR cluster to archive logs to Amazon S3 for persistent access. EMR writes logs to the primary node in /mnt/var/log/ by default, but these are lost when the cluster terminates. S3 log archival ensures logs are available for post-mortem analysis and troubleshooting.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-debugging.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Always specify an S3 log URI when creating EMR clusters. This ensures application logs, step logs, and daemon logs are preserved after cluster termination for debugging and compliance.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-debugging.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS1_1 && OPS1_2 && OPS1_3 && OPS1_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS1_2) || (!OPS1_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS2",
+                    "title": "How do you monitor your Spark Job on Spark on EMR?",
+                    "description": "Monitoring individual Spark job performance is critical for identifying bottlenecks, optimizing resource usage, and ensuring SLA compliance. This includes leveraging Spark UI, CloudWatch metrics, and observability platforms.",
+                    "choices": [
+                        {
+                            "id": "OPS2_1",
+                            "title": "Monitor jobs using the Spark History Server and Spark Web UI",
+                            "helpfulResource": {
+                                "displayText": "EMR provides three Spark UI options: (1) Spark Event UI on port 20888 for live real-time monitoring, (2) Spark History Server on port 18080 for historical job analysis, and (3) EMR Persistent UI accessible for up to 30 days after application ends even after cluster termination. Use these to inspect DAG visualizations, stage/task metrics, shuffle read/write sizes, GC times, and executor logs.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/app-history-spark-UI.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use EMR Persistent Application UI for post-mortem analysis without keeping clusters running. For large clusters, increase SPARK_DAEMON_MEMORY (e.g., 4g or more) if the Spark History Server becomes unresponsive. In multi-master setups, note that persistent application UI is not supported.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/app-history-spark-UI.html"
+                            }
+                        },
+                        {
+                            "id": "OPS2_2",
+                            "title": "Monitor jobs using EMR cluster and CloudWatch metrics",
+                            "helpfulResource": {
+                                "displayText": "Amazon EMR publishes cluster-level and YARN-level metrics to Amazon CloudWatch every 5 minutes for free. Starting with EMR 7.0, you can install the CloudWatch Agent to publish 34 additional paid metrics every minute, including Hadoop, YARN, and HBase metrics. Key metrics include YARNMemoryAvailablePercentage, ContainerPendingRatio, HDFSUtilization, MRUnhealthyNodes, and MRLostNodes.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/UsingEMR_ViewingMetrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set up CloudWatch alarms for critical metrics: HDFSUtilization > 80%, MRUnhealthyNodes > 0, and YARNMemoryAvailablePercentage < 20%. Use the emr-cw_dashboard.sh script from the EMR best practices repo to create comprehensive CloudWatch dashboards.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Observability/best_practices/"
+                            }
+                        },
+                        {
+                            "id": "OPS2_3",
+                            "title": "Set up Spark observability with Prometheus and Grafana or Amazon Managed Services",
+                            "helpfulResource": {
+                                "displayText": "Spark JMX metrics provide fine-grained details on resource usage beyond YARN allocation, including actual heap usage. Use Amazon Managed Prometheus (AMP) and Amazon Managed Grafana (AMG), or configure PrometheusServlet and jmx_exporter to collect and visualize Spark metrics. Amazon OpenSearch can also be used for log analytics with Kibana.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-and-optimize-analytic-workloads-on-amazon-emr-with-prometheus-and-grafana/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy Prometheus node_exporter on each EMR node and configure Spark JMX exporter for detailed metrics collection. Use Grafana dashboards for real-time visualization of executor memory, GC behavior, and shuffle metrics.",
+                                "url": "https://aws.amazon.com/blogs/big-data/monitor-and-optimize-analytic-workloads-on-amazon-emr-with-prometheus-and-grafana/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS2_1 && OPS2_2 && OPS2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS2_1) || (!OPS2_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS3",
+                    "title": "How do you troubleshoot Spark on EMR?",
+                    "description": "Effective troubleshooting requires systematic log analysis, understanding of common failure patterns, and knowledge of EMR-specific diagnostic tools. This covers gathering diagnostic information, resolving common errors, and handling capacity issues.",
+                    "choices": [
+                        {
+                            "id": "OPS3_1",
+                            "title": "Gathering Spark on EMR troubleshooting information",
+                            "helpfulResource": {
+                                "displayText": "When encountering unexpected EMR behavior or failures, collect: cluster ID, step IDs, application IDs, bootstrap action logs, instance-state logs (CPU/memory/disk snapshots every 15 min), YARN ResourceManager logs, NodeManager logs, and container logs. Logs are stored at /mnt/var/log/ on nodes and archived to S3 if configured. Use \"yarn logs -applicationId <APP_ID>\" to retrieve application-specific logs.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-troubleshoot.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Always configure S3 log archival. Use instance-state logs to check disk usage (df -h), CPU load (load average), and memory (free -m). For Spark driver logs: in cluster mode check AM container logs; in client mode check step stderr. Use AWSSupport-AnalyzeEMRLogs automation for systematic log analysis.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-troubleshoot.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_2",
+                            "title": "Troubleshooting common errors in Spark on EMR",
+                            "helpfulResource": {
+                                "displayText": "Common Spark on EMR errors include: S3 503 Slow Down throttling (increase fs.s3.maxRetries, consider AIMD retry strategy for EMR 6.4+), FetchFailedException during shuffle (increase spark.reducer.maxBlocksInFlightPerAddress, check NodeManager heap), Container killed by YARN for exceeding memory limits (tune spark.executor.memory and memoryOverhead), and spark.driver.maxResultSize errors on heterogeneous clusters.",
+                                "url": "https://github.com/aws/aws-emr-best-practices/blob/main/website/docs/bestpractices/Applications/Spark/troubleshooting.md"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For S3 throttling: increase fs.s3.maxRetries to 20+, use Iceberg ObjectStoreLocationProvider for hash-based S3 prefixes. For large clusters (1000+ executors): increase spark.scheduler.listenerbus.eventqueue.size, spark.executor.heartbeatInterval to 30s. For concurrent workloads: pre-zip Spark dependencies and set spark.yarn.archive to avoid repeated zipping.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/spark-troubleshoot.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_3",
+                            "title": "Troubleshoot EMR node and cluster capacity issues",
+                            "helpfulResource": {
+                                "displayText": "Node failures, Spot interruptions, and insufficient EC2 capacity are common operational challenges. Nodes become UNHEALTHY when disk utilization exceeds 90% (yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage). UNHEALTHY nodes are excluded from YARN scheduling. After 45 minutes, nodes may be terminated if termination protection is off.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-troubleshoot-error-resource.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Right-size EBS volumes to prevent 90% disk threshold. Monitor MRUnhealthyNodes and HDFSUtilization CloudWatch metrics. Use Instance Fleets with multiple instance types. Set On-Demand for core nodes, Spot for task nodes. Enable managed scaling with appropriate min/max boundaries.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-managed-scaling.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_4",
+                            "title": "Spark on EMR quotas and API throttling",
+                            "helpfulResource": {
+                                "displayText": "EMR has resource limits (max active clusters, max instances per instance group) and API rate limits (burst and rate). For example, AddInstanceFleet has a burst limit of 5 calls/second. Exceeding these limits causes throttling errors that can impact cluster provisioning and scaling.",
+                                "url": "https://docs.aws.amazon.com/general/latest/gr/emr.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Reduce API call frequency, stagger intervals, and implement exponential back-off. Use AWS Service Quotas to request increases. Monitor for throttling errors in CloudTrail logs.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-service-limits-what-are.html"
+                            }
+                        },
+                        {
+                            "id": "OPS3_5",
+                            "title": "Troubleshoot HDFS health issues (missing blocks, corruption, under-replication)",
+                            "helpfulResource": {
+                                "displayText": "HDFS issues can critically impact Spark jobs. Use \"hdfs fsck /\" to check filesystem health and \"hdfs dfsadmin -report\" for usage reports. Monitor CloudWatch metrics: HDFSUtilization, MissingBlocks, CorruptBlocks, CapacityRemainingGB. Common causes include node termination reducing replicas, high disk usage, and DataNode communication failures.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-troubleshoot-error-resource.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Launch clusters with at least 4 core nodes (auto-sets dfs.replication=2). For critical data, use 10+ core nodes (dfs.replication=3). Never scale core nodes below dfs.replication count. Use \"hdfs dfs -setrep\" to fix under-replicated files. For corrupted HBase store files, restore from snapshots.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hdfs-config.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS3_1 && OPS3_2 && OPS3_3 && OPS3_4 && OPS3_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS3_1) || (!OPS3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS4",
+                    "title": "How do you support variable data source and schema evolution in Spark on EMR?",
+                    "description": "As data pipelines evolve, schemas change and new data sources are added. Using centralized metadata management and open table formats ensures backward compatibility and operational continuity.",
+                    "choices": [
+                        {
+                            "id": "OPS4_1",
+                            "title": "Use the AWS Glue Data Catalog as a centralized metastore for EMR",
+                            "helpfulResource": {
+                                "displayText": "The AWS Glue Data Catalog provides a centralized, persistent metastore that decouples metadata from compute. This enables multiple EMR clusters to share the same schema definitions, supports schema versioning, and integrates with Lake Formation for fine-grained access control.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-iceberg.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure EMR to use Glue Data Catalog by setting hive.metastore.client.factory.class. Organize databases and tables to reflect data domains. Use Lake Formation for column-level security. When upgrading from Hive 2.x to 3.x, follow the metastore schema upgrade procedure.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-glue.html"
+                            }
+                        },
+                        {
+                            "id": "OPS4_2",
+                            "title": "Handle schema evolution using Apache Iceberg or Apache Hudi on EMR",
+                            "helpfulResource": {
+                                "displayText": "Open table formats like Apache Iceberg and Apache Hudi provide native schema evolution support including adding/removing columns, renaming fields, and changing data types without rewriting existing data. Use Parquet or ORC columnar formats for optimal read/write performance and schema evolution compatibility.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-iceberg.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Adopt Apache Iceberg for new tables to leverage schema evolution, time travel, and partition evolution. Use Parquet as the underlying file format (default compression: Snappy). Avoid legacy formats like CSV/JSON for production data.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-iceberg.html"
+                            }
+                        },
+                        {
+                            "id": "OPS4_3",
+                            "title": "Standardize and reuse pipeline patterns using Infrastructure as Code",
+                            "helpfulResource": {
+                                "displayText": "As the number of EMR pipelines grows, maintaining consistency across cluster configurations, bootstrap actions, and step definitions becomes challenging. Use CloudFormation, CDK, or Terraform to codify EMR cluster configurations as reusable templates.",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Store EMR configurations as JSON files in S3 for easy reuse across environments. Use EMR Step API or orchestration services (Step Functions, MWAA) for job submission. Treat clusters as transient resources with automation to re-provision on demand.",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS4_1 && OPS4_2 && OPS4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS4_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS5",
+                    "title": "How do you create and deploy your Spark on EMR Job?",
+                    "description": "A robust development and deployment workflow for Spark on EMR includes local development and testing, CI/CD integration, and choosing the right deployment mode for production.",
+                    "choices": [
+                        {
+                            "id": "OPS5_1",
+                            "title": "Developing Spark on EMR ETL jobs locally using a container",
+                            "helpfulResource": {
+                                "displayText": "The Amazon EMR Toolkit for VS Code and Docker-based local environments enable developers to build and test Spark code locally before deploying to a cluster. This reduces iteration time and catches errors early in the development cycle.",
+                                "url": "https://aws.amazon.com/blogs/big-data/streamline-spark-application-development-on-amazon-emr-with-the-data-solutions-framework-on-aws/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set up a local Spark development environment using Docker containers that mirror the EMR runtime. Use EMR Serverless to quickly validate application code on upgraded Spark versions without managing infrastructure.",
+                                "url": "https://aws.amazon.com/blogs/big-data/streamline-spark-application-development-on-amazon-emr-with-the-data-solutions-framework-on-aws/"
+                            }
+                        },
+                        {
+                            "id": "OPS5_2",
+                            "title": "Deploy Spark on EMR jobs with your CI/CD pipeline",
+                            "helpfulResource": {
+                                "displayText": "Unit tests and integration tests are quality gates for Spark applications. Automate testing, packaging, and deployment of Spark jobs using CI/CD pipelines. Include data quality validation using tools like Deequ to verify data integrity after job execution.",
+                                "url": "https://aws.amazon.com/blogs/big-data/streamline-spark-application-development-on-amazon-emr-with-the-data-solutions-framework-on-aws/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement CI/CD pipelines that include unit testing, integration testing with sample data, and automated deployment to EMR. Use Deequ for data quality checks. Validate data integrity at multiple stages of long-running jobs.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Applications/Spark/data_quality#data-quality-and-integrity-checks-with-deequ"
+                            }
+                        },
+                        {
+                            "id": "OPS5_3",
+                            "title": "Choose the right Spark deploy mode (client vs cluster)",
+                            "helpfulResource": {
+                                "displayText": "Spark provides client and cluster deploy modes. Client mode runs the driver on the submitting node (good for 1-2 apps, notebook use cases, large clusters with 1000+ executors). Cluster mode runs the driver in YARN AM container (good for multiple concurrent apps, fault tolerance with AM retry, and when client disconnection should not kill the job).",
+                                "url": "https://spark.apache.org/docs/latest/submitting-applications.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use cluster mode for production batch jobs to benefit from driver fault tolerance (spark.yarn.maxAppAttempts). Use client mode for interactive/notebook workloads. In cluster mode, set spark.yarn.submit.waitAppCompletion=false if you want the client to return immediately after submission.",
+                                "url": "https://spark.apache.org/docs/latest/submitting-applications.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS5_1 && OPS5_2 && OPS5_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS5_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS6",
+                    "title": "How do you ensure your EMR cluster uses the latest and most performant configuration?",
+                    "description": "Keeping EMR clusters up to date with the latest releases, AMIs, and runtime optimizations is essential for performance, security, and cost efficiency.",
+                    "choices": [
+                        {
+                            "id": "OPS6_1",
+                            "title": "Use the most recent EMR version and AMI",
+                            "helpfulResource": {
+                                "displayText": "Each new EMR release includes performance improvements, bug fixes, and new features. EMR Spark runtime provides optimizations like Adaptive Query Execution (available from EMR 5.30/6.0+). EMR 6.5.0 Spark runtime is 1.9x faster than EMR 6.1.0 based on TPC-DS benchmarks. Each EMR release is locked to a specific Amazon Linux AMI version, so using the latest release also ensures the latest OS patches.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-release-components.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Upgrade to the latest EMR release version regularly. Use EMR Serverless to quickly validate application code on new versions without infrastructure changes. When using custom AMIs, base them on the most recent Amazon Linux AMI.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-default-ami.html"
+                            }
+                        },
+                        {
+                            "id": "OPS6_2",
+                            "title": "Treat all EMR clusters as transient resources",
+                            "helpfulResource": {
+                                "displayText": "Whether using long-running or short-running clusters, treat them as transient resources with automation to re-provision on demand. Decouple persistent data, metadata, scripts, and orchestrators from the cluster. This makes upgrading, patching, and recovering from failures easier and removes operational overhead.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-longrunning-transient.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Store all persistent data in S3, use external metastore (Glue Data Catalog or external RDS), and use orchestration services (Step Functions, MWAA) for job management. Have standard templates (CloudFormation/CDK) to ensure cluster startup consistency. Recreate long-running clusters periodically.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-longrunning-transient.html"
+                            }
+                        },
+                        {
+                            "id": "OPS6_3",
+                            "title": "Use Graviton instances for better price-performance",
+                            "helpfulResource": {
+                                "displayText": "Amazon EMR supports Graviton instances (e.g., m6g, r6g, c6g) from EMR 5.31+ and 6.1+, offering up to 15% performance improvement and 30% cost reduction compared to equivalent x86 instances. For example, m6g.4xlarge costs 19.8% less than m5.4xlarge with the same 16 vCPU and 64 GiB memory.",
+                                "url": "https://aws.amazon.com/blogs/big-data/amazon-emr-now-provides-up-to-30-lower-cost-and-up-to-15-improved-performance-for-spark-workloads-on-graviton2-based-instances/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Evaluate Graviton instances (m7g, r7g, c7g) as replacements for equivalent x86 instances. Test with representative workloads before migrating production. Consider M-family instances before defaulting to R-family, as many Spark jobs do not fully utilize extra memory.",
+                                "url": "https://aws.amazon.com/blogs/big-data/amazon-emr-now-provides-up-to-30-lower-cost-and-up-to-15-improved-performance-for-spark-workloads-on-graviton2-based-instances/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS6_1 && OPS6_2 && OPS6_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS6_1) || (!OPS6_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SEC",
+            "name": "Security",
+            "questions": [
+                {
+                    "id": "SEC1",
+                    "title": "How do you protect data in Spark on EMR?",
+                    "description": "Protecting data at rest and in transit is a core component of the AWS Well-Architected security pillar. Amazon EMR security configurations provide a template-based approach to enable encryption and other security settings that can be applied to any cluster at launch time.",
+                    "choices": [
+                        {
+                            "id": "SEC1_1",
+                            "title": "Encrypt data at rest using EMR security configurations",
+                            "helpfulResource": {
+                                "displayText": "Amazon EMR security configurations make it easy to encrypt data at rest. For S3 data via EMRFS, you can specify Amazon S3 server-side encryption (SSE-S3, SSE-KMS) or client-side encryption (CSE-KMS, CSE-Custom) as the default encryption mode. You can also specify different encryption methods for individual buckets using per-bucket encryption overrides. For local disk storage (EC2 instance store volumes and EBS), you can use Linux Unified Key Setup (LUKS) encryption or AWS KMS as your key provider.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-data-encryption-options.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "EMR disk encryption supports both LUKs encryption and EBS encryption. Not only LUKS. Besides, security configuration is already applied to all nodes, you can't apply security configration to certain nodes, so it seems not necessary to mention \"apply security configuration to all nodes\"",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-data-encryption-options.html."
+                            }
+                        },
+                        {
+                            "id": "SEC1_2",
+                            "title": "Encrypt data in transit using TLS certificates",
+                            "helpfulResource": {
+                                "displayText": "EMR security configurations allow you to enable in-transit encryption by either manually creating PEM certificates, packaging them in a zip file, and storing them in S3, or by implementing a custom Java certificate provider. EMR automatically downloads the certificates to each node and uses them to enable TLS encryption for supported HTTP-based open-source framework endpoints. For non-HTTP framework communication, such as Spark shuffle, HDFS RPC, and YARN shuffle, encryption is handled through each framework s native encryption mechanisms, such as AES-256 for Spark and SASL-based encryption for HDFS and YARN when Kerberos is enabled.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-data-encryption-options.html#emr-encryption-intransit"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement a certificate custom provider for automated certificate rotation, or use manually created PEM certificates for simpler setups. Ensure certificates cover all node hostnames in the cluster.",
+                                "url": "https://aws.amazon.com/blogs/big-data/secure-amazon-emr-with-encryption"
+                            }
+                        },
+                        {
+                            "id": "SEC1_3",
+                            "title": "Identify FIPS compliance requirements",
+                            "helpfulResource": {
+                                "displayText": "If you require FIPS 140-2 validated cryptographic modules when accessing AWS through a command line interface or an API, use a FIPS endpoint. Amazon EMR supports FIPS endpoints in applicable regions for API calls.",
+                                "url": "https://docs.aws.amazon.com/general/latest/gr/emr.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review your compliance requirements for FIPS 140-2. If required, configure AWS CLI and SDKs to use FIPS endpoints for EMR API calls.",
+                                "url": "https://docs.aws.amazon.com/general/latest/gr/rande.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_4",
+                            "title": "Apply Parquet columnar encryption for sensitive columns",
+                            "helpfulResource": {
+                                "displayText": "For fine-grained data protection, you can apply columnar encryption on Parquet files using KMS. This allows you to encrypt specific sensitive columns while leaving other columns readable, enabling analytics on non-sensitive fields without decrypting the entire dataset.",
+                                "url": "https://spark.apache.org/docs/latest/sql-data-sources-parquet.html#columnar-encryption"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Parquet crypto with KMS to encrypt sensitive columns (e.g., PII fields). Configure parquet.crypto.factory.class and parquet.encryption.column.keys in your Spark job to specify which columns to encrypt and with which master keys.",
+                                "url": "https://spark.apache.org/docs/latest/sql-data-sources-parquet.html#columnar-encryption"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC1_1 && SEC1_2 && SEC1_3 && SEC1_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC1_1) || (!SEC1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC2",
+                    "title": "How do you manage network security for Spark on EMR?",
+                    "description": "Network security is critical for protecting EMR clusters from unauthorized access. This includes controlling inbound/outbound traffic with security groups, deploying clusters in private subnets, and using VPC endpoints for AWS service access.",
+                    "choices": [
+                        {
+                            "id": "SEC2_1",
+                            "title": "Restrict network access using EMR security groups and block public access",
+                            "helpfulResource": {
+                                "displayText": "Inbound and outbound network access to your EMR cluster is controlled by EC2 Security Groups. Apply the principle of least privilege so your cluster is locked down to only the applications or individuals who need access from expected source IPs. The EMR block public access feature (enabled by default) prevents clusters in public subnets from launching when any security group allows inbound traffic from 0.0.0.0/0 or ::/0.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-security-groups.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review and tighten security group rules by removing broad inbound access, especially open SSH rules. Keep EMR block public access enabled and do not disable it. For remote interaction, prefer controlled access patterns such as AWS Systems Manager Session Manager, EMR Steps API, orchestration services like MWAA or Step Functions, or EMR Studio instead of direct SSH access.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-block-public-access.html"
+                            }
+                        },
+                        {
+                            "id": "SEC2_2",
+                            "title": "Provision EMR clusters in private VPC subnets",
+                            "helpfulResource": {
+                                "displayText": "It is recommended to provision EMR clusters in private VPC subnets. Private subnets allow you to limit access to deployed components and control security and routing. Communication with your own network can be established over VPN tunnel or AWS Direct Connect. For access to other AWS services (e.g., S3, CloudWatch), use VPC endpoints to keep traffic within the AWS network.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-vpc-subnet.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy production EMR clusters in private subnets and create VPC endpoints for services used by EMR, such as Amazon S3 gateway endpoints, CloudWatch, AWS KMS, and other required AWS services. Customers can still access the Spark UI for a private EMR cluster if their local environment has network connectivity to the cluster through approved private access paths such as VPN, AWS Direct Connect, a bastion host, or similar mechanisms. Persistent Application UIs are most useful when customers need to review Spark logs and application details after the EMR cluster has been terminated, but some customers may have concerns about sending application logs to the EMR backend for this feature, so security and compliance requirements should be validated before recommending it as the default access method.",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-access.html"
+                            }
+                        },
+                        {
+                            "id": "SEC2_3",
+                            "title": "Enforce IMDSv2 on EMR cluster instances",
+                            "helpfulResource": {
+                                "displayText": "The EC2 Instance Metadata Service (IMDS) provides instance data accessible via HTTP at 169.254.169.254. IMDSv2 adds protections against SSRF vulnerabilities, open firewalls, and reverse proxy attacks. From EMR 5.32 and 6.2 onward, Amazon EMR components use IMDSv2 for all IMDS calls. It is recommended to disable IMDSv1 and only allow IMDSv2.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-create-security-configuration.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure IMDSv2 enforcement in EMR Security Configurations. Update any custom application code that uses IMDSv1 to use IMDSv2 (token-based requests). Test thoroughly before enforcing in production.",
+                                "url": "https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC2_1 && SEC2_2 && SEC2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC2_1) || (!SEC2_2) || (!SEC2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC3",
+                    "title": "How do you manage identity and access in Spark on EMR?",
+                    "description": "Proper identity and access management ensures that only authorized users and services can interact with EMR clusters and the data they process. This includes IAM roles, resource policies, Lake Formation integration, and Kerberos authentication.",
+                    "choices": [
+                        {
+                            "id": "SEC3_1",
+                            "title": "Create separate IAM roles for long running EMR cluster or use case",
+                            "helpfulResource": {
+                                "displayText": "EMR uses IAM service roles to perform actions on your behalf to provision and manage clusters. It is recommended to create a separate IAM role for each use case and workload, allowing you to segregate access control between clusters. Use the new v2 managed policies (e.g., AmazonEMRFullAccessPolicy_v2) which are scoped down using tags and align with AWS best practices.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-iam-roles.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create dedicated IAM roles per cluster or workload. Use EMR-specific tag conditions in IAM policies to restrict access. Migrate from legacy managed policies to v2 policies. Use Runtime Roles (EMR 6.x+) for per-job credential isolation.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-managed-policy-fullaccess-v2.html"
+                            }
+                        },
+                        {
+                            "id": "SEC3_2",
+                            "title": "Use AWS Lake Formation for fine-grained access control on data",
+                            "helpfulResource": {
+                                "displayText": "AWS Lake Formation provides column-level and row-level security for data accessed through EMR. Combined with the Glue Data Catalog, Lake Formation enables centralized governance of data permissions across multiple EMR clusters and other analytics services.",
+                                "url": "https://docs.aws.amazon.com/lake-formation/latest/dg/what-is-lake-formation.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Integrate EMR with Lake Formation for table-level and column-level access control. Define data permissions in Lake Formation rather than S3 bucket policies for more granular control. Use Lake Formation with Glue Data Catalog as the central metastore.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-lf-conceptual.html"
+                            }
+                        },
+                        {
+                            "id": "SEC3_3",
+                            "title": "Enable Kerberos authentication for strong identity verification",
+                            "helpfulResource": {
+                                "displayText": "By default, EMR clusters do not enable authentication, allowing any client to access services. For strong authentication, use Kerberos which implements SASL at the RPC level for authentication and encryption negotiation. EMR automatically configures Kerberos for Spark, Hive, HBase, and other frameworks when you launch a cluster with a Kerberos-enabled Security Configuration.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-kerberos.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable Kerberos authentication through EMR Security Configurations for clusters that require strong identity verification. Configure cross-realm trust with your corporate Active Directory if needed, and use service-specific authorization controls to enforce least-privilege access across EMR applications.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-kerberos.html"
+                            }
+                        },
+                        {
+                            "id": "SEC3_4",
+                            "title": "Granting cross-account access securely",
+                            "helpfulResource": {
+                                "displayText": "Cross-account access enables ETL jobs to query and join data from different AWS accounts. Use IAM roles with cross-account trust policies and S3 bucket policies to grant access. For Glue Data Catalog resources, use resource-based policies to share databases and tables across accounts.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-iam-roles.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use IAM role assumption (sts:AssumeRole) for cross-account access rather than sharing credentials. Apply least-privilege principles to cross-account policies. Audit cross-account access patterns using CloudTrail.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC3_1 && SEC3_2 && SEC3_3 && SEC3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC3_1) || (!SEC3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC4",
+                    "title": "How do you audit and maintain security posture for Spark on EMR?",
+                    "description": "Maintaining a strong security posture requires continuous auditing of user activity, regular patching of software and OS, and monitoring for security events. This includes CloudTrail integration, S3 access logging, and AMI management.",
+                    "choices": [
+                        {
+                            "id": "SEC4_1",
+                            "title": "Audit user activity with AWS CloudTrail and S3 access logs",
+                            "helpfulResource": {
+                                "displayText": "AWS CloudTrail captures all API calls for Amazon EMR as events, providing a complete audit trail for governance and compliance. However, CloudTrail only records AWS API calls; it does not track S3 data access from EMR jobs. Use S3 access logs to comprehensively monitor and audit data access patterns from EMR.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/logging-using-cloudtrail.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable CloudTrail for all EMR API calls. Enable S3 server access logging or S3 CloudTrail data events on buckets accessed by EMR to audit data-level access. Install third-party auditing agents via bootstrap actions or custom AMIs if additional audit requirements exist.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/logging-using-cloudtrail.html"
+                            }
+                        },
+                        {
+                            "id": "SEC4_2",
+                            "title": "Upgrade EMR releases and AMIs frequently for security patches",
+                            "helpfulResource": {
+                                "displayText": "Each EMR release is locked to a specific Amazon Linux AMI version for compatibility. This means the same AMI is used even when newer ones become available. Use the latest EMR release to get the latest OS and application security patches. When using custom AMIs, base them on the most recent Amazon Linux AMI and rebuild when new AMIs are released.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-default-ami.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish a regular upgrade cadence for EMR releases. If you must use an earlier release, use the latest in that series (e.g., 5.12.2 instead of 5.12.0). For custom AMIs, automate rebuilds when new Amazon Linux AMIs are released. Test upgrades in non-production environments first.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-custom-ami.html"
+                            }
+                        },
+                        {
+                            "id": "SEC4_3",
+                            "title": "Monitor EMR security events and configure alerts",
+                            "helpfulResource": {
+                                "displayText": "Set up monitoring for security-relevant events including unauthorized access attempts, security group changes, IAM policy modifications, and cluster launches without encryption. Use EventBridge rules to detect and respond to security events in near real time.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-manage-cloudwatch-events.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create EventBridge rules for EMR security events (e.g., cluster launched without security configuration, security group modifications). Use AWS Config rules to enforce encryption and network security compliance. Integrate with AWS Security Hub for centralized security findings.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-manage-cloudwatch-events.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC4_1 && SEC4_2 && SEC4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC4_1) || (!SEC4_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "REL",
+            "name": "Reliability",
+            "questions": [
+                {
+                    "id": "REL1",
+                    "title": "How do you ensure EMR cluster resilience and high availability?",
+                    "description": "How do you design your EMR clusters to be resilient against node failures and service interruptions?",
+                    "choices": [
+                        {
+                            "id": "REL1_1",
+                            "title": "Use Multi-Master EMR clusters for high availability",
+                            "helpfulResource": {
+                                "displayText": "EMR Multi-Master clusters provide high availability for the master node by running multiple master nodes. If one master fails the cluster continues to operate.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-ha.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy Multi-Master clusters for long-running or critical workloads to eliminate the master node as a single point of failure.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-ha.html"
+                            }
+                        },
+                        {
+                            "id": "REL1_2",
+                            "title": "Configure instance fleets with multiple instance types",
+                            "helpfulResource": {
+                                "displayText": "Instance fleets allow you to specify multiple instance types per node group. EMR automatically provisions the best available capacity reducing the risk of insufficient capacity errors.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-fleet.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use instance fleets with a diversified list of instance types for core and task nodes to improve capacity availability and Spot instance fulfillment.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-fleet.html"
+                            }
+                        },
+                        {
+                            "id": "REL1_3",
+                            "title": "Use On-Demand instances for core nodes and Spot for task nodes",
+                            "helpfulResource": {
+                                "displayText": "Core nodes store HDFS data. Losing a core node on Spot termination can cause data loss. Task nodes only process data and can be safely interrupted.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-instances-guidelines.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use On-Demand or Reserved Instances for core nodes to protect HDFS data. Use Spot instances for task nodes to reduce cost while maintaining fault tolerance.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-instances-guidelines.html"
+                            }
+                        },
+                        {
+                            "id": "REL1_4",
+                            "title": "Enable termination protection",
+                            "helpfulResource": {
+                                "displayText": "Termination protection prevents accidental cluster termination from API calls or console actions. It must be explicitly disabled before a cluster can be terminated.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/UsingEMR_TerminationProtection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable termination protection on long-running and production clusters to prevent accidental termination.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/UsingEMR_TerminationProtection.html"
+                            }
+                        },
+                        {
+                            "id": "REL1_5",
+                            "title": "Deploy clusters across multiple Availability Zones using EMR on EKS",
+                            "helpfulResource": {
+                                "displayText": "EMR on EKS can leverage EKS clusters spanning multiple AZs providing resilience against AZ-level failures for Spark workloads.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/emr-eks.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For workloads requiring AZ-level resilience consider EMR on EKS with multi-AZ EKS node groups.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/emr-eks.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL1_1 && REL1_2 && REL1_3 && REL1_4 && REL1_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!REL1_1) || (!REL1_2) || (!REL1_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL2",
+                    "title": "How do you ensure data durability and protection for EMR workloads?",
+                    "description": "How do you protect data processed and stored by EMR clusters against loss or corruption?",
+                    "choices": [
+                        {
+                            "id": "REL2_1",
+                            "title": "Use Amazon S3 as the primary data store instead of HDFS",
+                            "helpfulResource": {
+                                "displayText": "HDFS on EMR is ephemeral and tied to cluster lifecycle. Amazon S3 provides 99.999999999% durability and decouples storage from compute.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-file-systems.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Store input data intermediate results and output data on S3. Use HDFS only for temporary shuffle and cache data that benefits from local I/O performance."
+                            }
+                        },
+                        {
+                            "id": "REL2_2",
+                            "title": "Use S3 Strong Consistency",
+                            "helpfulResource": {
+                                "displayText": "Amazon S3 now provides strong read-after-write consistency and strong list consistency by default, so EMRFS Consistent View is no longer required for new Amazon EMR architectures. EMRFS Consistent View also reached end of standard support for future EMR releases on June 1, 2023, although it can continue to work on existing releases.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-consistent-view.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use Amazon S3 strong consistency directly for EMR, Spark, Hive, and data lake workloads that read newly written or updated S3 objects. After a successful write, overwrite, or delete, subsequent reads and list operations reflect the latest state without needing an extra DynamoDB-backed metadata layer. This reduces operational complexity and can avoid unnecessary DynamoDB costs previously used by EMRFS Consistent View.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-file-systems.html"
+                            }
+                        },
+                        {
+                            "id": "REL2_3",
+                            "title": "Use S3 versioning and replication for critical datasets",
+                            "helpfulResource": {
+                                "displayText": "Amazon S3 provides strong read-after-write and list consistency by default, so EMRFS Consistent View is no longer needed for new EMR workloads.",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "This simplifies architecture and avoids the extra DynamoDB metadata layer previously used by EMRFS Consistent View.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-consistent-view.html"
+                            }
+                        },
+                        {
+                            "id": "REL2_4",
+                            "title": "Use open table formats for ACID transactions and data integrity",
+                            "helpfulResource": {
+                                "displayText": "Apache Iceberg Hudi and Delta Lake on EMR provide ACID transactions snapshot isolation and rollback capabilities protecting against partial writes and data corruption.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-iceberg.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Adopt Iceberg or Hudi for tables that require transactional guarantees concurrent writes or the ability to roll back to a previous state.",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html"
+                            }
+                        },
+                        {
+                            "id": "REL2_5",
+                            "title": "Use EMR S3 optimized committer for reliable writes",
+                            "helpfulResource": {
+                                "displayText": "For EMR versions before 7.10, EMRFS S3-optimized committer is valid for reliable Spark writes to S3. For EMR 7.10 and later, EMR uses S3A by default, so avoid EMRFS-specific guidance.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-s3-optimized-committer.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use version-aware wording: pre-7.10 = EMRFS committer; 7.10+ = S3A/default optimized write path.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-iceberg.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL2_1 && REL2_2 && REL2_3 && REL2_4 && REL2_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!REL2_1) || (!REL2_2) || (!REL2_4) || (!REL2_5)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL3",
+                    "title": "How do you handle Spark job failures and enable recovery on EMR?",
+                    "description": "How do you design your Spark jobs on EMR to handle failures gracefully and recover automatically?",
+                    "choices": [
+                        {
+                            "id": "REL3_1",
+                            "title": "Configure EMR step action on failure",
+                            "helpfulResource": {
+                                "displayText": "EMR steps support configurable action-on-failure policies: TERMINATE_CLUSTER CANCEL_AND_WAIT and CONTINUE. Choose the appropriate policy based on step dependencies.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-work-with-steps.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use CANCEL_AND_WAIT for production clusters to pause on failure for investigation. Use CONTINUE for independent steps that should not block subsequent steps.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-work-with-steps.html"
+                            }
+                        },
+                        {
+                            "id": "REL3_2",
+                            "title": "Implement retry logic with AWS Step Functions",
+                            "helpfulResource": {
+                                "displayText": "AWS Step Functions provides built-in retry and error handling for EMR job orchestration including exponential backoff and catch blocks.",
+                                "url": "https://docs.aws.amazon.com/step-functions/latest/dg/connect-emr.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Wrap EMR step submissions in Step Functions with retry policies that include maxAttempts backoffRate and error type filtering.",
+                                "url": "https://docs.aws.amazon.com/step-functions/latest/dg/connect-emr.html"
+                            }
+                        },
+                        {
+                            "id": "REL3_3",
+                            "title": "Use Spark checkpointing for long-running and streaming jobs",
+                            "helpfulResource": {
+                                "displayText": "Spark checkpointing persists RDD/DataFrame lineage to reliable storage enabling recovery from executor failures without recomputing the entire DAG.",
+                                "url": "https://spark.apache.org/docs/latest/streaming-programming-guide.html#checkpointing"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For Spark Structured Streaming jobs, configure a durable S3 checkpoint location to store progress, offsets, and state so the job can recover after failure or restart.",
+                                "url": "https://spark.apache.org/docs/latest/streaming-programming-guide.html#checkpointing"
+                            }
+                        },
+                        {
+                            "id": "REL3_4",
+                            "title": "Handle Spot instance interruptions gracefully",
+                            "helpfulResource": {
+                                "displayText": "Spot instances can be reclaimed with 2 minutes notice. EMR handles Spot termination by rescheduling tasks but jobs should be designed to tolerate executor loss.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-instances-guidelines.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Keep primary and critical core nodes on On-Demand. Use Spot task nodes for extra compute capacity. Enable YARN node labels on EMR after version 6.x so application masters run on core nodes, not Spot task nodes.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-instances-guidelines.html"
+                            }
+                        },
+                        {
+                            "id": "REL3_5",
+                            "title": "Implement idempotent job design",
+                            "helpfulResource": {
+                                "displayText": "Jobs that may be retried should produce the same result regardless of how many times they run. This prevents data duplication or corruption on retry.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Design ETL jobs to overwrite output partitions atomically rather than appending. Use open table formats with MERGE operations for upsert patterns.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-iceberg.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL3_1 && REL3_2 && REL3_3 && REL3_4 && REL3_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!REL3_1) || (!REL3_2) || (!REL3_3) || (!REL3_4) || (!REL3_5)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL4",
+                    "title": "How do you manage EMR cluster lifecycle and automate recovery?",
+                    "description": "How do you automate EMR cluster provisioning and ensure consistent repeatable deployments?",
+                    "choices": [
+                        {
+                            "id": "REL4_1",
+                            "title": "Use transient clusters for batch workloads",
+                            "helpfulResource": {
+                                "displayText": "Transient clusters are created for a specific job and terminated upon completion. This eliminates long-running cluster maintenance and reduces blast radius of failures.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-overview.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use transient clusters for scheduled batch ETL jobs. Automate cluster creation with Step Functions or Airflow to ensure consistent configuration.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-overview.html"
+                            }
+                        },
+                        {
+                            "id": "REL4_2",
+                            "title": "Define clusters as Infrastructure as Code",
+                            "helpfulResource": {
+                                "displayText": "Use AWS CloudFormation or Terraform to define EMR cluster configurations as code ensuring repeatable deployments and version-controlled configuration changes.",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-cluster.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Maintain EMR cluster definitions in CloudFormation or Terraform with parameterized templates for different environments (dev staging prod).",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-cluster.html"
+                            }
+                        },
+                        {
+                            "id": "REL4_3",
+                            "title": "Use EMR launch templates and instance fleet configurations",
+                            "helpfulResource": {
+                                "displayText": "EMR supports launch templates that define reusable cluster configurations including instance types networking and bootstrap actions.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-fleet.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create standardized EMR launch configurations for each workload type to ensure consistency and reduce configuration drift across cluster launches.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-fleet.html"
+                            }
+                        },
+                        {
+                            "id": "REL4_4",
+                            "title": "Automate bootstrap actions for consistent cluster setup",
+                            "helpfulResource": {
+                                "displayText": "Bootstrap actions run scripts on cluster nodes during launch to install additional software configure settings or download dependencies.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-bootstrap.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use bootstrap actions to install required libraries configure system settings and validate prerequisites. Store bootstrap scripts in S3 with versioning.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-bootstrap.html"
+                            }
+                        },
+                        {
+                            "id": "REL4_5",
+                            "title": "Implement cluster health monitoring and alerting",
+                            "helpfulResource": {
+                                "displayText": "Set up CloudWatch alarms on key EMR metrics such as IsIdle HDFSUtilization YARNMemoryAvailablePercentage and UnhealthyNodes to detect issues early.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/UsingEMR_ViewingMetrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create CloudWatch alarms for cluster health metrics and integrate with SNS for notifications. Use EventBridge rules to capture EMR state change events.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-manage-cloudwatch-events.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL4_1 && REL4_2 && REL4_3 && REL4_4 && REL4_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!REL4_1) || (!REL4_2) || (!REL4_5)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL5",
+                    "title": NaN,
+                    "description": NaN,
+                    "choices": [
+                        {
+                            "id": "REL5_1",
+                            "title": "Store all critical data and artifacts in S3 with cross-region replication",
+                            "helpfulResource": {
+                                "displayText": "Decouple data from compute by storing all input data output data job scripts and configurations in S3. Enable cross-region replication for DR requirements.",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Replicate S3 buckets containing job scripts bootstrap actions configuration files and critical datasets to a secondary region.",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html"
+                            }
+                        },
+                        {
+                            "id": "REL5_2",
+                            "title": "Replicate Glue Data Catalog metadata across regions",
+                            "helpfulResource": {
+                                "displayText": "If using Glue Data Catalog as the metastore the catalog metadata must be available in the DR region. Use AWS Glue resource policies or export/import for replication.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/export-import.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement automated Glue Data Catalog export and import to the DR region or use CloudFormation to maintain catalog definitions as code.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/export-import.html"
+                            }
+                        },
+                        {
+                            "id": "REL5_3",
+                            "title": "Maintain cluster launch automation in multiple regions",
+                            "helpfulResource": {
+                                "displayText": "Ensure your IaC templates Step Functions workflows and CI/CD pipelines can launch EMR clusters in a secondary region with minimal manual intervention.",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-cluster.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy CloudFormation stacks or Terraform configurations for EMR in both primary and DR regions. Test DR cluster launches periodically.",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-cluster.html"
+                            }
+                        },
+                        {
+                            "id": "REL5_4",
+                            "title": "Design jobs for region portability",
+                            "helpfulResource": {
+                                "displayText": "Avoid hardcoding region-specific resource ARNs S3 paths or endpoint URLs in job scripts. Use parameterized configurations that can be switched per region.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Externalize all region-specific configurations (S3 paths IAM roles VPC settings) into parameter files or environment variables for easy region switching.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html"
+                            }
+                        },
+                        {
+                            "id": "REL5_5",
+                            "title": "Define and test RTO/RPO targets for EMR workloads",
+                            "helpfulResource": {
+                                "displayText": "Establish Recovery Time Objective and Recovery Point Objective for each EMR workload based on business criticality and data freshness requirements.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Document RTO/RPO targets for each EMR workload. Conduct periodic DR drills to validate that recovery procedures meet the defined targets.",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL5_1 && REL5_2 && REL5_3 && REL5_4 && REL5_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!REL5_1) || (!REL5_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL6",
+                    "title": "How do you handle S3 throttling and ensure reliable data access from EMR?",
+                    "description": "How do you handle S3 503 Slow Down errors and ensure reliable data access for EMR workloads?",
+                    "choices": [
+                        {
+                            "id": "REL6_1",
+                            "title": "Configure EMRFS retry strategies for S3 503 errors",
+                            "helpfulResource": {
+                                "displayText": "When S3 request rates exceed 3500 PUT or 5500 GET per prefix per second S3 returns 503 Slow Down errors. EMRFS provides exponential back-off and AIMD retry strategies.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-emrfs-retry.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Increase fs.s3.maxRetries (default 4) to 20-50 in emrfs-site. For EMR 6.4+ consider enabling AIMD retry strategy for adaptive throttling.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-emrfs-retry.html"
+                            }
+                        },
+                        {
+                            "id": "REL6_2",
+                            "title": "Optimize S3 data layout to distribute requests across prefixes",
+                            "helpfulResource": {
+                                "displayText": "S3 rate limits are per-prefix. Structuring data with additional prefix levels distributes requests and increases effective throughput.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html#emr-spark-performance-dynamic"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Add partition columns to S3 prefix structure to spread requests. Use coalesce or repartition to reduce output file count and write request volume.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-performance.html#emr-spark-performance-dynamic"
+                            }
+                        },
+                        {
+                            "id": "REL6_3",
+                            "title": "Stagger job start times to smooth S3 request patterns",
+                            "helpfulResource": {
+                                "displayText": "Multiple jobs starting simultaneously against the same S3 prefix can trigger throttling. Spreading job start times reduces peak request rates.",
+                                "url": "https://aws.amazon.com/premiumsupport/knowledge-center/emr-s3-503-slow-down/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Stagger job schedules across the hour or day instead of launching all jobs at the same time to reduce concurrent S3 request volume.",
+                                "url": "https://aws.amazon.com/premiumsupport/knowledge-center/emr-s3-503-slow-down/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL6_1 && REL6_2 && REL6_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!REL6_1) || (!REL6_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "REL7",
+                    "title": "How do you ensure HDFS reliability and node health on EMR?",
+                    "description": "How do you configure HDFS replication and EBS storage to prevent data loss and unhealthy nodes?",
+                    "choices": [
+                        {
+                            "id": "REL7_1",
+                            "title": "Set dfs.replication greater than 1 for Spot core nodes or long-running clusters",
+                            "helpfulResource": {
+                                "displayText": "If dfs.replication is 1 and a core node is lost due to Spot reclamation or hardware failure you risk losing HDFS data and the cluster becoming unusable.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hdfs-config.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Launch at least 2 core nodes and set dfs.replication to 2. Never scale core node count below the dfs.replication value.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hdfs-config.html"
+                            }
+                        },
+                        {
+                            "id": "REL7_2",
+                            "title": "Right-size EBS volumes to avoid UNHEALTHY nodes",
+                            "helpfulResource": {
+                                "displayText": "When disk usage exceeds 90% the disk is marked unhealthy. If fewer than 25% of a node disks are healthy the entire node is marked UNHEALTHY and stops receiving containers.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-instances-guidelines.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Size EBS volumes to handle HDFS data and Spark shuffle spill. Monitor HDFSUtilization and MRUnhealthyNodes CloudWatch metrics and set alarms.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-instances-guidelines.html"
+                            }
+                        },
+                        {
+                            "id": "REL7_3",
+                            "title": "Audit and manage EMR and EC2 service limits to avoid throttling",
+                            "helpfulResource": {
+                                "displayText": "EMR has API burst and rate limits. Exceeding these limits causes throttling errors that can impact cluster provisioning and job orchestration.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-service-limits-what-are.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use retry with exponential backoff, avoid unnecessary polling, and batch or stagger automation requests when managing multiple EMR clusters or jobs.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-service-limits-what-are.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "REL7_1 && REL7_2 && REL7_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!REL7_1) || (!REL7_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "COST",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "COST1",
+                    "title": "How are you choosing the right compute unit and storage for Spark on EMR Job?",
+                    "description": "How are you choosing the right compute unit and storage and enable spark dynamic allocation for Spark on EMR Job?",
+                    "choices": [
+                        {
+                            "id": "COST1_1",
+                            "title": "Streamline Spark application development on Amazon EMR with the Data Solutions Framework on AWS",
+                            "helpfulResource": {
+                                "displayText": "Before deploying to production, leverage a local environment to test and debug your application.",
+                                "url": "https://aws.amazon.com/blogs/big-data/streamline-spark-application-development-on-amazon-emr-with-the-data-solutions-framework-on-aws/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Improve by enhancing Docker-based local testing and CI/CD to better match EMR runtime behavior before production.",
+                                "url": "https://aws.amazon.com/blogs/big-data/streamline-spark-application-development-on-amazon-emr-with-the-data-solutions-framework-on-aws/"
+                            }
+                        },
+                        {
+                            "id": "COST1_2",
+                            "title": "Structure your data to build high performant of Spark on EMR Job",
+                            "helpfulResource": {
+                                "displayText": "You can identify your ETL job query pattern and structure your data so that you can get better performance and reduce cost through target the partitioned data.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can apply the same practices to Amazon EMR data processing applications such as Spark, Presto, and Hive when your data is stored in Amazon S3.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            }
+                        },
+                        {
+                            "id": "COST1_3",
+                            "title": "Use Amazon S3 as your persistent data store",
+                            "helpfulResource": {
+                                "displayText": "Using Amazon S3 with Amazon EMR via EMRFS enables significantly lower-cost, scalable, and decoupled storage compared to HDFS on EBS, while still allowing selective HDFS usage for performance-critical intermediate data.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Further optimize costs by tiering infrequently accessed data in Amazon S3, minimizing HDFS/EBS usage to transient workloads, and aligning storage choices with performance versus cost trade-offs.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/"
+                            }
+                        },
+                        {
+                            "id": "COST1_4",
+                            "title": "Use the right hardware family for the job type",
+                            "helpfulResource": {
+                                "displayText": "Choosing the right instance types for Amazon EMR based on workload improves performance and stability.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize by right-sizing instances and avoiding over-provisioning to balance cost and performance.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/"
+                            }
+                        },
+                        {
+                            "id": "COST1_5",
+                            "title": "Use instances with instance store for jobs that require high disk IOPS",
+                            "helpfulResource": {
+                                "displayText": "Using dense SSD instances (e.g., I3en, D3en) on Amazon EMR improves performance for HDFS and shuffle-heavy workloads, reducing overall processing time and cost.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize further by using SSD-backed instances only for I/O-intensive workloads and avoiding overuse for compute-light jobs to control cost.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/"
+                            }
+                        },
+                        {
+                            "id": "COST1_6",
+                            "title": "Use Graviton family instances",
+                            "helpfulResource": {
+                                "displayText": "Using AWS Graviton2 instances on Amazon EMR can deliver better price-performance, reducing cost by ~20% while maintaining similar compute capacity.",
+                                "url": "https://aws.amazon.com/blogs/big-data/amazon-emr-now-provides-up-to-30-lower-cost-and-up-to-15-improved-performance-for-spark-workloads-on-graviton2-based-instances"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize further by evaluating workload compatibility with Graviton-based instances and migrating suitable Spark jobs to maximize cost savings and performance gains.",
+                                "url": "https://aws.amazon.com/blogs/big-data/amazon-emr-now-provides-up-to-30-lower-cost-and-up-to-15-improved-performance-for-spark-workloads-on-graviton2-based-instances"
+                            }
+                        },
+                        {
+                            "id": "COST1_7",
+                            "title": "Use spot instances",
+                            "helpfulResource": {
+                                "displayText": "Using Amazon EC2 Spot Instances with Amazon EMR enables up to 90% cost savings while maintaining processing continuity for fault-tolerant workloads.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-running-apache-spark-applications-using-amazon-ec2-spot-instances-with-amazon-emr/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize further by combining Spot with On-Demand capacity and designing workloads to handle interruptions to maximize savings without impacting reliability.",
+                                "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-running-apache-spark-applications-using-amazon-ec2-spot-instances-with-amazon-emr/"
+                            }
+                        },
+                        {
+                            "id": "COST1_8",
+                            "title": "Mix on-Demand and spot instances",
+                            "helpfulResource": {
+                                "displayText": "Combining Amazon EC2 Spot Instances with On-Demand in Amazon EMR reduces cost and runtime by adding scalable compute while maintaining baseline reliability for critical workloads.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize further by sizing On-Demand capacity for SLA guarantees and using Spot for burst scaling, while accounting for potential reprocessing overhead due to interruptions.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/"
+                            }
+                        },
+                        {
+                            "id": "COST1_9",
+                            "title": "Use EMR managed scaling",
+                            "helpfulResource": {
+                                "displayText": "Enabling managed scaling in Amazon EMR automatically adjusts cluster size based on workload, improving utilization and reducing cost.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize further by setting appropriate scaling limits and monitoring workload patterns to avoid over-scaling while maintaining performance.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST1_1 && COST1_2 && COST1_3 && COST1_4 && COST1_5 && COST1_6 && COST1_7 && COST1_8 && COST1_9",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST1_2) || (!COST1_3) || (!COST1_4) || (!COST1_6) || (!COST1_8) || (!COST1_9)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST2",
+                    "title": "Have you monitor and optimize cost on Spark on EMR?",
+                    "description": "Have you monitor and optimize cost on Spark on EMR?",
+                    "choices": [
+                        {
+                            "id": "COST2_1",
+                            "title": "Right size application containers",
+                            "helpfulResource": {
+                                "displayText": "Default YARN and Spark configurations in Amazon EMR are optimized for instance resources, and proper executor sizing significantly improves CPU and memory utilization.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hadoop-task-config.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize further by tuning executor memory and cores to align with YARN resource allocation, maximizing cluster utilization and reducing wasted resources.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hadoop-task-config.html"
+                            }
+                        },
+                        {
+                            "id": "COST2_2",
+                            "title": "Use the latest Amazon EMR version",
+                            "helpfulResource": {
+                                "displayText": "New EMR versions have performance improvements, cost savings, bug fixes stability improvements and new features.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-release-components.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use the latest EMR version and upgrade whenever possible.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-release-components.html"
+                            }
+                        },
+                        {
+                            "id": "COST2_3",
+                            "title": "Select the appropriate pricing model for your use case and node type",
+                            "helpfulResource": {
+                                "displayText": "Selecting the right purchasing options (On-Demand, Spot, Reserved/Savings Plans) for Amazon EMR based on workload criticality and duration helps balance cost and reliability.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-purchasing-options.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize further by combining Spot for cost savings with On-Demand or Reserved capacity for baseline stability, especially for streaming or always-on workloads.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-instance-purchasing-options.html"
+                            }
+                        },
+                        {
+                            "id": "COST2_4",
+                            "title": "Using transient than long-running clusters",
+                            "helpfulResource": {
+                                "displayText": "Choosing between transient and long-running clusters in Amazon EMR based on workload type helps optimize cost, flexibility, and operational efficiency.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/#monitor-cluster-utilization"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize further by right-sizing transient clusters and enabling managed scaling with automation for long-running clusters to minimize idle resources and reduce costs.",
+                                "url": "https://aws.github.io/aws-emr-best-practices/docs/bestpractices/Cost%20Optimizations/best_practices/#monitor-cluster-utilization"
+                            }
+                        },
+                        {
+                            "id": "COST2_5",
+                            "title": "Monitor cluster utilization",
+                            "helpfulResource": {
+                                "displayText": "Monitoring vCPU, memory, and disk utilization in Amazon EMR using tools like CloudWatch or Grafana helps identify over-provisioning and right-size clusters to reduce costs.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/UsingEMR_ViewingMetrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize further by adjusting instance types or cluster size based on utilization patterns and using managed scaling for unpredictable or long-running workloads.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/UsingEMR_ViewingMetrics.html"
+                            }
+                        },
+                        {
+                            "id": "COST2_6",
+                            "title": "Monitor and decommission idle EMR cluster",
+                            "helpfulResource": {
+                                "displayText": "Automatically terminating idle clusters in Amazon EMR using termination policies or CloudWatch isIdle metrics helps eliminate unnecessary costs.",
+                                "url": "https://aws.amazon.com/blogs/big-data/optimize-amazon-emr-costs-with-idle-checks-and-automatic-resource-termination-using-advanced-amazon-cloudwatch-metrics-and-aws-lambda/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Optimize further by configuring idle thresholds and alarms carefully to ensure clusters are terminated only when truly inactive without impacting workloads.",
+                                "url": "https://aws.amazon.com/blogs/big-data/optimize-amazon-emr-costs-with-idle-checks-and-automatic-resource-termination-using-advanced-amazon-cloudwatch-metrics-and-aws-lambda/"
+                            }
+                        },
+                        {
+                            "id": "COST2_7",
+                            "title": "Performance tuning to optimize cost",
+                            "helpfulResource": {
+                                "displayText": "Performance tuning plays an important role in reducing cost. The first action for performance tuning is to identify the bottlenecks.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-webui.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable Spark event logging and use the Spark UI to review job status and performance. The Spark UI visualizes event log data, which helps identify bottlenecks such as slow stages, skew, shuffle issues, and resource constraints.",
+                                "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-webui.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST2_1 && COST2_2 && COST2_3 && COST2_4 && COST2_5 && COST2_6 && COST2_7",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST2_1) || (!COST2_2) || (!COST2_3) || (!COST2_5) || (!COST2_6) || (!COST2_7)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
