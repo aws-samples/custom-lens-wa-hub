@@ -39,6 +39,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [DynamoDB](/DynamoDB/)
 * [DocumentDB](/DocumentDB/)
 * [Glue](/Glue/)
+* [Spark on EMR](/EMR-spark-lens/)
 * [OpenSearch](/OpenSearch/)
 * [API Gateway and Lambda](/ApiGwLambda/)
 * [ElastiCache](/ElastiCache/)
