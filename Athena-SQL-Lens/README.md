@@ -3,4 +3,5 @@ Athena SQL Best Practice Lens provides best practices for using Athena SQL inclu
 
 ## Contributing
 - Ray Wang, Senior Solutions Architect, AWS
+- Dai Ozaki, Athena SME, AWS
 - Chia-Wei Hsu, Big Data Engineer, AWS
