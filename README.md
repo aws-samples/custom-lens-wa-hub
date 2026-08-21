@@ -51,6 +51,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [Managed Streaming for Apache Kafka](/Amazon-MSK-Lens)
 * [Personalize](/Personalize)
 * [Cognito](/Amazon-Cognito-Lens)
+* [Athena SQL](/Athena-SQL-Lens)
 
 ### Custom Lens for AWS Solutions
 * [Streaming Media Lens](/Streaming-Media-Lens/)
