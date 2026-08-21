@@ -1,0 +1,983 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "Spark on EMR Best Practice Lens",
+    "description": "Best practices for configuring Spark on EMR",
+    "pillars": [
+        {
+            "id": "PERF",
+            "name": "Performance Efficiency",
+            "questions": [
+                {
+                    "id": "PERF1",
+                    "title": "Do you know how file formats, file size, file layout and compression effect your query performance?",
+                    "description": "To minimize the amount of data scanned when accessing datasets from Amazon S3, you should carefully consider file size, compression, file format, and file layout (such as partitioning and bucketing).",
+                    "choices": [
+                        {
+                            "id": "PERF1_1",
+                            "title": "Choice the suitable compression for your Athena table",
+                            "helpfulResource": {
+                                "displayText": "Using compression reduces the amount of data scanned from Amazon S3, which lowers query costs. It also decreases network traffic between Amazon S3 and Athena.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/compression-formats.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Athena can successfully query a table in Parquet format even when some files are compressed with Snappy and others with GZIP.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/compression-formats.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_2",
+                            "title": "Choice the suitable file size for your Athena table",
+                            "helpfulResource": {
+                                "displayText": "Queries run more efficiently when data can be read in parallel and when each read request retrieves as much data as possible.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "As a general guideline, aim for splits of about 128 MB. A split represents a portion of a file, such as a byte range in an uncompressed text file or a page in a Parquet file.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            }
+                        },
+                        {
+                            "id": "PERF1_3",
+                            "title": "Choice columnar storage formats for your Athena table",
+                            "helpfulResource": {
+                                "displayText": "Apache Parquet and ORC are columnar storage formats optimized for fast data retrieval and commonly used across AWS analytics services.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/columnar-storage.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The decision to use ORC or Parquet depends on the specific requirements of your workload.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/columnar-storage.html"
+                            }
+                        },
+                        {
+                            "id": "PERF1_4",
+                            "title": "Choice the suitable file layout for you Athena table",
+                            "helpfulResource": {
+                                "displayText": "Partitioning and bucketing are techniques that help reduce the volume of data scanned by Athena when running queries.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/ctas-partitioning-and-bucketing.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Reducing the amount of data scanned improves query performance and lowers costs.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/ctas-partitioning-and-bucketing.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF1_1 && PERF1_2 && PERF1_3 && PERF1_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF1_1) || (!PERF1_2) || (!PERF1_3) || (!PERF1_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF2",
+                    "title": "How do you organize or partition your data in your data lake for Athena table?",
+                    "description": "Partition keys should be chosen based on common query patterns, and they should have relatively low cardinality to ensure efficient performance.",
+                    "choices": [
+                        {
+                            "id": "PERF2_1",
+                            "title": "Structure your data to build high performant of Athena",
+                            "helpfulResource": {
+                                "displayText": "A common practice is to partition data by time, which often results in a multi-level partitioning scheme.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Partitioning your data limits the amount of data scanned per query, which improves performance and reduces cost.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            }
+                        },
+                        {
+                            "id": "PERF2_2",
+                            "title": "Aware performance degration in Glue Partition",
+                            "helpfulResource": {
+                                "displayText": "AWS Glue may load all table partitions first, and then applies the user s query expression in the GetPartitions request to filter them.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/partition-indexes.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "When an index is used, the GetPartitions query retrieves only a subset of partitions instead of loading all partitions in the table.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/partition-indexes.html"
+                            }
+                        },
+                        {
+                            "id": "PERF2_3",
+                            "title": "Avoid too many S3 partitions",
+                            "helpfulResource": {
+                                "displayText": "Over-partitioning creates a large number of small files, which can degrade performance.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Avoid over-partitioning your data, and aim to split files into chunks of about 128 MB.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF2_1 && PERF2_2 && PERF2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF3",
+                    "title": "How do you update your partition of your Athnea table?",
+                    "description": "After new data is written to Amazon S3, you need to update the partitions of your Athena table.",
+                    "choices": [
+                        {
+                            "id": "PERF3_1",
+                            "title": "Use a crawler to add a table and partition",
+                            "helpfulResource": {
+                                "displayText": "AWS Glue crawlers automatically detect the schema of datasets and register them as tables in the AWS Glue Data Catalog.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/schema-crawlers.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Crawlers scan your data to determine the schema and can also detect and register partitions.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/schema-crawlers.html"
+                            }
+                        },
+                        {
+                            "id": "PERF3_2",
+                            "title": "Use the Glue Data Catalog API",
+                            "helpfulResource": {
+                                "displayText": "CreatePartition and BatchCreatePartition can support Creates one or more partitions in a API operation.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-catalog-partitions.html#aws-glue-api-catalog-partitions-CreatePartition"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use this approach when you want control it with automation code",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-catalog-partitions.html#aws-glue-api-catalog-partitions-CreatePartition"
+                            }
+                        },
+                        {
+                            "id": "PERF3_3",
+                            "title": "Use ALTER TABLE ADD PARTITION",
+                            "helpfulResource": {
+                                "displayText": "You can manually add partitions in Athena and unify table and partition schemas",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/alter-table-add-partition.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use ALTER TABLE ADD PARTITION if you want to query data from Athena and set custom S3 paths for partitions.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/alter-table-add-partition.html"
+                            }
+                        },
+                        {
+                            "id": "PERF3_4",
+                            "title": "Avoid using MSCK REPAIR TABLE when using Athena",
+                            "helpfulResource": {
+                                "displayText": "When you run the MSCK REPAIR TABLE command, Athena scans partitions in Amazon S3. If there are too many, the command may take a long time to complete or even time out with an error.",
+                                "url": "https://repost.aws/knowledge-center/athena-msck-repair-table-time-out"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use alternative methods to register partitions, such as AWS Glue crawlers, the Glue Data Catalog API, or the ALTER TABLE ADD PARTITION command.",
+                                "url": "https://repost.aws/knowledge-center/athena-msck-repair-table-time-out"
+                            }
+                        },
+                        {
+                            "id": "PERF3_5",
+                            "title": "Use partition projection with Amazon Athena",
+                            "helpfulResource": {
+                                "displayText": "With partition projection, Athena calculates partition values and locations based on the table properties you configure directly in AWS Glue.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/partition-projection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Partition projection in Athena helps accelerate queries on highly partitioned tables and automates partition management.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/partition-projection.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF3_1 && PERF3_2 && PERF3_3 && PERF3_4 && PERF3_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF3_1) || (!PERF3_5)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF4",
+                    "title": "How do you improve your slow query?",
+                    "description": "Athena queries can sometimes spend a long time in the queue or during processing, so optimization is needed to improve performance.",
+                    "choices": [
+                        {
+                            "id": "PERF4_1",
+                            "title": "Reuse query results in Athena",
+                            "helpfulResource": {
+                                "displayText": "When you rerun a query in Athena, you can choose to reuse the previously stored query results.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/reusing-query-results.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "This option improves performance and reduces costs by lowering the number of bytes scanned.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/reusing-query-results.html"
+                            }
+                        },
+                        {
+                            "id": "PERF4_2",
+                            "title": "Add column statistics to enable cost-based optimization",
+                            "helpfulResource": {
+                                "displayText": "Athena uses a cost-based optimizer (CBO) that leverages table statistics to generate more efficient query plans.",
+                                "url": "https://aws.amazon.com/blogs/big-data/speed-up-queries-with-cost-based-optimizer-in-amazon-athena/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To benefit from CBO optimizations, generate table and column statistics in the AWS Glue Data Catalog.",
+                                "url": "https://docs.aws.amazon.com/glue/latest/dg/column-statistics.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF4_1 && PERF4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF4_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF5",
+                    "title": "How do you identify the slow part of SQL and rewrite it?",
+                    "description": "You can apply the recommendations in this section to optimize your SQL queries in Amazon Athena.",
+                    "choices": [
+                        {
+                            "id": "PERF5_1",
+                            "title": "Use EXPLAIN in Athena",
+                            "helpfulResource": {
+                                "displayText": "The EXPLAIN statement displays the logical or distributed execution plan for a given SQL statement.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can output the execution plan of a SQL statement either as text or in a data format that can be rendered into a graph.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_10",
+                            "title": "Use approximation aggregate functions when exact values are not required",
+                            "helpfulResource": {
+                                "displayText": "Approximation functions such as approx_distinct and numeric_histogram use less memory and run faster than their exact counterparts.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Replace COUNT(DISTINCT col) with approx_distinct and histogram with numeric_histogram when exact values are not required.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_11",
+                            "title": "Use UNION ALL instead of UNION when deduplication is not required",
+                            "helpfulResource": {
+                                "displayText": "UNION removes duplicates after concatenating results, which consumes additional memory and compute, while UNION ALL skips that step.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use UNION ALL instead of UNION when duplicates are known to be absent or acceptable.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_12",
+                            "title": "Use UNLOAD for large query results",
+                            "helpfulResource": {
+                                "displayText": "A standard query writes its result as a single uncompressed CSV file on Amazon S3 serially, while UNLOAD writes in parallel from worker nodes and supports compressed and columnar formats.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use UNLOAD instead of a standard query when the result is expected to be large, for example tens of thousands of rows or more.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/unload.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_13",
+                            "title": "Materialize frequently used aggregations with CTAS or Glue ETL",
+                            "helpfulResource": {
+                                "displayText": "When multiple queries share the same joins and aggregations, recomputing them repeatedly is redundant and pre-computing the common sub result reduces total cost.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create a temporary table with CTAS or AWS Glue ETL and reuse it from downstream queries, choosing a refresh cadence that matches freshness requirements.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/ctas.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_2",
+                            "title": "Use EXPLAIN ANALYZE in Athena",
+                            "helpfulResource": {
+                                "displayText": "The EXPLAIN ANALYZE statement provides the distributed execution plan of a SQL statement along with the computational cost of each operation in the query.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can output the execution plan and computational cost of a SQL statement in either text or JSON format.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_3",
+                            "title": "Use LIMIT with the ORDER BY clause",
+                            "helpfulResource": {
+                                "displayText": "The ORDER BY clause returns data in sorted order, which requires Athena to send all rows to a single worker node for sorting. As a result, such queries may run for a long time or even fail.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For greater efficiency, consider retrieving only the top or bottom N values and applying a LIMIT clause. This reduces sorting costs by distributing both sorting and limiting across worker nodes instead of a single node.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_4",
+                            "title": "Optimize JOIN clauses",
+                            "helpfulResource": {
+                                "displayText": " In a distributed hash join, the right side becomes the build side (kept in memory as a hash table) and the left side is streamed as the probe side.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The smaller table is placed on the right of JOIN so the build side fits in memory; if it still does not fit, the join is split into subsets.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_5",
+                            "title": "Optimize aggregations",
+                            "helpfulResource": {
+                                "displayText": " GROUP BY distributes records across nodes by grouping columns, and fewer and smaller columns reduce memory pressure and spill to disk. ",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Redundant columns are excluded from GROUP BY, numeric keys are preferred over string labels, and associated labels are returned with the arbitrary function. ",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_6",
+                            "title": "Limit the number of columns",
+                            "helpfulResource": {
+                                "displayText": "To minimize the overall memory required for storing your data",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Limit the number of columns included in your SELECT statement.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_7",
+                            "title": "Use regular expressions instead of LIKE",
+                            "helpfulResource": {
+                                "displayText": "Queries that use clauses like LIKE '%string%' on large text fields can be highly computationally intensive.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "When filtering for multiple values in a string column, use the regexp_like() function with a regular expression instead.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_8",
+                            "title": "Reduce the scope of window functions",
+                            "helpfulResource": {
+                                "displayText": "Window functions keep all records in the window in memory, and large windows can cause the query to fail with Query exhausted resources at this scale factor.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Add a PARTITION BY clause or narrow an existing one to keep each window small enough to fit in memory.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            }
+                        },
+                        {
+                            "id": "PERF5_9",
+                            "title": "Rewrite window functions as non-window functions when possible",
+                            "helpfulResource": {
+                                "displayText": "Top N per group and deduplication patterns written with window functions such as row_number or rank can often be rewritten without window functions, which uses less memory and runs faster.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Replace row_number based top N with ORDER BY and LIMIT, and replace row_number or rank based deduplication with GROUP BY and the aggregate functions max_by, min_by, or arbitrary.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-query-optimization-techniques.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF5_1 && PERF5_10 && PERF5_11 && PERF5_12 && PERF5_13 && PERF5_2 && PERF5_3 && PERF5_4 && PERF5_5 && PERF5_6 && PERF5_7 && PERF5_8 && PERF5_9",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!PERF5_1) || (!PERF5_2) || (!PERF5_3) || (!PERF5_6) || (!PERF5_7)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "PERF6",
+                    "title": "Have you use the lastest version of ODBC and JDBC driver?",
+                    "description": "Use the latest 3.x version of the ODBC and JDBC drivers for improved performance and compatibility.",
+                    "choices": [
+                        {
+                            "id": "PERF6_1",
+                            "title": "Connect to Amazon Athena with latest ODBC and JDBC drivers",
+                            "helpfulResource": {
+                                "displayText": "To explore and visualize your data with business intelligence tools, download, install, and configure an ODBC or JDBC driver.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/athena-bi-tools-jdbc-odbc.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The latest Athena JDBC and ODBC drivers offer improved performance and compatibility.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/athena-bi-tools-jdbc-odbc.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "PERF6_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "OPS",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "OPS1",
+                    "title": "How do you monitor query jobs in Amazon Athena?",
+                    "description": "Leverage Amazon CloudWatch and Amazon EventBridge to monitor Athena queries and manage costs effectively.",
+                    "choices": [
+                        {
+                            "id": "OPS1_1",
+                            "title": "Monitor Athena query metrics with CloudWatch",
+                            "helpfulResource": {
+                                "displayText": "Athena publishes query-related metrics to Amazon CloudWatch when the Publish query metrics to CloudWatch option is enabled.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/query-metrics-viewing.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "In CloudWatch, you can create custom dashboards, set alarms and triggers on metrics, or use the pre-populated dashboards available in the Athena console.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/query-metrics-viewing.html"
+                            }
+                        },
+                        {
+                            "id": "OPS1_2",
+                            "title": "Monitor Athena usage metrics with CloudWatch",
+                            "helpfulResource": {
+                                "displayText": "In Athena, usage and availability metrics map to AWS service quotas. You can configure alarms to alert you when your usage is nearing a quota limit.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/monitoring-athena-usage-metrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use CloudWatch usage metrics to gain visibility into how your account consumes resources by displaying current service usage on CloudWatch graphs and dashboards.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/monitoring-athena-usage-metrics.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS1_1 && OPS1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS1_1) || (!OPS1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS2",
+                    "title": "How do you troubleshooting Amazon Athena",
+                    "description": "When using Athena, you may encounter different types of errors caused by service limitations or expected behaviors.",
+                    "choices": [
+                        {
+                            "id": "OPS2_1",
+                            "title": "Gather query ID if you encounter errors or unexpected behavior in Amazon Athena.",
+                            "helpfulResource": {
+                                "displayText": "If you encounter errors or unexpected behavior in Amazon Athena and need to contact AWS Support, first gather details such as the query execution ID and the AWS Region where the query ran.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/queries-viewing-history.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can find the query execution ID in the Recent queries tab of the Athena console.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/queries-viewing-history.html"
+                            }
+                        },
+                        {
+                            "id": "OPS2_2",
+                            "title": "Troubleshooting errors in Amazon Athena",
+                            "helpfulResource": {
+                                "displayText": "If you experience errors, query timeouts, or slow query performance in Amazon Athena, use the following solutions to identify the root cause and resolve the issues.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/troubleshooting-athena.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can find more helpful details in the additional materials that cover common performance optimization tips.",
+                                "url": "https://aws.amazon.com/jp/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            }
+                        },
+                        {
+                            "id": "OPS2_3",
+                            "title": "Aware the Amazon Athena quotas and limitation",
+                            "helpfulResource": {
+                                "displayText": "If you encounter quota-related issues, check the current service quota limits in the AWS Region where you ran the query.",
+                                "url": "https://docs.aws.amazon.com/general/latest/gr/athena.html#amazon-athena-limits"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can request a quota increase by contacting AWS Support.",
+                                "url": "https://docs.aws.amazon.com/general/latest/gr/athena.html#amazon-athena-limits"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS2_1 && OPS2_2 && OPS2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS2_1) || (!OPS2_2) || (!OPS2_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS3",
+                    "title": "How do you support variable data source and schema evolve if the Athena",
+                    "description": "Athena supports multiple data sources through both pre-built and custom connectors.",
+                    "choices": [
+                        {
+                            "id": "OPS3_1",
+                            "title": "Use prebuilt data source connectors in Athena",
+                            "helpfulResource": {
+                                "displayText": "Athena provides prebuilt data source connectors that let you query a variety of external data sources beyond Amazon S3.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/connectors-available.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "To use a connector in Athena queries, you must configure and deploy it in your account.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/connectors-available.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS3_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS3_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS4",
+                    "title": "How you manage your workload in Athena?",
+                    "description": "Athena provides some features to deliver improved efficiency, cost optimization, and performance predictability for your data analysis.",
+                    "choices": [
+                        {
+                            "id": "OPS4_1",
+                            "title": "Check the number of concurrent queries running simultaneously",
+                            "helpfulResource": {
+                                "displayText": "Depending on the number of concurrent queries, Athena may temporarily queue your queries before execution.",
+                                "url": "https://repost.aws/knowledge-center/athena-queries-long-processing-time"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use capacity reservations in Athena to secure dedicated processing capacity for your queries.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/capacity-management.html"
+                            }
+                        },
+                        {
+                            "id": "OPS4_2",
+                            "title": "Use managed query results",
+                            "helpfulResource": {
+                                "displayText": "Managed query results is a feature that automatically stores, secures, and manages the lifecycle of query result data at no additional cost.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/managed-results.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "With managed query results, you can run SQL queries without specifying an Amazon S3 bucket for result storage or managing lifecycle rules to clean up query data.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/managed-results.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS4_1 && OPS4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!OPS4_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "OPS5",
+                    "title": "How you manage your query in Athena?",
+                    "description": "You can use Athena s built-in features to manage your queries and reduce operational overhead.",
+                    "choices": [
+                        {
+                            "id": "OPS5_1",
+                            "title": "Query with Prepared Statement",
+                            "helpfulResource": {
+                                "displayText": "In Athena, parameterized queries can be expressed as execution parameters in DML statements or as SQL prepared statements.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/querying-with-prepared-statements.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Athena parameterized queries let you rerun the same query with different parameter values at execution time, while also helping to prevent SQL injection attacks.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/querying-with-prepared-statements.html"
+                            }
+                        },
+                        {
+                            "id": "OPS5_2",
+                            "title": "Work with Athena views or Glue Data Catalog views",
+                            "helpfulResource": {
+                                "displayText": "In Amazon Athena, a view is a logical table rather than a physical one. The defining query is executed each time the view is referenced.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/views.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can create a view from a SELECT query to combine multiple tables into a single query and hide underlying complexity.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/views.html"
+                            }
+                        },
+                        {
+                            "id": "OPS5_3",
+                            "title": "Save recurring queries for reuse",
+                            "helpfulResource": {
+                                "displayText": "Athena can save queries you create in the query editor and manage them directly in the Athena console.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/saved-queries.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "In the Athena console, you can save, edit, run, rename, and delete queries created in the query editor.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/saved-queries.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "OPS5_1 && OPS5_2 && OPS5_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SEC",
+            "name": "Security",
+            "questions": [
+                {
+                    "id": "SEC1",
+                    "title": "How do you protect data at rest and in transit for Amazon Athena workloads?",
+                    "description": "To protect data in Athena, you should consider encryption at rest, encryption in transit, key management, and the way you connect to the Athena endpoint.",
+                    "choices": [
+                        {
+                            "id": "SEC1_1",
+                            "title": "Encryption at rest",
+                            "helpfulResource": {
+                                "displayText": "You can run Amazon Athena queries on encrypted data stored in Amazon S3, both within the same Region and across a limited number of supported Regions.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/encryption.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can also encrypt query results stored in Amazon S3, as well as data in the AWS Glue Data Catalog.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/encryption.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_2",
+                            "title": "Key management",
+                            "helpfulResource": {
+                                "displayText": "Amazon Athena integrates with AWS Key Management Service (AWS KMS) to encrypt datasets in Amazon S3 and query results.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/key-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "AWS KMS uses customer managed keys (CMKs) to encrypt Amazon S3 objects, applying envelope encryption for added security.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/key-management.html"
+                            }
+                        },
+                        {
+                            "id": "SEC1_3",
+                            "title": "Using interface VPC endpoint",
+                            "helpfulResource": {
+                                "displayText": "An interface VPC endpoint enhances security by allowing you to control which services and destinations can be accessed from within your VPC.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/interface-vpc-endpoint.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can strengthen the security posture of your VPC by using an interface VPC endpoint (AWS PrivateLink) along with an AWS Glue VPC endpoint within your Virtual Private Cloud (VPC).",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/interface-vpc-endpoint.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC1_1 && SEC1_2 && SEC1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC1_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SEC2",
+                    "title": "How do you control access to amazon Athena and the data it queries?",
+                    "description": "You can use IAM and AWS Lake Formation with Athena, and also take into account compliance validation services within scope.",
+                    "choices": [
+                        {
+                            "id": "SEC2_1",
+                            "title": "Using IAM to control your S3 data source",
+                            "helpfulResource": {
+                                "displayText": "The AmazonAthenaFullAccess managed policy allows principals to read and write query results in Amazon S3.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/managed-policies.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "We recommend starting with the AmazonAthenaFullAccess policy and then tailoring it by granting or restricting specific S3 actions from the base policy to meet your security requirements.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/managed-policies.html"
+                            }
+                        },
+                        {
+                            "id": "SEC2_2",
+                            "title": "Using IAM to control your Glue Data Catalog",
+                            "helpfulResource": {
+                                "displayText": "You can define resource-level policies for the database and table objects in the Data Catalog that are used by Athena.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/fine-grained-access-to-glue-resources.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "If different IAM users need access to specific databases or tables in Athena, adjust their IAM policies to grant permissions only for the required Data Catalog objects.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/fine-grained-access-to-glue-resources.html"
+                            }
+                        },
+                        {
+                            "id": "SEC2_3",
+                            "title": "Using Data catalog and Lake formation to management your data permission",
+                            "helpfulResource": {
+                                "displayText": "AWS Lake Formation lets you restrict access to data at the catalog, database, table, column, row, and even cell level.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/security-athena-lake-formation.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Audit your Athena tables to identify sensitive data, and then use Lake Formation fine-grained permissions to restrict column- and row-level access based on user roles and data sensitivity.",
+                                "url": "https://docs.aws.amazon.com/lake-formation/latest/dg/access-control-fine-grained.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SEC2_1 && SEC2_2 && SEC2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SEC2_1) || (!SEC2_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "COST",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "COST1",
+                    "title": "How are you managing the capacity for Amazon Athena?",
+                    "description": "You need to understand DPUs and their pricing model, as choosing the right option can help you optimize your cost structure.",
+                    "choices": [
+                        {
+                            "id": "COST1_1",
+                            "title": "Understand DPUs",
+                            "helpfulResource": {
+                                "displayText": "In capacity reservations, DPUs represent the compute and memory resources Athena uses to process your data. Each DPU provides 4 vCPUs and 16 GB of memory.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/capacity-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "The number of DPUs you specify determines how many queries can run concurrently in Athena.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/capacity-management.html"
+                            }
+                        },
+                        {
+                            "id": "COST1_2",
+                            "title": "Reserve query processing capacity",
+                            "helpfulResource": {
+                                "displayText": "With capacity reservations, you can leverage workload management features that let you prioritize, control, and scale your most important interactive workloads.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/capacity-management.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Capacity reservations in Athena provide dedicated processing capacity for your queries.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/capacity-management-requirements.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST1_1 && COST1_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST1_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST2",
+                    "title": "Have you monitor and control cost on Amazon Athena?",
+                    "description": "It s important to understand DPUs and their pricing model, as selecting the right option can help you optimize your overall cost structure.",
+                    "choices": [
+                        {
+                            "id": "COST2_1",
+                            "title": "Monitor Athena usage metrics with CloudWatch",
+                            "helpfulResource": {
+                                "displayText": "In Athena, usage and availability metrics correspond to AWS service quotas. You can configure alarms to receive alerts when your usage approaches a quota. In addition, Athena publishes query metrics to CloudWatch when the Publish query metrics to CloudWatch option is enabled in the workgroup settings.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/monitoring-athena-usage-metrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can use usage and query metrics to gain visibility into how your account and queries consume resources by displaying them on CloudWatch graphs and dashboards.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/monitoring-athena-usage-metrics.html"
+                            }
+                        },
+                        {
+                            "id": "COST2_2",
+                            "title": "Use workgroups to control query access and costs",
+                            "helpfulResource": {
+                                "displayText": "Athena workgroups let you separate workloads, manage team access, enforce configurations, track query metrics, and control costs.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/workgroups-manage-queries-control-costs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Because workgroups are IAM resources, you can apply resource-level identity-based policies to control who can access a workgroup and run queries within it.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/workgroups-manage-queries-control-costs.html"
+                            }
+                        },
+                        {
+                            "id": "COST2_3",
+                            "title": "Reuse query results in Athena",
+                            "helpfulResource": {
+                                "displayText": "When you rerun a query in Athena, you can choose to reuse the most recently stored query results.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/reusing-query-results.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "This option improves performance and reduces costs by decreasing the number of bytes scanned.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/reusing-query-results.html"
+                            }
+                        },
+                        {
+                            "id": "COST2_4",
+                            "title": "Configure per-query and per-workgroup level data usage controls",
+                            "helpfulResource": {
+                                "displayText": "Athena provides two types of cost controls: per-query limits and per-workgroup limits.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/workgroups-setting-control-limits-cloudwatch.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "For each workgroup, you can define a single per-query limit and multiple per-workgroup limits.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/workgroups-setting-control-limits-cloudwatch.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST2_1 && COST2_2 && COST2_3 && COST2_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST2_1) || (!COST2_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "COST3",
+                    "title": "Have you optimize your data in Amazon S3?",
+                    "description": "When you run SQL queries in Athena, you are charged based on the amount of data scanned. Using efficient file formats and compression can help reduce these costs.",
+                    "choices": [
+                        {
+                            "id": "COST3_1",
+                            "title": "Use proper file format, data layout, compression,and file size",
+                            "helpfulResource": {
+                                "displayText": "You can reduce the number of S3 requests and minimize network traffic between Amazon S3 and Athena by choosing the right file format, layout, compression, and file size, in addition to optimizing your queries.",
+                                "url": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-data-optimization-techniques.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You can refer to the comprehensive guide on optimizing your data in Amazon S3.",
+                                "url": "https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "COST3_1",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!COST3_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
