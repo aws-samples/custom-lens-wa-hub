@@ -1,0 +1,1273 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "AIDLC Best Practice Lens",
+    "description": "Best practices for implementing AIDLC",
+    "pillars": [
+        {
+            "id": "TRUST",
+            "name": "Trustworthy",
+            "questions": [
+                {
+                    "id": "TRUST1",
+                    "title": "How do you maintain human oversight of AI-driven development?",
+                    "description": "Assess ownership, plan review, approval boundaries, clarification, and renewed validation when scope changes.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                    },
+                    "choices": [
+                        {
+                            "id": "TRUST1_1",
+                            "title": "Assign accountable human reviewers",
+                            "helpfulResource": {
+                                "displayText": "Named reviewers own business, architecture, implementation, and release decisions. Evidence includes a responsibility matrix and review records.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Assign accountable owners for each decision category and publish their review responsibilities and escalation paths.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST1_2",
+                            "title": "Review AI-generated plans before execution",
+                            "helpfulResource": {
+                                "displayText": "A human checks proposed scope, assumptions, risks, and execution steps before the agent proceeds. Evidence includes an approved plan revision.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Add a plan review checkpoint and require explicit approval of the proposed actions before executing the plan.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST1_3",
+                            "title": "Define approval boundaries for consequential actions",
+                            "helpfulResource": {
+                                "displayText": "Production changes, destructive operations, and privileged actions have explicit authorization boundaries. Evidence includes tool policies and approval records.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Classify consequential actions, configure tool restrictions, and require an authorized reviewer before those actions occur.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST1_4",
+                            "title": "Clarify ambiguous requirements before implementation",
+                            "helpfulResource": {
+                                "displayText": "The agent surfaces unresolved requirements and assumptions rather than silently making material business decisions. Evidence includes answered clarification questions.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Record ambiguities and obtain product or engineering decisions before implementing the affected behavior.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST1_5",
+                            "title": "Revalidate approvals after material scope changes",
+                            "helpfulResource": {
+                                "displayText": "An approval remains associated with the scope and artifact revision reviewed. Material changes trigger renewed review.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define material-change criteria and reopen approval when scope, risk, or architecture changes beyond the approved plan.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "TRUST1_1 && TRUST1_2 && TRUST1_3 && TRUST1_4 && TRUST1_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!TRUST1_1) || (!TRUST1_2) || (!TRUST1_3) || (!TRUST1_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "TRUST2",
+                    "title": "Testing: Is AI test generation integrated into the development workflow, and how are outputs validated?",
+                    "description": "Assess AI-assisted test creation, review, version control, automated execution, and independent validation of generated software.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                    },
+                    "choices": [
+                        {
+                            "id": "TRUST2_1",
+                            "title": "Validate outputs against approved acceptance criteria",
+                            "helpfulResource": {
+                                "displayText": "Acceptance criteria are established before implementation and checked against actual results. Evidence includes reviewed criteria and acceptance results.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create measurable acceptance criteria for each story and document whether the implementation satisfies each criterion.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST2_2",
+                            "title": "Independently review generated code",
+                            "helpfulResource": {
+                                "displayText": "Human review checks business logic, architectural fit, error handling, and unsupported assumptions before merge.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Require a qualified reviewer to inspect generated changes and resolve material findings before merge.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST2_3",
+                            "title": "Review generated tests for completeness",
+                            "helpfulResource": {
+                                "displayText": "Reviewers inspect test expectations and edge cases so generated tests do not simply reproduce implementation mistakes.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Compare tests with approved requirements. Add missing negative, boundary, and failure-path cases before acceptance.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST2_4",
+                            "title": "Run functional and integration tests",
+                            "helpfulResource": {
+                                "displayText": "Automated tests exercise expected behavior and interactions with dependencies. Evidence includes execution reports tied to a source revision.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Add unit, integration, and acceptance checks appropriate to the change and block release on required failures.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST2_5",
+                            "title": "Perform security and dependency checks",
+                            "helpfulResource": {
+                                "displayText": "Security checks examine code, dependencies, and exposed credentials. Findings are triaged against the release policy.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Integrate code, dependency, and secret scanning into the delivery pipeline and remediate release-blocking findings.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST2_6",
+                            "title": "Validate applicable non-functional requirements",
+                            "helpfulResource": {
+                                "displayText": "Performance, resilience, accessibility, and other applicable requirements have measurable thresholds and validation evidence.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define relevant non-functional thresholds, execute representative tests, and address failures before production release.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST2_7",
+                            "title": "Integrate AI test generation into the development workflow",
+                            "helpfulResource": {
+                                "displayText": "The workflow includes AI-assisted creation or extension of tests for applicable changes, with traceability to acceptance criteria and independent review of expected results.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Add an explicit AI test-generation step for applicable changes and review generated assertions against requirements before accepting the tests.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST2_8",
+                            "title": "Maintain and execute generated tests with the codebase",
+                            "helpfulResource": {
+                                "displayText": "Accepted generated tests are version-controlled, run in the applicable local or CI workflow, and updated when intended behavior changes.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Commit reviewed generated tests alongside the implementation and include them in required automated verification.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "TRUST2_1 && TRUST2_2 && TRUST2_3 && TRUST2_4 && TRUST2_5 && TRUST2_6 && TRUST2_7 && TRUST2_8",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!TRUST2_1) || (!TRUST2_2) || (!TRUST2_3) || (!TRUST2_4) || (!TRUST2_5) || (!TRUST2_6) || (!TRUST2_8)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "TRUST3",
+                    "title": "How do you protect sensitive information and constrain AI tool access?",
+                    "description": "Assess proposed enterprise security controls for development agents. These controls extend the AI-DLC methodology and must be tailored to the selected tools.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+                    },
+                    "choices": [
+                        {
+                            "id": "TRUST3_1",
+                            "title": "Restrict agent permissions to approved tasks",
+                            "helpfulResource": {
+                                "displayText": "Agent identities have only the repository, environment, and tool access required for their current responsibilities. Evidence includes reviewed permissions.",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use scoped roles and temporary credentials. Remove unnecessary access and review permissions when task responsibilities change.",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+                            }
+                        },
+                        {
+                            "id": "TRUST3_2",
+                            "title": "Control sensitive information in AI context",
+                            "helpfulResource": {
+                                "displayText": "The team defines which source code and data may enter each approved AI environment and checks inputs and retained artifacts for sensitive content.",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Document permitted data classifications, configure tool-specific data controls, and redact information that is not authorized for the selected environment.",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+                            }
+                        },
+                        {
+                            "id": "TRUST3_3",
+                            "title": "Keep credentials out of prompts and repositories",
+                            "helpfulResource": {
+                                "displayText": "Secrets are obtained through approved credential mechanisms instead of being embedded in instructions, source files, or retained transcripts.",
+                                "url": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Move secrets to an approved secrets manager, use temporary credentials where supported, scan artifacts, and rotate exposed credentials.",
+                                "url": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/best-practices.html"
+                            }
+                        },
+                        {
+                            "id": "TRUST3_4",
+                            "title": "Isolate execution and review external instructions",
+                            "helpfulResource": {
+                                "displayText": "Development execution is separated from production, and external repository or tool content is treated as untrusted input. Evidence includes environment boundaries and tool policies.",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Run agents in restricted development environments and require review before external instructions can authorize privileged or destructive actions.",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "TRUST3_1 && TRUST3_2 && TRUST3_3 && TRUST3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!TRUST3_1) || (!TRUST3_2) || (!TRUST3_3) || (!TRUST3_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "TRUST4",
+                    "title": "Artifacts: Are technical documents reviewed by AI before human review?",
+                    "description": "Assess an explicit AI-first review sequence for applicable technical documents while retaining accountable human validation.",
+                    "helpfulResource": {
+                        "displayText": "Custom assessment practices added to cover the requested team-adoption topics. The reference supports related AI-DLC principles. It does not prescribe every practice below. Select all implemented practices supported by evidence. Document justified non-applicability where a capability is outside the team s scope.",
+                        "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                    },
+                    "choices": [
+                        {
+                            "id": "TRUST4_1",
+                            "title": "Run an AI review before human document review",
+                            "helpfulResource": {
+                                "displayText": "Applicable design documents, technical specifications, and runbooks receive an AI review for completeness, contradictions, and standards alignment before the human review begins.",
+                                "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Add an AI pre-review step for applicable document types and provide the agent with the approved requirements and review checklist.",
+                                "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                            }
+                        },
+                        {
+                            "id": "TRUST4_2",
+                            "title": "Resolve or disposition AI findings before human approval",
+                            "helpfulResource": {
+                                "displayText": "Authors record how material AI findings were corrected or rejected, and human reviewers validate the document and its unresolved concerns. AI review does not replace human approval.",
+                                "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Include the AI review summary and finding dispositions with the human review request, then record the responsible reviewer s decision.",
+                                "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "TRUST4_1 && TRUST4_2",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "TRUST5",
+                    "title": "Autonomy: Do agents initiate work without a new human prompt within a defined semi-autonomous scope?",
+                    "description": "Assess event- or schedule-triggered initiation under standing authorization, with explicit limits, observability, and escalation. Broad autonomy is not required for every workload.",
+                    "helpfulResource": {
+                        "displayText": "Custom assessment practices added to cover the requested team-adoption topics. The reference supports related AI-DLC principles. It does not prescribe every practice below. Select all implemented practices supported by evidence. Document justified non-applicability where a capability is outside the team s scope.",
+                        "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                    },
+                    "choices": [
+                        {
+                            "id": "TRUST5_1",
+                            "title": "Define the permitted level and scope of autonomy",
+                            "helpfulResource": {
+                                "displayText": "The team documents whether agents are prompt-driven, event-triggered, or scheduled, which work may begin under standing authorization, and which decisions remain human-controlled.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Document permitted triggers, task boundaries, permissions, and approval requirements before enabling semi-autonomous execution.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST5_2",
+                            "title": "Enable approved event- or schedule-triggered initiation",
+                            "helpfulResource": {
+                                "displayText": "For suitable use cases, an approved event or schedule starts a bounded task without a fresh human prompt. Evidence includes trigger configuration and execution records.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Select a suitable bounded use case, approve its trigger and execution scope, and verify that initiation works without additional prompting.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST5_3",
+                            "title": "Apply stop conditions and escalate uncertain decisions",
+                            "helpfulResource": {
+                                "displayText": "Initiated work has time, usage, retry, and action limits. Agents stop or escalate when scope, confidence, or authorization becomes insufficient.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure execution limits and escalation paths and verify that agents stop before exceeding standing authorization.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "TRUST5_4",
+                            "title": "Record and review autonomous runs",
+                            "helpfulResource": {
+                                "displayText": "Each triggered run records its initiating event, actions, outputs, and approvals so owners can inspect behavior and disable ineffective automation.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Retain run records, review representative outcomes, and provide an owner-controlled mechanism to pause or disable triggers.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "TRUST5_1 && TRUST5_2 && TRUST5_3 && TRUST5_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!TRUST5_1) || (!TRUST5_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "AUDIT",
+            "name": "Auditable",
+            "questions": [
+                {
+                    "id": "AUDIT1",
+                    "title": "How do you maintain traceability from business intent to production?",
+                    "description": "Assess bidirectional links between intent, requirements, design, implementation, verification, and deployed releases.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                    },
+                    "choices": [
+                        {
+                            "id": "AUDIT1_1",
+                            "title": "Assign stable identifiers to lifecycle artifacts",
+                            "helpfulResource": {
+                                "displayText": "Intents, requirements, Units, and tests have stable identifiers that support durable cross-references.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Introduce a consistent identifier scheme and apply it to new and materially changed lifecycle artifacts.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "AUDIT1_2",
+                            "title": "Link requirements to implementation and verification",
+                            "helpfulResource": {
+                                "displayText": "A reviewer can trace a requirement to design decisions, source changes, and test evidence, and navigate those links in reverse.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Add requirement references to designs, pull requests, and tests. Review and resolve gaps before acceptance.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "AUDIT1_3",
+                            "title": "Link releases to approved source revisions",
+                            "helpfulResource": {
+                                "displayText": "Release records identify the source commit, build, configuration, and artifact deployed into each environment.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Record source and build identifiers in the release process and retain the relationship between approvals and deployment artifacts.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "AUDIT1_1 && AUDIT1_2 && AUDIT1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!AUDIT1_1) || (!AUDIT1_2) || (!AUDIT1_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "AUDIT2",
+                    "title": "How do you record AI interactions and human decisions?",
+                    "description": "Assess retained evidence of material instructions, approvals, configuration, and unresolved or overridden recommendations.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                    },
+                    "choices": [
+                        {
+                            "id": "AUDIT2_1",
+                            "title": "Retain material AI instructions and outputs",
+                            "helpfulResource": {
+                                "displayText": "Task instructions, context references, and consequential outputs are retained with sensitive information redacted.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure an approved interaction-recording process and retain the information needed to reconstruct material development decisions.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            }
+                        },
+                        {
+                            "id": "AUDIT2_2",
+                            "title": "Record approvals, rejections, and overrides",
+                            "helpfulResource": {
+                                "displayText": "Decision records identify the reviewer, time, outcome, rationale, and exact artifact revision reviewed.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Introduce a decision record linked to each material approval or override and require renewed review when relevant changes invalidate it.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            }
+                        },
+                        {
+                            "id": "AUDIT2_3",
+                            "title": "Record relevant model and tool configuration",
+                            "helpfulResource": {
+                                "displayText": "Available model identifiers, agent versions, workflow rules, and relevant tool settings are recorded for investigation. Identical output is not assumed.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Capture supported configuration metadata with each delivery run and record changes that may affect generated results.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            }
+                        },
+                        {
+                            "id": "AUDIT2_4",
+                            "title": "Track open risks and their disposition",
+                            "helpfulResource": {
+                                "displayText": "Material risks and unresolved recommendations have an owner and a recorded resolution or authorized acceptance.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Maintain a risk register linked to affected work. Require documented treatment or acceptance before crossing the relevant release gate.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "AUDIT2_1 && AUDIT2_2 && AUDIT2_3 && AUDIT2_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!AUDIT2_2) || (!AUDIT2_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "AUDIT3",
+                    "title": "How do you preserve verifiable evidence of testing and deployment?",
+                    "description": "Assess completeness, attribution, retention, and protection of verification and release evidence.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                    },
+                    "choices": [
+                        {
+                            "id": "AUDIT3_1",
+                            "title": "Retain test and security validation reports",
+                            "helpfulResource": {
+                                "displayText": "Reports identify the tested build, execution time, outcome, findings, and relevant exceptions.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Store verification reports with build identifiers and require retrievable evidence for all mandatory release checks.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            }
+                        },
+                        {
+                            "id": "AUDIT3_2",
+                            "title": "Preserve deployment and rollback records",
+                            "helpfulResource": {
+                                "displayText": "Records show what changed, where it was deployed, who authorized it, and the outcome of deployment or rollback.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Capture release approvals, environment changes, deployment results, and rollback events in a retained release history.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            }
+                        },
+                        {
+                            "id": "AUDIT3_3",
+                            "title": "Define evidence retention and access controls",
+                            "helpfulResource": {
+                                "displayText": "Retention periods and authorized access reflect organizational obligations. Evidence is protected from unauthorized alteration.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Assign evidence owners, configure retention and access policies, and review whether stored records remain complete and retrievable.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "AUDIT3_1 && AUDIT3_2 && AUDIT3_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!AUDIT3_1) || (!AUDIT3_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SCALE",
+            "name": "Scalable",
+            "questions": [
+                {
+                    "id": "SCALE1",
+                    "title": "How do you structure work for parallel AI-driven delivery?",
+                    "description": "Assess how Units, integration boundaries, and Bolts enable coordinated incremental delivery across teams.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                    },
+                    "choices": [
+                        {
+                            "id": "SCALE1_1",
+                            "title": "Decompose intents into cohesive, loosely coupled Units",
+                            "helpfulResource": {
+                                "displayText": "Each Unit has a clear purpose and scope, while dependencies are limited enough to allow independent progress.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Review the decomposition with business and technical owners. Split tightly coupled work and define acceptance criteria for each Unit.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "SCALE1_2",
+                            "title": "Define integration contracts before parallel implementation",
+                            "helpfulResource": {
+                                "displayText": "Teams agree on API, event, and schema expectations before dependent implementations diverge.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Document integration contracts and compatibility expectations, then validate them with appropriate contract or integration tests.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "SCALE1_3",
+                            "title": "Deliver through small, verifiable Bolts",
+                            "helpfulResource": {
+                                "displayText": "Each Bolt delivers a bounded increment with explicit validation and integration checkpoints.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Reduce oversized increments and plan short build-validation cycles with clear completion evidence.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SCALE1_1 && SCALE1_2 && SCALE1_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SCALE1_1) || (!SCALE1_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SCALE2",
+                    "title": "How do you manage context across teams and development sessions?",
+                    "description": "Assess persistent context, selective retrieval, session handoff, and freshness of shared artifacts.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                    },
+                    "choices": [
+                        {
+                            "id": "SCALE2_1",
+                            "title": "Persist approved context in shared repositories",
+                            "helpfulResource": {
+                                "displayText": "Requirements, designs, decisions, and progress remain accessible to authorized teams and agents across sessions.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Store authoritative artifacts in version-controlled locations and define ownership and access for each context category.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            }
+                        },
+                        {
+                            "id": "SCALE2_2",
+                            "title": "Load task-relevant context selectively",
+                            "helpfulResource": {
+                                "displayText": "Agents receive relevant current instructions and artifacts without indiscriminately loading every project document.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Organize context by project, Unit, and task. Use supported selective-loading mechanisms and review conflicting instructions.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            }
+                        },
+                        {
+                            "id": "SCALE2_3",
+                            "title": "Define session handoff and context refresh procedures",
+                            "helpfulResource": {
+                                "displayText": "A resumed session can identify completed work, open decisions, current revisions, and next actions.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Save a handoff record and check authoritative artifact revisions before resuming work or transferring it to another team.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SCALE2_1 && SCALE2_2 && SCALE2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SCALE2_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SCALE3",
+                    "title": "How do you scale delivery capacity while maintaining quality and cost control?",
+                    "description": "Assess automation, usage controls, review throughput, and balanced delivery outcomes as adoption expands.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                    },
+                    "choices": [
+                        {
+                            "id": "SCALE3_1",
+                            "title": "Automate repeatable build and verification tasks",
+                            "helpfulResource": {
+                                "displayText": "CI/CD performs repeatable checks consistently so increased generation volume does not bypass required verification.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Integrate build, test, and policy checks into CI/CD and remove manual steps that do not require judgment.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            }
+                        },
+                        {
+                            "id": "SCALE3_2",
+                            "title": "Manage agent concurrency, usage, and expenditure",
+                            "helpfulResource": {
+                                "displayText": "Tool usage, concurrent work, retries, and expenditure have owners and defined operating limits.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set tool-specific concurrency and spending controls, monitor usage, and define responses to throttling or abnormal consumption.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            }
+                        },
+                        {
+                            "id": "SCALE3_3",
+                            "title": "Measure delivery outcomes alongside quality",
+                            "helpfulResource": {
+                                "displayText": "Lead time and delivery volume are assessed alongside defects, failed changes, recovery, and cost.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish a baseline and review lead time, change failures, escaped defects, recovery time, and cost per accepted change together.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            }
+                        },
+                        {
+                            "id": "SCALE3_4",
+                            "title": "Scale review and integration capacity with generated work",
+                            "helpfulResource": {
+                                "displayText": "Review queues and integration failures are monitored so AI-generated output does not exceed the team s validation capacity.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Track review backlog and integration delays. Limit work in progress and add qualified review capacity where bottlenecks persist.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SCALE3_1 && SCALE3_2 && SCALE3_3 && SCALE3_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SCALE3_1) || (!SCALE3_4)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SCALE4",
+                    "title": "Plan & Define: Are AI tools involved in product definition or backlog management?",
+                    "description": "Assess actual AI participation in product discovery, requirements elaboration, and backlog refinement, with product ownership retained by humans.",
+                    "helpfulResource": {
+                        "displayText": "Custom assessment practices added to cover the requested team-adoption topics. The reference supports related AI-DLC principles. It does not prescribe every practice below. Select all implemented practices supported by evidence. Document justified non-applicability where a capability is outside the team s scope.",
+                        "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                    },
+                    "choices": [
+                        {
+                            "id": "SCALE4_1",
+                            "title": "Use AI to elaborate product intent and requirements",
+                            "helpfulResource": {
+                                "displayText": "AI helps turn a product goal into requirement drafts, clarification questions, and proposed acceptance criteria. Evidence includes AI-assisted definition artifacts reviewed by the product owner.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Introduce AI-assisted requirements elaboration for suitable product work and have the product owner validate business intent and acceptance criteria.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "SCALE4_2",
+                            "title": "Use AI during backlog refinement",
+                            "helpfulResource": {
+                                "displayText": "AI assists with story decomposition, missing-detail identification, dependency analysis, or suggested backlog updates. Humans own priority and commitment decisions.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Add AI assistance to backlog refinement and validate suggested stories, dependencies, and priorities before updating the authoritative backlog.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "SCALE4_3",
+                            "title": "Link approved planning outputs to tracked work",
+                            "helpfulResource": {
+                                "displayText": "Accepted AI planning outputs become linked backlog items with owners and acceptance criteria rather than remaining only in chat.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Connect reviewed AI planning artifacts to the team s backlog and retain the relationship to the originating product intent.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SCALE4_1 && SCALE4_2 && SCALE4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SCALE5",
+                    "title": "Pipelines: Is your pipeline full CI/CD, and do agents triage or resolve pipeline failures?",
+                    "description": "Assess integration-to-deployment automation, distinguish continuous delivery from continuous deployment, and evaluate agent-assisted diagnosis and bounded remediation.",
+                    "helpfulResource": {
+                        "displayText": "Custom assessment practices added to cover the requested team-adoption topics. The reference supports related AI-DLC principles. It does not prescribe every practice below. Select all implemented practices supported by evidence. Document justified non-applicability where a capability is outside the team s scope.",
+                        "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                    },
+                    "choices": [
+                        {
+                            "id": "SCALE5_1",
+                            "title": "Automate continuous integration and validation",
+                            "helpfulResource": {
+                                "displayText": "Relevant source changes trigger repeatable builds, automated tests, and required quality checks. Pipeline results are linked to the tested source revision.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure source-triggered build and validation stages and prevent required failed checks from being bypassed.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "SCALE5_2",
+                            "title": "Automate the deployment path and declare release gates",
+                            "helpfulResource": {
+                                "displayText": "A repeatable pipeline promotes versioned artifacts through applicable environments. The team records whether production release uses manual approval or automatic deployment and why.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Automate artifact promotion and deployment, document the chosen delivery or deployment model, and retain required production authorization and rollback controls.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "SCALE5_3",
+                            "title": "Use agents to triage pipeline failures",
+                            "helpfulResource": {
+                                "displayText": "Agents examine failed stages, logs, test results, and recent changes and propose evidence-backed causes to the responsible developer.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Connect an approved agent to relevant pipeline evidence and have developers validate its diagnosis before accepting a proposed fix.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "SCALE5_4",
+                            "title": "Validate agent-proposed pipeline remediation",
+                            "helpfulResource": {
+                                "displayText": "Agents propose or apply fixes within authorized scope. Corrected builds and tests rerun, and consequential changes follow the approval policy.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define permitted remediation actions, create a reviewed fix workflow, and require successful revalidation before promotion.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SCALE5_1 && SCALE5_2 && SCALE5_3 && SCALE5_4",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SCALE5_1) || (!SCALE5_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "SCALE6",
+                    "title": "Operations: Do agents assist with on-call triage or incident investigation?",
+                    "description": "Assess agent access to relevant operational context, evidence-backed incident investigation, and controlled execution of approved mitigations.",
+                    "helpfulResource": {
+                        "displayText": "Custom assessment practices added to cover the requested team-adoption topics. The reference supports related AI-DLC principles. It does not prescribe every practice below. Select all implemented practices supported by evidence. Document justified non-applicability where a capability is outside the team s scope.",
+                        "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                    },
+                    "choices": [
+                        {
+                            "id": "SCALE6_1",
+                            "title": "Use agents to summarize and triage operational alerts",
+                            "helpfulResource": {
+                                "displayText": "An approved agent helps the on-call responder correlate alerts with relevant metrics, logs, traces, and recent releases while preserving responder accountability.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Provide scoped access to operational telemetry and deployment context and introduce agent-generated triage summaries into the on-call workflow.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "SCALE6_2",
+                            "title": "Ground incident investigation in verifiable evidence",
+                            "helpfulResource": {
+                                "displayText": "Agent findings cite relevant observations and distinguish confirmed facts from hypotheses. Responders validate conclusions and retain investigation records.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Require evidence references in agent investigations and have responders verify proposed causes and document confirmed findings.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "SCALE6_3",
+                            "title": "Constrain operational mitigation to approved runbooks",
+                            "helpfulResource": {
+                                "displayText": "Agent-suggested mitigations follow validated runbooks and authorization boundaries. Production actions and outcomes are recorded with recovery options.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define permitted runbook actions, approvals, rollback procedures, and execution records before enabling agent-assisted production remediation.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "SCALE6_1 && SCALE6_2 && SCALE6_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!SCALE6_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "STD",
+            "name": "Standardized",
+            "questions": [
+                {
+                    "id": "STD1",
+                    "title": "Culture: Has the team standardized shared AI tooling, practices, and AI-DLC workflows?",
+                    "description": "Assess shared AI tooling, team working agreements, onboarding, version-controlled workflow rules, and controlled updates.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                    },
+                    "choices": [
+                        {
+                            "id": "STD1_1",
+                            "title": "Maintain version-controlled workflow rules",
+                            "helpfulResource": {
+                                "displayText": "Teams use an approved workflow baseline with named owners and a reviewable change history.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Publish the approved rules in version control and establish ownership, review, and distribution procedures.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            }
+                        },
+                        {
+                            "id": "STD1_2",
+                            "title": "Define task-specific workflow tailoring criteria",
+                            "helpfulResource": {
+                                "displayText": "Workflow depth reflects task complexity and risk, with reasons recorded for omitting otherwise relevant activities.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Document tailoring criteria for features, fixes, modernization, and other task types while retaining required controls.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            }
+                        },
+                        {
+                            "id": "STD1_3",
+                            "title": "Validate workflow updates before wider adoption",
+                            "helpfulResource": {
+                                "displayText": "Changes to workflow rules are trialed on representative tasks and reviewed for unwanted effects.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Pilot rule changes, compare results against acceptance expectations, and approve rollout with a rollback path.",
+                                "url": "https://aws.amazon.com/blogs/devops/building-with-ai-dlc-using-amazon-q-developer/"
+                            }
+                        },
+                        {
+                            "id": "STD1_4",
+                            "title": "Standardize shared AI tooling and configurations",
+                            "helpfulResource": {
+                                "displayText": "The team maintains an approved shared toolset or supported tool profiles with common configuration, ownership, and access arrangements.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Agree on supported AI tooling and shared configuration profiles and publish setup instructions, ownership, and change procedures.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "STD1_5",
+                            "title": "Reinforce shared AI practices through team enablement",
+                            "helpfulResource": {
+                                "displayText": "Working agreements, onboarding material, and practical learning sessions help team members use approved AI workflows consistently.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Publish shared AI working agreements and onboarding material, run practical sessions, and use feedback to close adoption gaps.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "STD1_1 && STD1_2 && STD1_3 && STD1_4 && STD1_5",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!STD1_1)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "STD2",
+                    "title": "How do you apply organizational engineering standards to AI-generated work?",
+                    "description": "Assess actionable engineering instructions, automated enforcement, and governed exceptions.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                    },
+                    "choices": [
+                        {
+                            "id": "STD2_1",
+                            "title": "Provide approved engineering standards as agent context",
+                            "helpfulResource": {
+                                "displayText": "Current coding, architecture, security, and dependency requirements are available in maintained instructions or steering files.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Translate applicable standards into actionable guidance, assign owners, and supply the approved version to development agents.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            }
+                        },
+                        {
+                            "id": "STD2_2",
+                            "title": "Enforce machine-checkable standards in pipelines",
+                            "helpfulResource": {
+                                "displayText": "Automated checks verify applicable standards rather than relying solely on whether an agent follows written instructions.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement linting, dependency checks, security scans, and policy checks. Block changes that violate mandatory rules.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            }
+                        },
+                        {
+                            "id": "STD2_3",
+                            "title": "Govern exceptions to organizational standards",
+                            "helpfulResource": {
+                                "displayText": "Approved exceptions identify an owner, rationale, scope, compensating controls, and a review or expiry date.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create an exception process and link each exception to affected artifacts and the authority that accepted the risk.",
+                                "url": "https://aws.amazon.com/blogs/industries/ai-driven-development-lifecycle-for-financial-services/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "STD2_1 && STD2_2 && STD2_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!STD2_1) || (!STD2_2)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "STD3",
+                    "title": "How do you maintain consistent artifacts and completion criteria?",
+                    "description": "Assess shared artifact structures, exit criteria, and operational readiness for each delivery increment.",
+                    "helpfulResource": {
+                        "displayText": "Reference basis: AWS guidance. Question wording and criticality are proposed custom-lens recommendations. Select every implemented practice supported by evidence.",
+                        "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                    },
+                    "choices": [
+                        {
+                            "id": "STD3_1",
+                            "title": "Use consistent templates for required artifacts",
+                            "helpfulResource": {
+                                "displayText": "Requirements, designs, decisions, and test reports follow shared structures that make required information easy to locate.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Publish lightweight templates for required artifacts and tailor optional sections to the task s scope.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "STD3_2",
+                            "title": "Define explicit completion and phase exit criteria",
+                            "helpfulResource": {
+                                "displayText": "Work is considered complete only when applicable evidence and required reviews satisfy the stated criteria.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Specify required artifacts, verification results, and approval responsibilities for each relevant completion checkpoint.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        },
+                        {
+                            "id": "STD3_3",
+                            "title": "Standardize operational readiness and handoff",
+                            "helpfulResource": {
+                                "displayText": "A production release has appropriate ownership, monitoring, runbooks, rollback procedures, and validated deployment configuration.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use a shared readiness checklist and resolve missing monitoring, recovery, documentation, or ownership before production handoff.",
+                                "url": "https://prod.d13rzhkk8cj2z0.amplifyapp.com/aidlc.pdf"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "STD3_1 && STD3_2 && STD3_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(!STD3_2) || (!STD3_3)",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "STD4",
+                    "title": "Code: Is AI-assisted development a standard team practice or an individual choice?",
+                    "description": "Assess the team s declared adoption model, routine use of approved AI assistance, and consistent handling of exceptions. Standard adoption does not require AI use for every change.",
+                    "helpfulResource": {
+                        "displayText": "Custom assessment practices added to cover the requested team-adoption topics. The reference supports related AI-DLC principles. It does not prescribe every practice below. Select all implemented practices supported by evidence. Document justified non-applicability where a capability is outside the team s scope.",
+                        "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                    },
+                    "choices": [
+                        {
+                            "id": "STD4_1",
+                            "title": "Define a team-wide AI-assisted development policy",
+                            "helpfulResource": {
+                                "displayText": "A documented team policy identifies expected AI-assisted activities, approved tools, and situations where individual discretion or an exception is appropriate.",
+                                "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Agree on and publish the team adoption model, distinguishing routine expected use from optional use and justified exclusions.",
+                                "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                            }
+                        },
+                        {
+                            "id": "STD4_2",
+                            "title": "Embed approved AI assistance in the coding workflow",
+                            "helpfulResource": {
+                                "displayText": "Team working agreements and repository instructions describe how developers use AI for suitable implementation and refactoring work, with normal review and verification controls.",
+                                "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Add approved AI-assisted coding steps to the shared workflow and provide examples for common implementation and refactoring tasks.",
+                                "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                            }
+                        },
+                        {
+                            "id": "STD4_3",
+                            "title": "Review adoption coverage and justified exceptions",
+                            "helpfulResource": {
+                                "displayText": "The team reviews whether agreed practices are used across relevant work and addresses access, training, or suitability issues. Evidence is based on work artifacts rather than individual surveillance.",
+                                "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Periodically sample relevant work, record adoption barriers and justified exceptions, and update enablement or working agreements.",
+                                "url": "https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/"
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "STD4_1 && STD4_2 && STD4_3",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "MEDIUM_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

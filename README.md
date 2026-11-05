@@ -54,6 +54,7 @@ You can also reference the [Well-Architected Lab](https://wellarchitectedlabs.co
 * [Athena SQL](/Athena-SQL-Lens)
 
 ### Custom Lens for AWS Solutions
+* [AIDLC Lens](/AIDLC-Lens/)
 * [Streaming Media Lens](/Streaming-Media-Lens/)
 * [Operational Readiness Review](/ORR-Lens/)
 * [Intelligent Document Processing Lens](/IDP-custom-lens/)
